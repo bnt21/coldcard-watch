@@ -202,8 +202,10 @@ tr:last-child td{border-bottom:none}
         applied to every block since the last run, forever.</span></div>
       <div class="f"><span class="k">Proves</span><span class="v">Nothing. It converts discovery from
         something that arrives by tweet into something the chain reports first.</span></div>
-      <div class="f blind"><span class="k">Blind to</span><span class="v">Everything scan.py is blind
-        to, inherited whole. It reuses that pattern test exactly.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Single sweeps only. The
+        scheduled scan now adds a fee-convergence pass for the no-collector shape, so the
+        Wave 3 gap is covered, but neither the firmware-epoch floor nor the second hop can
+        run there without a node.</span></div>
     </div>
   </div>
 
@@ -285,8 +287,8 @@ tr:last-child td{border-bottom:none}
     <tr>
       <td>Live block watch</td>
       <td class="yes">Yes</td>
-      <td class="no">No</td>
-      <td>Inherits the scan.py pattern, and its blind spot with it.</td>
+      <td class="na">Flags it now</td>
+      <td>A fee-convergence pass was added after Wave 3 exposed the gap.</td>
     </tr>
     <tr>
       <td>Victim reports on X</td>
@@ -318,6 +320,13 @@ tr:last-child td{border-bottom:none}
   <p><strong>Tier 3 is a fingerprint match and nothing else.</strong> It is held for a person. A
   batched sweep at a normal fee is shape-identical to an owner moving to safety, so it gets a
   Telegram message and never a site edit. The new two-hop detector sits here.</p>
+  <p><strong>Tier 3 now also covers the no-collector shape.</strong> The scheduled scan buckets
+  no-change sweeps by fee rate as well as by destination, so many sweeps at one hardcoded rate
+  paying many different fresh addresses raise a flag even though they share nothing. That is the
+  gap Wave 3 walked through, and it reuses the same block fetch, so it costs nothing extra. It
+  holds rather than publishes: public block data omits each input's funding height, so neither the
+  firmware-epoch floor nor the second hop into P2WSH can be applied there. The alert carries the
+  exact command to confirm a hit against a node, which applies both.</p>
   <p>The publish decision is code. <code>claude -p</code> is used only to read a tweet and judge
   whether a source attributes an address, which is evidence gathering rather than the final say.</p>
 </div>

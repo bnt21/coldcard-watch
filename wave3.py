@@ -65,6 +65,10 @@ UA = {"User-Agent": "coldcard-wave3/1.0"}
 # "Not one of the coins we have identified in Waves 1-3 taken was created before that block."
 FIRMWARE_EPOCH = 674951
 
+# Bump this whenever scan_block's accept/reject logic changes, so the block cache
+# cannot serve hits produced by a different rule set.
+PREDICATES = "v2:ver2+lock0+seq-uniform+1out+p2wpkh-homogeneous+epoch"
+
 # Galaxy Research's published Wave 3 figures, used only to score this run against theirs.
 GALAXY = {"blocks": (960396, 960471), "victims": 1912, "sweeps": 300, "parks": 293,
           "vaults": 293, "drained_btc": 208.24, "held_btc": 207.73, "fee_rate": 200.0}
@@ -238,6 +242,13 @@ def trace_hop2(dest):
         out.update({"ok": False, "why": "unspent, still parked", "parked": True})
         return out
 
+    # The claim being published is that the park forwarded its WHOLE balance with no
+    # change. That has to be tested, not assumed: a park still holding a residue, or one
+    # whose vault also holds unrelated coins, is a different claim entirely.
+    if out["balance"] != 0:
+        out.update({"ok": False, "why": f"still holds {out['balance']} sats; not a clean forward"})
+        return out
+
     txs = esplora(f"/address/{dest}/txs/chain") or []
     for t in txs:
         spends = [i for i in t.get("vin", [])
@@ -247,6 +258,12 @@ def trace_hop2(dest):
         vout = t.get("vout", [])
         if len(vout) != 1:                     # a change output means this is not the park leg
             continue
+        # and it must move everything the address ever received, in this one transaction
+        moved = sum((i.get("prevout") or {}).get("value", 0) for i in spends)
+        if moved != c["funded_txo_sum"]:
+            out.update({"ok": False,
+                        "why": "forward does not carry the whole balance"})
+            return out
         o = vault = vout[0]
         if o.get("scriptpubkey_type") != "v0_p2wsh":
             out.update({"ok": False, "why": f"forwards to {o.get('scriptpubkey_type')}, not P2WSH"})
@@ -289,7 +306,9 @@ def main():
     cache = {}
     if os.path.exists(STATE) and not a.rescan:
         cache = json.loads(open(STATE).read())
-    key = f"v2|{a.fee_multiple}|{a.min_rate}"   # bump the tag whenever a predicate changes
+    # The key covers every input to a hit, not just the fee args. Editing a predicate
+    # without this would silently reuse hits the old rules produced.
+    key = f"v3|{a.fee_multiple}|{a.min_rate}|{FIRMWARE_EPOCH}|{PREDICATES}"
     cache.setdefault(key, {})
 
     sweeps = []
@@ -378,7 +397,7 @@ def main():
         "criteria": {"fee_multiple": a.fee_multiple, "min_rate": a.min_rate,
                      "firmware_epoch": FIRMWARE_EPOCH,
                      "fields": "version=2, locktime=0, uniform nSequence, 1 output, "
-                               "homogeneous P2WPKH inputs, distinct input addresses"},
+                               "homogeneous P2WPKH inputs (address reuse allowed)"},
         "status": "CANDIDATES — NOT PUBLISHED. A batched full-drain into a fresh address "
                   "at an urgent fee is also what Coinkite's advisory told owners to do. "
                   "Shape alone cannot separate a theft from a rescue.",

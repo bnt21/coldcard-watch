@@ -85,7 +85,7 @@ def is_service_shaped(cstats):
     return cstats.get("funded_txo_count", 0) > 400 or cstats.get("tx_count", 0) > 400
 
 
-def cospend_expand(st):
+def cospend_expand(st, dry=False):
     """Grow the known-attacker set by common-input ownership. Co-spend only reveals
     addresses that have SPENT (they were inputs), so it is a DISCOVERY tool, not a
     publisher: it feeds the anchor set (which strengthens the fingerprint tier and the
@@ -100,7 +100,8 @@ def cospend_expand(st):
     def checkpoint():
         st["cospend_known"] = sorted(known)
         st["cospend_expanded"] = sorted(expanded)
-        publish.save_state(st)
+        if not dry:                       # --dry-run is documented as never writing
+            publish.save_state(st)
 
     # Bounded per run and checkpointed every few addresses, so a slow or interrupted
     # cycle still makes durable progress and the next run resumes where it left off.
@@ -204,7 +205,7 @@ def run(dry=False, cospend_only=False):
     # tier 1 — co-spend DISCOVERY: grow the known-attacker set, flag collectors for review.
     # Co-spend only surfaces addresses that already spent, so nothing here auto-publishes;
     # it makes the fingerprint tier and the X pipeline smarter, and surfaces victims.
-    newly, collector_stats = cospend_expand(st)
+    newly, collector_stats = cospend_expand(st, dry=dry)
     fresh_anchors = [a for a in newly if a not in st.get("cospend_reported", [])]
     if fresh_anchors and not dry:
         publish.record_anchors(newly)
@@ -215,11 +216,15 @@ def run(dry=False, cospend_only=False):
         if not dry:
             st[rk] = int(time.time())
         _flag_cospend_collector(coll, collector_stats[coll], dry)
-    st["cospend_reported"] = sorted(set(st.get("cospend_reported", [])) | set(newly))
+    if not dry:
+        st["cospend_reported"] = sorted(set(st.get("cospend_reported", [])) | set(newly))
 
     if not cospend_only:
         # tier 2/3: fingerprint candidates from the block scanner's recent output
-        for coll, fp in _fingerprint_candidates():
+        fp_cands, w3_cands = _fingerprint_candidates()
+        for w3 in w3_cands:
+            _hold_wave3(w3, st, dry)
+        for coll, fp in fp_cands:
             if _already(coll):
                 continue
             ok, src = corroborated(coll)
@@ -233,7 +238,8 @@ def run(dry=False, cospend_only=False):
             else:
                 _hold(coll, fp, st, dry)
 
-    publish.save_state(st)
+    if not dry:
+        publish.save_state(st)
     done = [p for p in published if p and p.get("added")]
     print(f"autopilot: {len(done)} cluster(s) added, "
           f"total now {done[-1]['new_total'] if done else 'unchanged'}")
@@ -306,6 +312,31 @@ def _hold(coll, fp, st, dry):
         f"  https://mempool.space/address/{coll}", publish.load_env(), dry)
 
 
+def _hold_wave3(w3, st, dry):
+    """Tier 3, no-collector shape. Many sweeps at ONE hardcoded fee going to many
+    DIFFERENT fresh addresses is what wave 3 looked like, and it is invisible to every
+    collector-shaped test above. Reported, never published: the same shape is what
+    Coinkite's advisory told owners to produce, and without the second hop and the
+    firmware-epoch check (which need a node) this is the weakest signal here."""
+    key = f"held_w3:{w3['rate']}:{w3['blocks'][0]}"
+    if st.get(key):
+        return
+    if not dry:
+        st[key] = int(time.time())
+    dests = w3["dests"]
+    publish.send_telegram(
+        "HELD — possible NO-COLLECTOR wave (the wave-3 shape).\n\n"
+        f"{len(dests)} separate fresh destinations, all fed at {w3['rate']} sat/vB\n"
+        f"blocks {w3['blocks'][0]}-{w3['blocks'][-1]}, {w3['sats']/1e8:.8f} BTC\n\n"
+        + "\n".join(f"  {d}" for d in dests[:5])
+        + (f"\n  ...and {len(dests)-5} more" if len(dests) > 5 else "")
+        + "\n\nNothing shared between them, so no collector test can see this. Confirm "
+          "with:  python3 wave3.py --from " + str(w3["blocks"][0])
+        + " --to " + str(w3["blocks"][-1]) + "\n"
+          "That adds the two-hop P2WSH check and the firmware-epoch floor, which need "
+          "a node and are not applied here.", publish.load_env(), dry)
+
+
 def _propose(coll, fp, src, st, dry):
     """Tier-2 while it is still supervised: a strong, corroborated candidate that WOULD
     auto-publish once TIER2_AUTOPUBLISH is on. One command adds it now."""
@@ -344,6 +375,9 @@ SCAN_STATE = os.path.expanduser("~/.coldcard-autopilot-scan.json")
 UA = {"User-Agent": "coldcard-autopilot/1.0"}
 FIRST_DRAIN_BLOCK = 960183
 MIN_SWEEPS = 5             # a collector needs this many sweeps in the window to flag
+WAVE3_MIN_DESTS = 5        # distinct fresh destinations at ONE fee rate = a no-collector wave
+WAVE3_FEE_MULTIPLE = 20.0  # and the rate must sit far above what that block charged
+WAVE3_MIN_RATE = 100.0     # absolute floor, so a quiet block cannot make 6 sat/vB look extreme
 
 
 def _rawblock(h):
@@ -369,19 +403,29 @@ def scan_recent_for_candidates(max_blocks=20):
         tip = int(publish._get("https://blockstream.info/api/blocks/tip/height",
                                timeout=30).decode().strip())
     except Exception:
-        return []
+        return [], []                  # both detectors, or run() cannot unpack
     start = st["last"] + 1
     end = min(tip, start + max_blocks - 1)
     if start > tip:
-        return []
+        return [], []                  # caught up to the tip: the steady state
 
-    groups = {}    # dest -> {sweeps, sats, rates{}}
+    groups = {}    # dest -> {sweeps, sats, rates{}}          collector convergence
+    byrate = {}    # rate -> {dests:set, sats, blocks:set}    fee convergence (wave 3)
     reached = start - 1
     for h in range(start, end + 1):
         try:
             blk = _rawblock(h)
         except Exception:
             break                          # stop; retry this block next run
+        # the block's own median rate, so "far above market" means something here
+        rates = []
+        for t in blk.get("tx", []):
+            w = t.get("weight") or 0
+            if w > 0 and t.get("fee") is not None:
+                rates.append(t["fee"] / (w / 4.0))
+        rates.sort()
+        median = rates[len(rates) // 2] if rates else 1.0
+
         for t in blk.get("tx", []):
             outs = t.get("out", [])
             ins = t.get("inputs", [])
@@ -398,6 +442,22 @@ def scan_recent_for_candidates(max_blocks=20):
             g["sats"] += sum((i.get("prev_out") or {}).get("value", 0) for i in ins)
             if rate is not None:
                 g["rates"][rate] = g["rates"].get(rate, 0) + 1
+
+            # --- wave-3 shape: no shared destination, so convergence is on the fee ---
+            # Same signer fingerprint wave3.py uses, minus the firmware-epoch floor,
+            # which needs each input's funding height and public block data omits it.
+            if rate is None or rate < max(median * WAVE3_FEE_MULTIPLE, WAVE3_MIN_RATE):
+                continue
+            if t.get("ver") != 2 or t.get("lock_time") != 0:
+                continue
+            if len({i.get("sequence") for i in ins}) != 1:
+                continue
+            if not all(s and len(s) == 42 for s in srcs):     # homogeneous P2WPKH
+                continue
+            b = byrate.setdefault(rate, {"dests": set(), "sats": 0, "blocks": set()})
+            b["dests"].add(dst)
+            b["sats"] += sum((i.get("prev_out") or {}).get("value", 0) for i in ins)
+            b["blocks"].add(h)
         reached = h
         time.sleep(0.3)
 
@@ -416,13 +476,24 @@ def scan_recent_for_candidates(max_blocks=20):
             dom += top[1][1]
         if dom / g["sweeps"] >= 0.85:
             cands.append(dst)
-    return cands
+
+    # A wave-3 cluster is many sweeps at ONE fee rate going to many DIFFERENT fresh
+    # addresses. That is the opposite shape from a collector, and it is the blind spot
+    # that let wave 3 sit unnoticed for two days.
+    w3 = []
+    for rate, b in byrate.items():
+        if len(b["dests"]) >= WAVE3_MIN_DESTS:
+            w3.append({"rate": rate, "dests": sorted(b["dests"]),
+                       "sats": b["sats"], "blocks": sorted(b["blocks"])})
+    w3.sort(key=lambda x: -len(x["dests"]))
+    return cands, w3
 
 
 def _fingerprint_candidates():
     """Scan recent blocks, then confirm each candidate against the full fingerprint."""
     out = []
-    for coll in scan_recent_for_candidates():
+    collectors, w3 = scan_recent_for_candidates()
+    for coll in collectors:
         try:
             fp = cluster.cluster_fingerprint(coll)
         except Exception:
@@ -433,7 +504,7 @@ def _fingerprint_candidates():
                 and fp["unspent"] and fp["victims"] >= 3 and tight):
             out.append((coll, fp))
         time.sleep(0.2)
-    return out
+    return out, w3
 
 
 def rollback(entry_id):

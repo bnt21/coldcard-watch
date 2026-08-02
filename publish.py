@@ -126,9 +126,9 @@ SWEEP_START = 1785373820               # first drain block, 2026-07-30 01:10:20 
 
 # ---------------------------------------------------------------- env + telegram
 
-# Keychain service names are defaults, overridable by environment, so that no
-# particular machine's Keychain layout is asserted by this file.
-DEFAULT_X_KEYCHAIN = "x-bearer-token"
+# No Keychain service name is written down here. Set this env var to the service
+# holding the X token; with it unset, the Keychain fallback is simply skipped.
+X_KEYCHAIN_ENV = "CCW_X_KEYCHAIN"   # set this to the Keychain service holding the X token
 
 
 def load_env():
@@ -142,11 +142,10 @@ def load_env():
                     env.setdefault(k.strip(), v.strip().strip('"').strip("'"))
         except Exception:
             continue
-    # Mac fallback for interactive testing: the Keychain holds the X token and
-    # the Vercel CLI is logged in, so those two never need the env file there.
-    # The Keychain service name is configurable so no machine's entry is named here.
-    if "X_BEARER_TOKEN" not in env and sys.platform == "darwin":
-        service = os.environ.get("CCW_X_KEYCHAIN", DEFAULT_X_KEYCHAIN)
+    # Mac fallback for interactive testing: the Keychain can hold the X token and
+    # the Vercel CLI is logged in, so those two need no env file there.
+    if "X_BEARER_TOKEN" not in env and sys.platform == "darwin" and os.environ.get(X_KEYCHAIN_ENV):
+        service = os.environ[X_KEYCHAIN_ENV]
         try:
             tok = subprocess.run(["security", "find-generic-password", "-s", service, "-w"],
                                  capture_output=True, text=True, timeout=10).stdout.strip()

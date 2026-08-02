@@ -19,7 +19,9 @@ following the vendor advisory, because the advisory told owners to do the same t
 | `scan-batched.py` | Block scan for batched sweeps, many victims in one transaction. |
 | `co-spend.py` | Common-input-ownership. The only test here treated as proof. |
 | `cluster.py` | Resolves a collector to its victims and checks it against the drain fingerprint. |
-| `autopilot.py` | Orchestrator. Tiers candidates by proof strength and decides what may publish. |
+| `autopilot.py` | Orchestrator. Tiers candidates by proof strength and decides what may publish. Runs on a schedule and includes a no-collector tier so the wave-3 shape cannot hide again. |
+| `wave3-refresh.py` | Re-reads the 214 vault balances hourly, and shouts the first time one of them spends. |
+| `tests/` | Pins the published numbers and every fingerprint predicate. Needs no node and no network. |
 | `x-watch.py` | Watches for victims reporting their own address, then verifies each claim on-chain. |
 | `publish.py` | Chain reads, atomic multi-file edits, deploy, and deployed-byte verification. |
 | `nodeconf.py` | Where block data comes from, with no address hardcoded anywhere. |
@@ -46,7 +48,23 @@ credential is read from the environment or from a file outside the repo.
 python3 wave3.py --from 960396 --to 960471     # reconstruct wave 3
 python3 wave3-diag.py                          # why a predicate rejected what it rejected
 python3 wave3-publish-set.py                   # freeze the subset that clears the bar
+python3 -m unittest discover -s tests -v       # the regression tests
+python3 check-clean.py                         # refuse to ship a credential or a node address
 ```
+
+## Tests
+
+The published figures went up before any tests existed, so for a while the only thing
+standing behind 200.33487536 BTC was that one run landed near a number Galaxy published.
+`tests/` closes that. It re-derives the published set from the frozen report and requires
+it to match the live dataset to the satoshi, asserts the canary chain is present and every
+vault still unspent, and exercises each fingerprint predicate against hand-built blocks so
+a loosened rule fails a test rather than shipping.
+
+The most valuable one is `test_address_reuse_across_inputs_is_allowed`. Requiring every
+input to sit at a distinct address silently dropped 63 sweeps on the first run, roughly a
+fifth of the wave, because a victim wallet reuses addresses. That regression now has a
+name.
 
 ## How wave 3 was reconstructed
 

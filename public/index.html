@@ -281,9 +281,10 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   <h2>Is your Coldcard affected?</h2>
   <p class="tool-lede">Seeds generated on the firmware below were built with far less randomness than intended. Find your model and compare against the version you generated your seed on.</p>
   <div class="fw" id="fw"></div>
-  <p class="warn">Coinkite’s advisory covers the Mk3 and newer. The Mk2 entry comes from Block’s engineering analysis, which found the same vulnerable path and no secure reseed on that model, and no patched firmware for it has been published. Coinkite dates the Mk3 exposure from 4.0.1 while Block traces it to 4.0.0; the wider range is shown here.</p>
+  <p class="warn">Two details here go further than Coinkite’s advisory, both checked against their own signed release manifest. Their advisory bounds the Mk3 at 4.1.9, but signed Mk3 builds 5.0.1 and 5.0.3 shipped in 2022, after the change that caused this, and Coinkite has not said whether those are affected; they are listed as at risk because that is the safer reading. Block traces the fault to a 4.0.0 tag, but no 4.0.0 firmware was ever distributed, so 4.0.1 is the first version anyone could have generated a seed on.</p>
+  <p class="warn">Coinkite emailed affected customers directly, and said so publicly on 2 August so people could tell a real message from a fake one. Treat any email, DM or call about this that asks for a seed phrase as an attack. Nobody legitimate needs it, and an incident like this draws people who will ask.</p>
   <p class="warn">Updating the firmware does not repair a seed that already exists. If your seed was generated on an affected version, the fix is to move your funds to a newly generated wallet.</p>
-  <p class="tool-lede">Two things reduce the risk: adding 50 or more of your own dice rolls during seed generation, and a strong BIP-39 passphrase. Coinkite still recommends migrating. Their <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">advisory</a> is the authority on what to do, not this page.</p>
+  <p class="tool-lede">Two things reduce the risk. Coinkite say 50 to 98 of your own private dice rolls contributed at least 128 bits on their own, and 99 or more about 256 bits; below 50, or if you cannot remember, they say migrate. A strong BIP-39 passphrase reduces the immediate exposure but does not repair the seed, so passphrase users are told to migrate as well. On fixed firmware dice rolls are optional and the device seed is enough. Their <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">advisory</a> is the authority on what to do, not this page.</p>
 </section>
 
 <footer>
@@ -913,12 +914,15 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
   /* ---------- affected firmware ---------- */
   (function(){
-    // Mk2/Mk3 ranges and the 3.2.2 cutoff come from Block's engineering analysis;
-    // Coinkite's advisory does not cover Mk2 at all. Rows flagged "nofix" have no
-    // published patch, so migrating the seed is the only remedy.
+    // Mk2/Mk3 ranges and the 3.2.2 cutoff come from Block's engineering analysis,
+    // checked against Coldcard's own signed release manifest (releases/signatures.txt),
+    // not just the advisory prose. Two things that manifest settles: 4.2.0 shipped on
+    // 31 July 2026 and fixes the Mk2, which the advisory never mentions; and no 4.0.0
+    // firmware was ever distributed, so 4.0.1 is the first version a seed could be made on.
     var FW = [
-      ["Mk2",           "4.0.0 through 4.1.9",  "no fixed firmware published", "nofix"],
-      ["Mk3",           "4.0.0 through 4.1.9",  "4.2.0 and later", ""],
+      ["Mk2",           "4.0.1 through 4.1.9",  "4.2.0, released 31 July 2026", ""],
+      ["Mk3",           "4.0.1 through 4.1.9, and the Mk3-only 5.0.1 and 5.0.3 builds",
+                                                "4.2.0, released 31 July 2026", ""],
       ["Mk4",           "before 5.6.0",         "5.6.0 and later", ""],
       ["Mk5",           "before 5.6.0",         "5.6.0 and later", ""],
       ["Mk4 / Mk5 Edge","before 6.6.0X",        "6.6.0X and later", ""],

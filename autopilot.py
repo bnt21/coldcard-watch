@@ -385,11 +385,29 @@ WAVE3_FEE_MULTIPLE = 20.0  # and the rate must sit far above what that block cha
 WAVE3_MIN_RATE = 100.0     # absolute floor, so a quiet block cannot make 6 sat/vB look extreme
 
 
+def _block_hash(h):
+    """Height to hash, across both Esplora hosts.
+
+    blockstream.info rate-limits this endpoint long before it limits /address: a probe
+    from the box got 429 here while /address answered in 0.2s. _rawblock used to
+    hardcode that one host, so a single 429 broke the scan loop, the checkpoint never
+    advanced, and the forward scan sat 432 blocks behind while every run still reported
+    success. mempool.space is slow from here (measured 20s), so it gets a wide timeout
+    and is only ever reached as a fallback.
+    """
+    last = None
+    for host, t in (("https://blockstream.info/api", 12),
+                    ("https://mempool.space/api", 45)):
+        try:
+            return publish._get(f"{host}/block-height/{h}", timeout=t, tries=1).decode().strip()
+        except Exception as e:
+            last = e
+    raise last
+
+
 def _rawblock(h):
-    """Whole block in one call (blockchain.info), esplora fallback for the hash."""
-    import urllib.request
-    bh = publish._get(f"https://blockstream.info/api/block-height/{h}",
-                      timeout=30).decode().strip()
+    """Whole block in one call (blockchain.info), with a two-host lookup for the hash."""
+    bh = _block_hash(h)
     return json.loads(publish._get(f"https://blockchain.info/rawblock/{bh}", timeout=90))
 
 

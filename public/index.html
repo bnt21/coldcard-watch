@@ -281,7 +281,8 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   <h2>Is your Coldcard affected?</h2>
   <p class="tool-lede">Seeds generated on the firmware below were built with far less randomness than intended. Find your model and compare against the version you generated your seed on.</p>
   <div class="fw" id="fw"></div>
-  <p class="warn">Coinkite\u2019s advisory covers the Mk3 and newer. The Mk2 entry comes from Block\u2019s engineering analysis, which found the same vulnerable path and no secure reseed on that model, and no patched firmware for it has been published. Coinkite dates the Mk3 exposure from 4.0.1 while Block traces it to 4.0.0; the wider range is shown here.</p>\n  <p class="warn">Updating the firmware does not repair a seed that already exists. If your seed was generated on an affected version, the fix is to move your funds to a newly generated wallet.</p>
+  <p class="warn">Coinkite’s advisory covers the Mk3 and newer. The Mk2 entry comes from Block’s engineering analysis, which found the same vulnerable path and no secure reseed on that model, and no patched firmware for it has been published. Coinkite dates the Mk3 exposure from 4.0.1 while Block traces it to 4.0.0; the wider range is shown here.</p>
+  <p class="warn">Updating the firmware does not repair a seed that already exists. If your seed was generated on an affected version, the fix is to move your funds to a newly generated wallet.</p>
   <p class="tool-lede">Two things reduce the risk: adding 50 or more of your own dice rolls during seed generation, and a strong BIP-39 passphrase. Coinkite still recommends migrating. Their <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">advisory</a> is the authority on what to do, not this page.</p>
 </section>
 
@@ -359,7 +360,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   /* ---------- address rows ---------- */
   var rowsHost = el("rows");
 
-  function short(a){ return a.slice(0,10) + "\u2026" + a.slice(-6); }
+  function short(a){ return a.slice(0,10) + "…" + a.slice(-6); }
 
   // single source of truth for "how much of this address is traced theft proceeds"
   function effective(w){

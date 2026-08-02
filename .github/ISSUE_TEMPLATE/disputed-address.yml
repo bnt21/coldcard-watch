@@ -1,0 +1,61 @@
+name: Dispute an address
+description: An address on the site is yours, or is listed wrongly. This takes priority over everything else in the project.
+title: "[dispute] "
+labels: ["dispute"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Getting an address wrong matters more than anything else here, so this is the
+        one issue type that gets looked at first.
+
+        You do not need to prove anything or identify yourself. Give the address and
+        the transaction and it gets checked against the chain. If the listing does not
+        hold up it comes off the site, and the totals move with it.
+
+        Do not post a private key, a seed phrase, or a signed message. None of that is
+        needed and none of it should ever be in a public issue.
+
+  - type: input
+    id: address
+    attributes:
+      label: The address
+      description: The address as it appears on the site.
+      placeholder: bc1q...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: How is it listed?
+      options:
+        - Listed as drained, but I moved those coins myself
+        - Listed as an attacker vault, but it is mine
+        - Listed as drained, but it was never drained
+        - Something else is wrong with it
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: What actually happened
+      description: >
+        Whatever you can say. The transaction id of the spend is the most useful single
+        thing. If you moved the coins yourself after the Coinkite advisory, saying so is
+        enough to get it reviewed, because that is exactly the case the detector cannot
+        tell apart from a theft.
+      placeholder: |
+        txid:
+        what happened:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: nokeys
+    attributes:
+      label: Confirm
+      options:
+        - label: I have not included a private key, seed phrase, or anything secret.
+          required: true

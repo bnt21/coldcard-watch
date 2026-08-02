@@ -426,7 +426,7 @@ def _rawblock(h):
     return json.loads(publish._get(f"https://blockchain.info/rawblock/{bh}", timeout=90))
 
 
-def scan_recent_for_candidates(max_blocks=20):
+def scan_recent_for_candidates(max_blocks=12):
     """Scan blocks since the last autopilot scan for fingerprint collectors: a
     destination receiving several no-change sweeps (single OR batched) at one hardcoded
     fee. Returns candidate collector addresses. Self-contained so it does not couple to
@@ -496,6 +496,18 @@ def scan_recent_for_candidates(max_blocks=20):
             b["sats"] += sum((i.get("prev_out") or {}).get("value", 0) for i in ins)
             b["blocks"].add(h)
         reached = h
+        # Checkpoint every block, not once at the end. A 20-block pass can take longer
+        # than the cron's 900s timeout, and a run killed mid-pass used to write nothing,
+        # so the next run restarted at the same block and was killed at the same place.
+        # The scan stood still for days while every cycle looked like a clean no-op.
+        # Durable per block means a killed run still leaves progress behind.
+        st["last"] = reached
+        try:
+            with open(SCAN_STATE + ".tmp", "w") as f:
+                json.dump(st, f)
+            os.replace(SCAN_STATE + ".tmp", SCAN_STATE)
+        except Exception:
+            pass                       # a failed checkpoint must not abort the scan
         time.sleep(0.3)
 
     st["last"] = reached

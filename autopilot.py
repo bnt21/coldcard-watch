@@ -160,7 +160,12 @@ def corroborated(coll):
     try:
         req = urllib.request.Request(url, headers={
             "Authorization": "Bearer " + env["X_BEARER_TOKEN"]})
-        d = json.load(urllib.request.urlopen(req, timeout=30))
+        # A context manager, because json.load(urlopen(...)) never closes the response.
+        # Each corroboration check leaked a socket; they accumulated in CLOSE-WAIT until
+        # a run sat parked in poll() for four hours holding the shared pipeline lock,
+        # which silently stopped x_watch and wave3_refresh with it.
+        with urllib.request.urlopen(req, timeout=30) as r:
+            d = json.load(r)
     except Exception:
         return False, None
     users = {u["id"]: u["username"] for u in d.get("includes", {}).get("users", [])}

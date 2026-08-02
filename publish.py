@@ -242,6 +242,20 @@ def esplora(path):
     raise last
 
 
+def esplora_text(path):
+    """Host-fallback for Esplora endpoints that return plain text rather than JSON
+    (e.g. /block-height/:h returns a bare block hash). Same primary/fallback order as
+    esplora(); a 429 on blockstream.info falls through to mempool.space instead of
+    aborting the caller — the gap that blocked a manual add during a rate cap."""
+    last = None
+    for i, host in enumerate(ESPLORA_HOSTS):
+        try:
+            return _get(f"{host}{path}", timeout=(12 if i == 0 else 8), tries=2).decode().strip()
+        except Exception as e:
+            last = e
+    raise last
+
+
 def verify_addr(addr, known_victims):
     """On-chain test of a claimed drain. Returns a verdict dict; never raises
     on a merely-unverifiable claim, only on transport failure."""

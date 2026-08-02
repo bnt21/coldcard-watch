@@ -410,26 +410,11 @@ WAVE3_FEE_MULTIPLE = 20.0  # and the rate must sit far above what that block cha
 WAVE3_MIN_RATE = 100.0     # absolute floor, so a quiet block cannot make 6 sat/vB look extreme
 
 
-def _esplora_text(path, label):
-    """A plain-text Esplora read across both hosts.
-
-    Every single-host call in this file was a silent stall waiting to happen:
-    blockstream.info rate-limits some endpoints (429) long before others, and on 429
-    the fetch refuses to retry, so a hardcoded host turns a transient cap into a
-    permanent no-op. Two of these existed. Both are routed through here now.
-    """
-    last = None
-    for host, t in (("https://blockstream.info/api", 12),
-                    ("https://mempool.space/api", 45)):
-        try:
-            return publish._get(f"{host}{path}", timeout=t, tries=1).decode().strip()
-        except Exception as e:
-            last = e
-    raise RuntimeError(f"{label} failed on both hosts: {last}")
-
-
+# Plain-text Esplora reads go through publish.esplora_text, which carries the same
+# primary/fallback order as esplora(). A concurrent session added it to publish.py
+# while this file grew its own copy; one helper, in the module that owns the hosts.
 def _chain_tip():
-    return int(_esplora_text("/blocks/tip/height", "chain tip"))
+    return int(publish.esplora_text("/blocks/tip/height"))
 
 
 def _block_hash(h):
@@ -442,7 +427,7 @@ def _block_hash(h):
     success. mempool.space is slow from here (measured 20s), so it gets a wide timeout
     and is only ever reached as a fallback.
     """
-    return _esplora_text(f"/block-height/{h}", f"height {h}")
+    return publish.esplora_text(f"/block-height/{h}")
 
 
 def _rawblock(h):

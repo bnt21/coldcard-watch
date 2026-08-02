@@ -194,8 +194,7 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
     h2t = {b["h"]: b["t"] for b in blocks}
     for h in sorted(need_h):
         if h not in h2t:
-            bh = publish._get(f"https://blockstream.info/api/block-height/{h}",
-                              timeout=30).decode().strip()
+            bh = publish.esplora_text(f"/block-height/{h}")
             h2t[h] = publish.esplora(f"/block/{bh}")["timestamp"]
 
     h2i = {b["h"]: i for i, b in enumerate(blocks)}
@@ -279,6 +278,7 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
                 "new_count": new_n, "new_total": new_total_disp, "balance": balance}
 
     baks = {}
+    deployed = False
     try:
         for path, content in edits.items():
             baks[path] = path + ".clbak"
@@ -291,18 +291,28 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
             raise RuntimeError(f"invariants broken after edit: {probs}")
         idx2 = _read(os.path.join(publish.PUBLIC, "index.html"))
         assert new_total_disp in idx2 and coll in idx2
+        # Deploy inside the protected region. If deploy() raises (invalid token,
+        # network error), nothing reached production and the except clause restores
+        # every local file from its backup, so local can never sit diverged ahead of
+        # live with no way back — the exact failure that stranded a manual add.
+        url = publish.deploy()
+        deployed = True
+        if not publish.verify_deployed(new_n):
+            raise RuntimeError(f"deployed ({url}) but live count != {new_n}")
     except Exception:
-        for path, bak in baks.items():
-            shutil.copy2(bak, path)
+        # Roll the local files back only when NOTHING reached production. Once
+        # deploy() has succeeded, live carries the new content and restoring local
+        # would re-introduce the divergence, so a post-deploy verify miss (usually
+        # CDN lag) is raised without touching the files.
+        if not deployed:
+            for path, bak in baks.items():
+                if os.path.exists(bak):
+                    shutil.copy2(bak, path)
         raise
     finally:
         for bak in baks.values():
             if os.path.exists(bak):
                 os.remove(bak)
-
-    url = publish.deploy()
-    if not publish.verify_deployed(new_n):
-        raise RuntimeError(f"deployed ({url}) but live count != {new_n}")
 
     own = st is None
     if own:

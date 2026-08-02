@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coldcard Sweep Watch: is the stolen bitcoin still sitting there?</title>
+<meta name="description" content="A live chart of the 1,082.57 BTC swept from Coldcard wallets on 30 July 2026. The line extends in real time for as long as the attacker leaves it untouched.">
+<link rel="icon" href="/bitcoin.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0e11;
+  --surface:#14161a;
+  --line:#24282f;
+  --line-soft:#1e2128;
+  --ink:#f2f4f7;
+  --ink-2:#c9cfd6;
+  --ink-3:#a4acb6;
+  --accent:#f7931a;
+  --accent-deep:#8a5a12;
+  --moved:#e5484d;
+  --safe:#3fb950;
+  --ease:cubic-bezier(0.32,0.72,0,1);
+  --t-fast:150ms;
+  --t-base:300ms;
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-6:24px;--sp-8:32px;--sp-12:48px;--sp-16:64px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.6;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
+  -webkit-font-smoothing:antialiased;
+}
+main{max-width:1180px;margin:0 auto;padding:0 var(--sp-6)}
+h1{font-size:clamp(1.5rem,3.4vw,2.3rem);font-weight:500;letter-spacing:-.025em;line-height:1.2;margin:0;text-wrap:balance}
+p{color:var(--ink-2);margin:0 0 var(--sp-4);text-wrap:pretty}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(247,147,26,.28);transition:border-color var(--t-fast) var(--ease)}
+a:hover{border-bottom-color:var(--accent)}
+
+/* header */
+.shell{position:sticky;top:0;z-index:50;background:rgba(13,14,17,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+.shell-in{max-width:1180px;margin:0 auto;padding:var(--sp-3) var(--sp-6);display:flex;align-items:center;gap:var(--sp-4)}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem}
+.brand img{width:22px;height:22px;display:block}
+.shell-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-4)}
+.tick{display:flex;align-items:center;gap:var(--sp-2);font-size:.85rem;color:var(--ink-3)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+.live .dot{animation:pulse 2.4s var(--ease) infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.8)}}
+
+/* headline block */
+.top{padding:var(--sp-12) 0 var(--sp-6)}
+.total{font-size:clamp(3.4rem,12vw,8rem);font-weight:500;letter-spacing:-.05em;line-height:.92;color:var(--accent);margin:var(--sp-6) 0 var(--sp-2)}
+.total{white-space:nowrap}
+#totalBtc{display:inline-block;text-align:left}
+.total .unit{font-size:.24em;color:var(--ink-3);letter-spacing:-.01em;margin-left:.4em}
+.sub{font-size:1.15rem;color:var(--ink-2)}
+.sub .q{color:var(--ink-3);font-size:.85rem;margin-left:var(--sp-3)}
+
+
+/* the chart */
+.chart{margin:var(--sp-8) 0 0;background:var(--surface);border:1px solid var(--line-soft);border-radius:12px;padding:var(--sp-6) var(--sp-6) var(--sp-4);overflow:hidden}
+#big{width:100%;height:clamp(300px,44vh,460px);display:block}
+.readouts{display:flex;flex-wrap:wrap;gap:var(--sp-8);padding:var(--sp-6) var(--sp-2) var(--sp-2);border-top:1px solid var(--line-soft);margin-top:var(--sp-4)}
+.ro{min-width:168px}
+.ro:first-child{min-width:206px}
+.ro .v{font-size:1.4rem;font-weight:500;letter-spacing:-.02em;display:block;line-height:1.2;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.ro .k{font-size:.8rem;color:var(--ink-3);display:block;margin-top:var(--sp-1)}
+.ro.flag .v{color:var(--moved)}
+
+/* addresses */
+.addr-strip{margin-top:var(--sp-12);border-top:1px solid var(--line-soft);padding-top:var(--sp-8)}
+.addr-strip h2{font-size:1rem;font-weight:500;margin:0 0 var(--sp-4);color:var(--ink-2)}
+.rows{display:grid;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}
+.row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:var(--sp-4);
+  background:var(--surface);padding:var(--sp-4) var(--sp-6);transition:background var(--t-base) var(--ease)}
+.row.alert{background:#1c1416}
+.row .a{font-size:.82rem;color:var(--ink-3);word-break:break-all;line-height:1.4}
+.row .a a{color:var(--ink-3);border-bottom-color:var(--line)}
+.row .a a:hover{color:var(--accent)}
+.row .b{font-size:1.05rem;font-weight:500;white-space:nowrap}
+.row .b .bal{display:inline-block;min-width:9.5ch;text-align:right}
+.row .b .unit{font-size:.7em;color:var(--ink-3);margin-left:.25em}
+.row .s{font-size:.76rem;color:var(--ink-3);display:inline-flex;align-items:center;gap:var(--sp-2);white-space:nowrap}
+.row .s .dot{width:6px;height:6px}
+.row.alert .s{color:#ff9ea1}
+.row.alert .s .dot{background:var(--moved)}
+.row.traced{background:#16181d}
+.row .trace{display:block;color:#7f8794;font-size:.76rem;margin-top:2px}
+.ld-split{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin:var(--sp-6) 0 var(--sp-4)}
+.ld-split .lastdrain{margin:0;height:100%}
+.totaldrain .ld-amt{color:var(--ink)}
+.totaldrain .ld-addr{color:var(--ink-2)}
+@media (max-width:720px){.ld-split{grid-template-columns:1fr}}
+.lastdrain{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;
+  padding:var(--sp-8) var(--sp-6);margin:var(--sp-6) 0 var(--sp-4)}
+.ld-amt{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:500;letter-spacing:-.04em;line-height:1;
+  color:var(--accent);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.ld-amt .ld-unit{font-size:.28em;color:var(--ink-3);margin-left:.4em;letter-spacing:-.01em}
+.ld-addr{margin-top:var(--sp-4);font-size:.9rem;color:var(--ink-3);word-break:break-all;line-height:1.5}
+.ld-addr a{color:var(--ink-2);border-bottom-color:var(--line)}
+.ld-addr a:hover{color:var(--accent)}
+.ld-when{margin-top:var(--sp-3);display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-4);
+  font-size:.85rem;color:var(--ink-3);align-items:baseline}
+.ld-when a{font-size:.8rem;color:var(--ink-3);border-bottom-color:var(--line)}
+.ld-when a:hover{color:var(--accent)}
+.lastdrain.fresh{border-color:var(--moved)}
+.lastdrain.fresh .ld-amt{color:#ff9ea1}
+.banner{background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.4);color:#ff9ea1;
+  padding:var(--sp-3) var(--sp-4);border-radius:8px;font-size:.9rem;margin-bottom:var(--sp-4)}
+
+/* tools */
+.tool{margin-top:var(--sp-12);border-top:1px solid var(--line-soft);padding-top:var(--sp-8)}
+.tool h2{font-size:1.35rem;font-weight:500;letter-spacing:-.02em;margin:0 0 var(--sp-3)}
+.tool-lede{font-size:.95rem;color:var(--ink-2);max-width:70ch}
+.warn{font-size:.88rem;color:var(--ink-3);max-width:70ch}
+.check{display:flex;gap:var(--sp-3);flex-wrap:wrap;margin:var(--sp-6) 0 var(--sp-4);max-width:640px}
+#addrIn{flex:1 1 320px;background:var(--surface);border:1px solid var(--line);color:var(--ink);
+  font:inherit;font-size:.95rem;padding:var(--sp-3) var(--sp-4);border-radius:8px;min-width:0;
+  transition:border-color var(--t-fast) var(--ease)}
+#addrIn:focus{outline:none;border-color:var(--accent-deep)}
+#addrIn::placeholder{color:#7f8794}
+#addrIn.ok{border-color:var(--safe);box-shadow:0 0 0 3px rgba(63,185,80,.16)}
+#addrIn.hit{border-color:var(--moved);box-shadow:0 0 0 3px rgba(229,72,77,.16)}
+.verdict{display:inline-flex;align-items:center;gap:var(--sp-2);font-size:.9rem;font-weight:500;
+  padding:var(--sp-2) var(--sp-4);border-radius:999px;margin-bottom:var(--sp-3);
+  border:1px solid transparent}
+.verdict::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.verdict.ok{color:var(--safe);border-color:rgba(63,185,80,.35);background:rgba(63,185,80,.10)}
+.verdict.hit{color:#ff9ea1;border-color:rgba(229,72,77,.4);background:rgba(229,72,77,.12)}
+.verdict-wrap{margin-bottom:var(--sp-2)}
+.cta{background:var(--accent);border:1px solid var(--accent);color:#1a1205;font:inherit;font-weight:500;
+  font-size:.95rem;padding:var(--sp-3) var(--sp-6);border-radius:8px;cursor:pointer;
+  transition:opacity var(--t-fast) var(--ease)}
+.cta:hover{opacity:.88}
+.result{font-size:.95rem;min-height:1.6em;max-width:70ch;margin-bottom:var(--sp-4)}
+.result.hit{color:#ff9ea1}
+.result.fail{background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.45);color:#ff9ea1;
+  padding:var(--sp-4);border-radius:8px;font-weight:500}
+.result.miss{color:var(--ink-2)}
+.result b{font-weight:500}
+.fw{display:grid;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);
+  border-radius:10px;overflow:hidden;margin:var(--sp-6) 0 var(--sp-4)}
+.fwrow{display:grid;grid-template-columns:150px 1fr 1fr;gap:var(--sp-4);background:var(--surface);
+  padding:var(--sp-3) var(--sp-6);font-size:.9rem;align-items:baseline}
+.fwrow.head{color:var(--ink-3);font-size:.8rem}
+.fwrow .m{font-weight:500}
+.fwrow .bad{color:var(--ink-2)}
+.fwrow .good{color:var(--ink-2)}
+.fwrow.safe .m{color:var(--ink-2)}
+.fwrow.nofix .good{color:#ff9ea1}
+@media (max-width:640px){
+  .fwrow{grid-template-columns:1fr;gap:var(--sp-1);padding:var(--sp-4) var(--sp-4)}
+  .fwrow.head{display:none}
+  .fwrow .bad::before{content:"affected: ";color:var(--ink-3)}
+  .fwrow .good::before{content:"fixed in: ";color:var(--ink-3)}
+}
+.tick.stale .dot{background:#7f8794;animation:none}
+.tick.stale{color:#7f8794}
+.tick.offline{background:rgba(229,72,77,.14);border:1px solid rgba(229,72,77,.5);color:#ff9ea1;
+  font-weight:500;padding:var(--sp-1) var(--sp-3);border-radius:999px}
+.tick.offline .dot{background:var(--moved);animation:none}
+footer{padding:var(--sp-8) 0 var(--sp-16);color:var(--ink-3);font-size:.85rem}
+footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
+
+@media (max-width:640px){
+  .row{grid-template-columns:1fr auto;gap:var(--sp-2)}
+  .row .a{grid-column:1/-1;order:3}
+  .readouts{gap:var(--sp-6)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<div id="simbar">
+  <div class="sb-in">
+    <span class="sb-tag">SIMULATION</span>
+    <span class="sb-t">They move part of it</span>
+    <span class="sb-b">The main vault sends 200 BTC to one new address and keeps the rest. The row goes red as “partly moved”, the destination is added and watched, and the timer restarts from the spend.</span>
+    <span class="sb-nav"><a href="/00-now.html">&larr; previous</a><a href="/index.html">all scenarios</a><a href="/02-exchange.html">next &rarr;</a></span>
+  </div>
+</div>
+<style>
+  #simbar{position:sticky;top:0;z-index:999;background:#3b1d05;border-bottom:1px solid #7a4a12;
+    font-family:"DM Sans",system-ui,sans-serif}
+  #simbar .sb-in{max-width:1180px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;
+    gap:8px 16px;align-items:baseline}
+  #simbar .sb-tag{font-size:.68rem;letter-spacing:.16em;color:#ffb454;border:1px solid #7a4a12;
+    border-radius:999px;padding:2px 10px}
+  #simbar .sb-t{color:#ffd9a8;font-weight:500;font-size:.95rem}
+  #simbar .sb-b{color:#c9a075;font-size:.85rem;flex:1 1 320px;line-height:1.45}
+  #simbar .sb-nav{margin-left:auto;display:flex;gap:14px}
+  #simbar .sb-nav a{color:#ffb454;font-size:.82rem;text-decoration:none;border-bottom:1px solid #7a4a12}
+</style>
+
+
+<div class="shell">
+  <div class="shell-in">
+    <div class="brand"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></div>
+    <div class="shell-right">
+      <div class="tick live" id="tickWrap"><span class="dot"></span><span id="tickText">connecting</span></div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<section class="top">
+  <h1>Bitcoin Drained from Coldcards</h1>
+  <div class="total"><span id="totalBtc">1,082.5696</span><span class="unit">BTC</span></div>
+  <div class="sub"><span id="totalUsd">$68,146,000</span><span class="q" id="priceSrc">at $62,949 per bitcoin</span></div>
+</section>
+
+<section class="chart">
+  <svg id="big" viewBox="0 0 1000 440" role="img"
+       aria-label="Bitcoin under the attacker's control over time: a steep climb during the 41-minute sweep, then a flat line that keeps extending because nothing has moved."></svg>
+  <div class="readouts">
+    <div class="ro"><span class="v" id="sinceMove">0d 00h 00m 00s</span><span class="k" id="sinceLabel">untouched for</span></div>
+    <div class="ro"><span class="v" id="blocksSince">275</span><span class="k" id="blocksLabel">blocks mined since</span></div>
+    <div class="ro"><span class="v" id="tipHeight">960,466</span><span class="k">chain tip</span></div>
+  </div>
+</section>
+
+<section class="tool">
+  <h2>Was your address drained?</h2>
+  <p class="tool-lede">Paste a public bitcoin address to check it against the 1,195 addresses drained in this sweep. The check runs entirely inside your browser against a hashed list. Nothing is sent anywhere and nothing is logged.</p>
+  <div class="check">
+    <input id="addrIn" type="text" spellcheck="false" autocomplete="off"
+           placeholder="bc1... or 1... or 3..." aria-label="Public bitcoin address to check">
+    <button class="cta" id="addrBtn">Check</button>
+  </div>
+  <div class="result" id="addrOut" role="status" aria-live="polite"></div>
+  <p class="warn">The set covers every address drained between 01:10:20 and 01:51:26 UTC on 30 July 2026, blocks 960183 to 960191. In US time zones that window fell on the evening of Wednesday 29 July, which is why some accounts date the theft to the 29th. No drains outside that window have been published, and the four addresses below have taken in nothing since.</p>
+  <p class="warn">Never type a seed phrase, private key, or passphrase into this page or any other. No legitimate tool asks for one.</p>
+</section>
+
+<section class="tool">
+  <h2>Most recent drain</h2>
+  <div class="ld-split">
+  <div class="lastdrain" id="ldBox">
+    <div class="ld-amt"><span id="ldAmt">0.15694687</span><span class="ld-unit">BTC</span></div>
+    <div class="ld-addr">taken from <a id="ldAddr" target="_blank" rel="noopener"
+      href="https://mempool.space/address/bc1qysdng7zm6sqwqjgjmyg8880mvlw56tkaw65gw4">bc1qysdng7zm6sqwqjgjmyg8880mvlw56tkaw65gw4</a></div>
+    <div class="ld-when"><span id="ldWhen">30 July 2026, 01:51:26 UTC</span><span id="ldMeta">block 960,191</span><a id="ldTx" target="_blank" rel="noopener" href="https://mempool.space/tx/35cebc4cd8a4ec65563f93a72ab201881923e2c27385526d3af7660a23543c01">view transaction</a></div>
+  </div>
+  <div class="lastdrain totaldrain">
+    <div class="ld-amt"><span id="tdCount">1,195</span></div>
+    <div class="ld-addr">total addresses drained</div>
+    <div class="ld-when"><a href="/list.html">view the full list</a></div>
+  </div>
+  </div>
+  <p class="tool-lede">The last address drained in the sweep. 158 others were drained in the same block. How many people that adds up to is not knowable from the chain, since one wallet can hold many addresses.</p>
+</section>
+
+<section class="addr-strip">
+  <h2>Where the money is</h2>
+  <p class="tool-lede" id="addrCount">The four addresses the sweep paid into. Nothing has left them.</p>
+  <div class="banner" id="moveBanner" hidden>Coins have moved. The rows below now include the addresses they went to.</div>
+  <div class="rows" id="rows"></div>
+  <p class="tool-lede" style="margin-top:var(--sp-4)">Balances refresh every 60 seconds and stream over a websocket in between. If any tracked address spends, this page reads where the coins went and starts tracking those addresses too, following the trail one hop at a time. The headline figure only ever counts coins traced back to the theft, so a destination wallet holding other funds cannot inflate it.</p>
+</section>
+
+<section class="tool">
+  <h2>Is your Coldcard affected?</h2>
+  <p class="tool-lede">Seeds generated on the firmware below were built with far less randomness than intended. Find your model and compare against the version you generated your seed on.</p>
+  <div class="fw" id="fw"></div>
+  <p class="warn">Coinkite\u2019s advisory covers the Mk3 and newer. The Mk2 entry comes from Block\u2019s engineering analysis, which found the same vulnerable path and no secure reseed on that model, and no patched firmware for it has been published. Coinkite dates the Mk3 exposure from 4.0.1 while Block traces it to 4.0.0; the wider range is shown here.</p>\n  <p class="warn">Updating the firmware does not repair a seed that already exists. If your seed was generated on an affected version, the fix is to move your funds to a newly generated wallet.</p>
+  <p class="tool-lede">Two things reduce the risk: adding 50 or more of your own dice rolls during seed generation, and a strong BIP-39 passphrase. Coinkite still recommends migrating. Their <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">advisory</a> is the authority on what to do, not this page.</p>
+</section>
+
+<footer>
+  <p>Balances stream from <a href="https://mempool.space/" rel="noopener">mempool.space</a> and <a href="https://blockstream.info/" rel="noopener">Blockstream Esplora</a>. Incident detail from the <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">Coinkite advisory</a> and <a href="https://engineering.block.xyz/blog/predictable-rng-fallback-and-32-bit-reseed-in-coldcard-firmware" rel="noopener">Block's engineering analysis</a>.</p>
+  <p>Not affiliated with Coinkite. If you hold a Coldcard, follow the vendor advisory and move to a new seed rather than relying on anything here.</p>
+</footer>
+
+</main>
+
+
+<script>
+/* simulator stub: replaces the network so the page's real logic renders a what-if state */
+(function(){
+  var SIM = {"state": {"bc1qq85v2c926eg6pgxhwp6q7lf6cnsz80qs3fcu9r": {"bal": 36202008836, "recv": 56202008836, "ntx": 8, "spent": 1}, "bc1qx76cae2706qd5q576feh7xq8rfcsjpf2htfhe3": {"bal": 39847573857, "recv": 39847573857, "ntx": 1, "spent": 0}, "bc1q8jy96fe5lf8vfugydnte3cguk92gpev7kwtp3q": {"bal": 8962327890, "recv": 8962327890, "ntx": 1, "spent": 0}, "bc1qnk4zh9qcnap2mycp56qjrgza3cc8ylrh8fecp0": {"bal": 3245056320, "recv": 59447723261, "ntx": 502, "spent": 341}, "bc1qexamplepeelhopaddress0000000000000000w3n2ac": {"bal": 20000000000, "recv": 20000000000, "ntx": 1, "spent": 0}}, "after": null, "txs": {"bc1qq85v2c926eg6pgxhwp6q7lf6cnsz80qs3fcu9r": [{"spend_from": "bc1qq85v2c926eg6pgxhwp6q7lf6cnsz80qs3fcu9r", "outs": [["bc1qexamplepeelhopaddress0000000000000000w3n2ac", 20000000000], ["bc1qq85v2c926eg6pgxhwp6q7lf6cnsz80qs3fcu9r", 36202008836]], "height": 960700, "time": 1785560000}]}, "failAll": false, "tip": 960710, "price": 62949};
+  if (false) { try { delete window.DRAINED; } catch(e){ window.DRAINED = undefined; } }
+
+  function jsonRes(obj){
+    return Promise.resolve({ ok:true, status:200,
+      json:function(){ return Promise.resolve(obj); },
+      text:function(){ return Promise.resolve(String(obj)); } });
+  }
+  function fail(){ return Promise.reject(new Error("simulated outage")); }
+
+  // some states only exist on a LATER read (a fresh drain is a change, not a value),
+  // so the stub serves phase 1 first and phase 2 once the page reads again
+  var reads = 0;
+  function cur(a){
+    var base = SIM.state[a] || {bal:0,recv:0,ntx:0,spent:0};
+    if (SIM.after && reads >= 2 && SIM.after[a]) return SIM.after[a];
+    return base;
+  }
+
+  function esploraAddr(a){
+    var s = cur(a);
+    return {address:a,
+      chain_stats:{funded_txo_count:s.ntx, funded_txo_sum:s.recv,
+                   spent_txo_count:s.spent, spent_txo_sum:s.recv - s.bal, tx_count:s.ntx},
+      mempool_stats:{funded_txo_count:0, funded_txo_sum:0, spent_txo_count:0, spent_txo_sum:0, tx_count:0}};
+  }
+  function esploraTxs(a){
+    return (SIM.txs[a] || []).map(function(t){
+      return {txid:"5111111111111111111111111111111111111111111111111111111111111111",
+        vin:[{prevout:{scriptpubkey_address:t.spend_from, value:1}}],
+        vout:t.outs.map(function(o){ return {scriptpubkey_address:o[0], value:o[1]}; }),
+        status:{confirmed:true, block_height:t.height, block_time:t.time}};
+    });
+  }
+
+  window.fetch = function(url){
+    url = String(url);
+    if (SIM.failAll) return fail();
+    if (url.indexOf("blockchain.info/balance") > -1){
+      reads++;
+      var q = decodeURIComponent(url.split("active=")[1] || "");
+      var out = {};
+      q.split("|").forEach(function(a){
+        var s = cur(a);
+        out[a] = {final_balance:s.bal, n_tx:s.ntx, total_received:s.recv};
+      });
+      return jsonRes(out);
+    }
+    var m = url.match(/\/address\/([a-z0-9]+)\/txs/i);
+    if (m) return jsonRes(esploraTxs(m[1]));
+    m = url.match(/\/address\/([a-z0-9]+)$/i);
+    if (m) return jsonRes(esploraAddr(m[1]));
+    if (url.indexOf("tip/height") > -1) return jsonRes(SIM.tip);
+    if (url.indexOf("prices") > -1) return jsonRes({USD:SIM.price});
+    if (url.indexOf("coinbase") > -1) return jsonRes({data:{amount:String(SIM.price)}});
+    return fail();
+  };
+
+  window.WebSocket = function(){
+    var self = this;
+    self.readyState = 1;
+    self.send = function(){}; self.close = function(){};
+    if (SIM.after){
+      setTimeout(function(){
+        if (typeof self.onmessage === "function"){
+          self.onmessage({data: JSON.stringify({"multi-address-transactions":{}})});
+        }
+      }, 2600);
+    }
+  };
+})();
+</script>
+<script src="/data.js"></script>
+<script src="/drained.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  // attributed = sats traced to this address from the theft, capped so that an exchange
+  // or third-party wallet cannot inflate the total with coins that were never stolen.
+  var WALLETS = [
+    {addr:"bc1qq85v2c926eg6pgxhwp6q7lf6cnsz80qs3fcu9r", attributed:56201962301, baselineSpent:0, origin:"seed"},
+    {addr:"bc1qx76cae2706qd5q576feh7xq8rfcsjpf2htfhe3", attributed:39847573857, baselineSpent:0, origin:"seed"},
+    {addr:"bc1q8jy96fe5lf8vfugydnte3cguk92gpev7kwtp3q", attributed:8962327890,  baselineSpent:0, origin:"seed"},
+    {addr:"bc1qnk4zh9qcnap2mycp56qjrgza3cc8ylrh8fecp0", attributed:3245056320,  baselineSpent:341, origin:"seed"}
+  ];
+  var MAX_TRACKED   = 40;         // backstop against a peel chain exploding the page
+  var FOLLOW_FLOOR  = 50000000;   // never follow an output under 0.5 BTC
+  var FOLLOW_SHARE  = 0.02;       // and never under 2% of what the spending address held
+  var FOLLOW_PER_TX = 5;          // only the largest few outputs per transaction
+  // Anyone holding these coins could send a small amount to an uninvolved address to
+  // get it published here. A relative floor makes that cost real money, and the
+  // per-transaction cap stops a spray of outputs from burying the actual trail.
+
+  var SWEEP_START = 1785373820;   // 2026-07-30 01:10:20 UTC
+  // the final drain of the sweep, measured from the chain
+  var NEW_DRAIN_MIN = 1000000;   // 0.01 BTC
+  var SWEEP_END   = 1785376286;   // 2026-07-30 01:51:26 UTC
+  var SWEEP_END_HEIGHT = 960191;
+  var API = "https://blockstream.info/api";
+  var API2 = "https://mempool.space/api";
+  var NS = "http://www.w3.org/2000/svg";
+
+  var price = 62949, tip = 960466, anyMoved = false;
+  var lastOk = 0;          // epoch seconds of the last successful balance read
+  var failCount = 0, backoffUntil = 0, rateLimited = false;
+  function nowSec(){ return Math.floor(Date.now()/1000); }
+  function gated(){ return document.hidden || nowSec() < backoffUntil; }
+  function noteOk(){ failCount = 0; backoffUntil = 0; rateLimited = false; }
+  function noteFail(status){
+    failCount++;
+    if (status === 429 || status >= 500) rateLimited = true;
+    // 60s, 120s, 240s ... capped at 15 minutes. Retrying a rate-limit at full speed
+    // is how an IP earns a ban rather than a throttle.
+    var wait = Math.min(900, 60 * Math.pow(2, failCount - 1));
+    backoffUntil = nowSec() + wait;
+    freshness();
+  }
+  var lastMoveTs = 0;      // block time of the most recent spend by a tracked address
+  var lastMoveHeight = 0;
+  var everOk = false;
+  function el(id){ return document.getElementById(id); }
+  function fmt(n,d){ return n.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}); }
+  function btc(s){ return s/1e8; }
+
+  /* ---------- address rows ---------- */
+  var rowsHost = el("rows");
+
+  function short(a){ return a.slice(0,10) + "\u2026" + a.slice(-6); }
+
+  // single source of truth for "how much of this address is traced theft proceeds"
+  function effective(w){
+    var bal = (typeof w.balance === "number") ? w.balance : w.attributed;
+    var e = Math.min(bal, w.attributed);
+    return e > 0 ? e : 0;
+  }
+  function heldTotal(){
+    var t = 0;
+    WALLETS.forEach(function(w){ t += effective(w); });
+    return t;
+  }
+
+  function renderRows(){
+    WALLETS.forEach(function(w){
+      if (w.node) return;
+      var d = document.createElement("div");
+      d.className = "row";
+      d.innerHTML = '<span class="a"><a target="_blank" rel="noopener"></a><span class="trace"></span></span>'+
+                    '<span class="b"><span class="bal">0</span><span class="unit">BTC</span></span>'+
+                    '<span class="s"><span class="dot"></span><span class="st">holding</span></span>';
+      var a = d.querySelector("a");
+      a.textContent = w.addr;
+      a.href = "https://mempool.space/address/" + w.addr;
+      if (w.origin === "traced"){
+        d.classList.add("traced");
+        d.querySelector(".trace").textContent = "received from " + short(w.from);
+      }
+      rowsHost.appendChild(d);
+      w.node = d;
+    });
+    var n = WALLETS.length;
+    el("addrCount").textContent = n === 4
+      ? "The four addresses the sweep paid into. Nothing has left them."
+      : n + " addresses tracked. The trail below updates as coins move.";
+  }
+
+  function paint(){
+    var total = heldTotal();
+    WALLETS.forEach(function(w){
+      var bal = (typeof w.balance === "number") ? w.balance : w.attributed;
+      if (!w.node) return;
+      w.node.querySelector(".bal").textContent = fmt(btc(bal),4);
+      var st = w.node.querySelector(".st");
+      if (w.moved){
+        w.node.classList.add("alert");
+        st.textContent = bal > 0 ? "partly moved" : "spent";
+      } else {
+        st.textContent = w.origin === "traced" ? "received" : "holding";
+      }
+    });
+    el("totalBtc").textContent = fmt(btc(total),4);
+    el("totalUsd").textContent = "$" + fmt(btc(total)*price,0);
+    if (anyMoved) el("moveBanner").hidden = false;
+    return total;
+  }
+
+  /* ---------- live data ---------- */
+  function getJSON(u){ return fetch(u,{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
+  function getText(u){ return fetch(u,{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.text(); }); }
+
+  // One request covers every tracked address. Esplora is then asked about an address
+  // only when the cheap call says something changed, so a 40-address trail costs
+  // one request per cycle instead of forty.
+  var BATCH = "https://blockchain.info/balance?active=";
+
+  function refreshBalances(){
+    if (gated()) return;
+    var list = WALLETS.map(function(w){ return w.addr; }).join("|");
+    fetch(BATCH + list, {cache:"no-store"})
+      .then(function(r){ if (!r.ok) { var e = new Error("http"); e.status = r.status; throw e; } return r.json(); })
+      .then(function(d){
+        var changed = [];
+        WALLETS.forEach(function(w){
+          var e = d[w.addr];
+          if (!e) return;
+          var first = (w.nTx === undefined);
+          if (!first && e.n_tx !== w.nTx) changed.push(w);
+          // fresh money arriving at a known collector means more addresses were drained
+          if (!first && typeof e.total_received === "number" && e.total_received > w.received){
+            var delta = e.total_received - w.received;
+            if (delta >= NEW_DRAIN_MIN) noteNewDrain(delta, w.addr);
+          }
+          if (typeof e.total_received === "number") w.received = e.total_received;
+          // on a cold load, a balance below what was traced here means it already spent
+          if (first && e.final_balance < w.attributed) changed.push(w);
+          w.nTx = e.n_tx;
+          w.balance = e.final_balance;
+        });
+        noteOk();
+        lastOk = nowSec(); everOk = true;
+        changed.forEach(confirmOne);
+        renderRows(); paint(); draw(); freshness();
+      })
+      .catch(function(err){
+        noteFail(err && err.status);
+        perAddressFallback();
+      });
+  }
+
+  // Authoritative read for one address: spent_txo_count is what actually proves a spend.
+  function confirmOne(w){
+    getJSON(API+"/address/"+w.addr)
+      .catch(function(){ return getJSON(API2+"/address/"+w.addr); })
+      .then(function(d){
+        var c = d.chain_stats, m = d.mempool_stats;
+        w.balance = (c.funded_txo_sum - c.spent_txo_sum) + (m.funded_txo_sum - m.spent_txo_sum);
+        if (c.spent_txo_count + m.spent_txo_count > w.baselineSpent){
+          if (!w.moved){ w.moved = true; anyMoved = true; }
+          follow(w);
+        }
+        renderRows(); paint(); draw();
+      }).catch(function(){});
+  }
+
+  // If the batch endpoint is unavailable, fall back to the original per-address path.
+  function perAddressFallback(){
+    if (document.hidden) return;
+    WALLETS.forEach(function(w){
+      getJSON(API+"/address/"+w.addr)
+        .catch(function(){ return getJSON(API2+"/address/"+w.addr); })
+        .then(function(d){
+          var c = d.chain_stats, m = d.mempool_stats;
+          w.balance = (c.funded_txo_sum - c.spent_txo_sum) + (m.funded_txo_sum - m.spent_txo_sum);
+          if (c.spent_txo_count + m.spent_txo_count > w.baselineSpent){
+            if (!w.moved){ w.moved = true; anyMoved = true; }
+            follow(w);
+          }
+          noteOk(); lastOk = nowSec(); everOk = true;
+          renderRows(); paint(); draw(); freshness();
+        }).catch(function(){ freshness(); });
+    });
+  }
+
+  /* ---------- follow the money ---------- */
+  // When a tracked address spends, read its transactions, find where the coins went,
+  // and start tracking those addresses too. Runs again on each refresh, so a peel
+  // chain is followed one hop per cycle.
+  function follow(w){
+    if (w.following || WALLETS.length >= MAX_TRACKED) return;
+    w.following = true;
+    getJSON(API+"/address/"+w.addr+"/txs")
+      .catch(function(){ return getJSON(API2+"/address/"+w.addr+"/txs"); })
+      .then(function(txs){
+        var known = {};
+        WALLETS.forEach(function(x){ known[x.addr] = true; });
+        var added = false;
+        (txs || []).forEach(function(t){
+          var spendsOurs = (t.vin || []).some(function(v){
+            return v.prevout && v.prevout.scriptpubkey_address === w.addr;
+          });
+          if (!spendsOurs) return;
+          var st = t.status || {};
+          var when = st.block_time || Math.floor(Date.now()/1000);
+          if (when > lastMoveTs){ lastMoveTs = when; lastMoveHeight = st.block_height || tip; }
+          var floor = Math.max(FOLLOW_FLOOR, w.attributed * FOLLOW_SHARE);
+          (t.vout || [])
+            .filter(function(o){
+              return o.scriptpubkey_address && !known[o.scriptpubkey_address] && o.value >= floor;
+            })
+            .sort(function(a,b){ return b.value - a.value; })
+            .slice(0, FOLLOW_PER_TX)
+            .forEach(function(o){
+              if (WALLETS.length >= MAX_TRACKED) return;
+              var a = o.scriptpubkey_address;
+              known[a] = true; added = true;
+              WALLETS.push({addr:a, attributed:o.value, baselineSpent:0, origin:"traced", from:w.addr});
+            });
+        });
+        w.following = false;
+        if (added){ renderRows(); paint(); subscribe(); refreshBalances(); }
+      })
+      .catch(function(){ w.following = false; });
+  }
+
+  function refreshPrice(){
+    if (gated()) return;
+    getJSON(API2+"/v1/prices").then(function(d){
+      if (d && d.USD){ price = d.USD; el("priceSrc").textContent = "at $" + fmt(price,0) + " per bitcoin"; paint(); }
+    }).catch(function(){
+      return getJSON("https://api.coinbase.com/v2/prices/BTC-USD/spot").then(function(d){
+        price = parseFloat(d.data.amount);
+        el("priceSrc").textContent = "at $" + fmt(price,0) + " per bitcoin";
+        paint();
+      });
+    }).catch(function(){});
+  }
+  function refreshTip(){
+    if (gated()) return;
+    getText(API+"/blocks/tip/height").catch(function(){ return getText(API2+"/blocks/tip/height"); })
+      .then(function(t){
+        var n = parseInt(t,10);
+        if (n){
+          tip = n;
+          el("tipHeight").textContent = tip.toLocaleString("en-US");
+          var anchorH = lastMoveHeight || SWEEP_END_HEIGHT;
+          el("blocksSince").textContent = Math.max(0, tip - anchorH).toLocaleString("en-US");
+          el("blocksLabel").textContent = lastMoveHeight ? "blocks since that move" : "blocks mined since";
+        }
+      }).catch(function(){});
+  }
+  // if fresh victim funds ever land at a known collector, this card becomes that drain
+  function noteNewDrain(sats, addr){
+    var box = el("ldBox");
+    if (box) box.classList.add("fresh");
+    el("ldAmt").textContent = fmt(btc(sats),8);
+    el("ldWhen").textContent = "just detected";
+    el("ldMeta").textContent = "arrived at a known collector";
+    var a = el("ldAddr");
+    a.href = "https://mempool.space/address/" + addr;
+    a.textContent = addr;
+    var tx = el("ldTx");
+    tx.href = "https://mempool.space/address/" + addr;
+    tx.textContent = "view on mempool";
+  }
+
+  function span(s){
+    function p2(n){ return n < 10 ? "0"+n : ""+n; }
+    return Math.floor(s/86400)+"d "+p2(Math.floor(s%86400/3600))+"h "+
+           p2(Math.floor(s%3600/60))+"m "+p2(s%60)+"s";
+  }
+
+  function tickElapsed(){
+    // once coins move, this counter must stop describing the sweep and start
+    // describing the last movement, or it silently reports a falsehood
+    var anchor = lastMoveTs || SWEEP_END;
+    el("sinceLabel").textContent = lastMoveTs ? "since coins last moved" : "untouched for";
+    var s = Math.floor(Date.now()/1000) - anchor;
+    if (s < 0) s = 0;
+    function p2(n){ return n < 10 ? "0"+n : ""+n; }
+    el("sinceMove").textContent = Math.floor(s/86400)+"d "+p2(Math.floor(s%86400/3600))+"h "+
+                                  p2(Math.floor(s%3600/60))+"m "+p2(s%60)+"s";
+  }
+
+  function freshness(){
+    var wrap = el("tickWrap"), txt = el("tickText");
+    if (!everOk){
+      wrap.classList.add("stale"); wrap.classList.add("offline");
+      txt.textContent = "no connection"; return;
+    }
+    wrap.classList.remove("offline");
+    var age = Math.floor(Date.now()/1000) - lastOk;
+    if (rateLimited && age > 180){
+      wrap.classList.add("stale"); txt.textContent = "rate limited, retrying"; return;
+    }
+    if (age > 180){
+      wrap.classList.add("stale");
+      txt.textContent = "last checked " + (age < 3600 ? Math.floor(age/60)+"m" : Math.floor(age/3600)+"h") + " ago";
+    } else {
+      wrap.classList.remove("stale");
+      txt.textContent = "live";
+    }
+  }
+
+  var ws, retry = 0;
+  function subscribe(){
+    if (!ws || ws.readyState !== 1) return;
+    try {
+      ws.send(JSON.stringify({"track-addresses":WALLETS.map(function(w){ return w.addr; })}));
+    } catch(e){}
+  }
+
+  function connect(){
+    try { ws = new WebSocket("wss://mempool.space/api/v1/ws"); } catch(e){ return; }
+    ws.onopen = function(){
+      retry = 0; freshness();
+      ws.send(JSON.stringify({action:"want",data:["blocks"]}));
+      subscribe();
+    };
+    ws.onmessage = function(e){
+      var d; try { d = JSON.parse(e.data); } catch(err){ return; }
+      if (d.block && d.block.height){
+        tip = d.block.height;
+        el("tipHeight").textContent = tip.toLocaleString("en-US");
+        var anchorH = lastMoveHeight || SWEEP_END_HEIGHT;
+        el("blocksSince").textContent = Math.max(0, tip - anchorH).toLocaleString("en-US");
+        el("blocksLabel").textContent = lastMoveHeight ? "blocks since that move" : "blocks mined since";
+      }
+      if (d["multi-address-transactions"]) refreshBalances();
+    };
+    ws.onclose = function(){
+      freshness();
+      retry++; setTimeout(connect, Math.min(30000, 2000*retry));
+    };
+    ws.onerror = function(){ try{ ws.close(); }catch(e){} };
+  }
+
+  /* ---------- the one chart ---------- */
+  var svg = el("big");
+  var W = 1000, H = 440, PL = 56, PR = 16, PT = 26, PB = 44;   // recomputed per draw
+  var SEAM = 0.36;                       // share of width given to the 41-minute sweep
+  var cum = [];                          // [tOffsetSeconds, cumulativeSats]
+
+  (function buildCum(){
+    var d = window.SWEEP;
+    if (!d || !d.events) return;
+    var evs = d.events.slice().sort(function(a,b){ return a[0]-b[0]; });
+    var run = 0;
+    evs.forEach(function(e){ run += e[1]; cum.push([e[0], run]); });
+  })();
+
+  var sweepSpan = cum.length ? cum[cum.length-1][0] : 2466;
+  var innerW = W - PL - PR, innerH = H - PT - PB;
+  var seamX = PL + innerW * SEAM;
+
+  // Resize the coordinate system to the element's actual box. Without this the SVG
+  // was stretched to fit, squashing the chart and its labels on any narrow screen.
+  function measure(){
+    var r = svg.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    W = Math.round(r.width);
+    H = Math.round(r.height);
+    PL = W < 480 ? 42 : 56;
+    PB = W < 480 ? 38 : 44;
+    innerW = W - PL - PR;
+    innerH = H - PT - PB;
+    seamX = PL + innerW * SEAM;
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    return true;
+  }
+
+  function xSweep(tOff){ return PL + (tOff / sweepSpan) * (seamX - PL); }
+  function xHold(ts){
+    var now = Math.floor(Date.now()/1000);
+    var span = Math.max(60, now - SWEEP_END);
+    var f = (ts - SWEEP_END) / span;
+    if (f < 0) f = 0; if (f > 1) f = 1;
+    return seamX + f * (W - PR - seamX);
+  }
+
+  function draw(){
+    if (!measure()) return;
+    var held = heldTotal();
+    var peak = cum.length ? cum[cum.length-1][1] : held;
+    var top = Math.max(peak, held) * 1.14;
+    function y(sats){ return (H - PB) - (sats / top) * innerH; }
+
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var frag = document.createDocumentFragment();
+
+    function mk(tag, attrs){
+      var n = document.createElementNS(NS, tag);
+      for (var k in attrs) n.setAttribute(k, attrs[k]);
+      return n;
+    }
+
+    // gridlines
+    [0, 0.5, 1].forEach(function(f){
+      var v = peak * f;
+      var yy = y(v);
+      frag.appendChild(mk("line",{x1:PL,x2:W-PR,y1:yy,y2:yy,stroke:"#1e2128","stroke-width":1}));
+      var t = mk("text",{x:PL-10,y:yy+4,fill:"#a4acb6","font-size":12,"text-anchor":"end",
+                         "font-family":"DM Sans, system-ui, sans-serif"});
+      t.textContent = fmt(btc(v),0);
+      frag.appendChild(t);
+    });
+
+    // build the path: sweep climb, then the flat hold out to now
+    var pts = [];
+    pts.push([xSweep(0), y(0)]);
+    cum.forEach(function(c){ pts.push([xSweep(c[0]), y(c[1])]); });
+    var nowTs = Math.floor(Date.now()/1000);
+    pts.push([seamX, y(peak)]);
+    pts.push([xHold(nowTs), y(held)]);
+
+    var dLine = pts.map(function(p,i){ return (i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1); }).join(" ");
+    var dArea = dLine + " L "+xHold(nowTs).toFixed(1)+" "+y(0).toFixed(1)+" L "+PL+" "+y(0).toFixed(1)+" Z";
+
+    var grad = mk("linearGradient",{id:"g1",x1:"0",y1:"0",x2:"0",y2:"1"});
+    var s1 = mk("stop",{offset:"0%","stop-color":"#f7931a","stop-opacity":"0.34"});
+    var s2 = mk("stop",{offset:"100%","stop-color":"#f7931a","stop-opacity":"0.02"});
+    grad.appendChild(s1); grad.appendChild(s2);
+    var defs = mk("defs",{}); defs.appendChild(grad); frag.appendChild(defs);
+
+    frag.appendChild(mk("path",{d:dArea, fill:"url(#g1)"}));
+    frag.appendChild(mk("path",{d:dLine, fill:"none", stroke:"#f7931a","stroke-width":3,
+                                "stroke-linejoin":"round","stroke-linecap":"round"}));
+
+    // seam marker between the two time scales
+    frag.appendChild(mk("line",{x1:seamX,x2:seamX,y1:PT,y2:H-PB,stroke:"#24282f",
+                                "stroke-width":1,"stroke-dasharray":"3 4"}));
+
+    // live edge marker (static, no pulse)
+    frag.appendChild(mk("circle",{cx:xHold(nowTs).toFixed(1), cy:y(held).toFixed(1), r:5,
+                                  fill:anyMoved ? "#e5484d" : "#f7931a"}));
+
+    // axis labels
+    function lab(x,txt,anchor,color){
+      var t = mk("text",{x:x,y:H-16,fill:color||"#a4acb6","font-size":12,"text-anchor":anchor||"middle",
+                         "font-family":"DM Sans, system-ui, sans-serif"});
+      t.textContent = txt; return t;
+    }
+    var tight = W < 560;
+    frag.appendChild(lab((PL+seamX)/2, tight ? "the sweep" : "the 41-minute sweep", "middle"));
+    frag.appendChild(lab((seamX + (W-PR))/2, tight ? "since, untouched" : "every hour since, untouched", "middle"));
+    frag.appendChild(lab(PL, tight ? "30 Jul 01:10" : "30 Jul 01:10 UTC", "start", "#7f8794"));
+    frag.appendChild(lab(W-PR, "now", "end", "#7f8794"));
+
+    svg.appendChild(frag);
+  }
+
+  renderRows();
+  paint();
+  draw();
+
+  // Pin the headline to the width it renders at now. The total can only fall (coins
+  // move out, attribution caps the rest), so today's width is the widest it will ever
+  // be: reserving it stops "BTC" shifting without inventing a ch value.
+  (function pinHeadline(){
+    function pin(){
+      var n = el("totalBtc");
+      if (!n) return;
+      n.style.minWidth = "";
+      var w = n.getBoundingClientRect().width;
+      if (w > 0) n.style.minWidth = Math.ceil(w) + "px";
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(pin);
+    else setTimeout(pin, 300);
+    window.addEventListener("resize", function(){ setTimeout(pin, 60); });
+  })();
+  tickElapsed();
+  refreshPrice();
+  refreshTip();
+  refreshBalances();
+  connect();
+
+  /* ---------- affected firmware ---------- */
+  (function(){
+    // Mk2/Mk3 ranges and the 3.2.2 cutoff come from Block's engineering analysis;
+    // Coinkite's advisory does not cover Mk2 at all. Rows flagged "nofix" have no
+    // published patch, so migrating the seed is the only remedy.
+    var FW = [
+      ["Mk2",           "4.0.0 through 4.1.9",  "no fixed firmware published", "nofix"],
+      ["Mk3",           "4.0.0 through 4.1.9",  "4.2.0 and later", ""],
+      ["Mk4",           "before 5.6.0",         "5.6.0 and later", ""],
+      ["Mk5",           "before 5.6.0",         "5.6.0 and later", ""],
+      ["Mk4 / Mk5 Edge","before 6.6.0X",        "6.6.0X and later", ""],
+      ["Q",             "before 1.5.0Q",        "1.5.0Q and later", ""],
+      ["Q Edge",        "before 6.6.0QX",       "6.6.0QX and later", ""],
+      ["Any model on 3.2.2 or earlier", "not affected", "used the hardware RNG directly", "safe"],
+      ["TAPSIGNER, OPENDIME, SATSCARD", "not affected", "no action needed", "safe"]
+    ];
+    var host = el("fw");
+    var head = document.createElement("div");
+    head.className = "fwrow head";
+    head.innerHTML = "<span>Model</span><span>Seeds at risk if made on</span><span>Fixed in</span>";
+    host.appendChild(head);
+    FW.forEach(function(r,i){
+      var d = document.createElement("div");
+      d.className = "fwrow" + (r[3] ? " " + r[3] : "");
+      d.innerHTML = '<span class="m"></span><span class="bad"></span><span class="good"></span>';
+      d.querySelector(".m").textContent = r[0];
+      d.querySelector(".bad").textContent = r[1];
+      d.querySelector(".good").textContent = r[2];
+      host.appendChild(d);
+    });
+  })();
+
+  /* ---------- local address check ---------- */
+  var DRAINED_COUNT = 1195;   // must match drained.js exactly
+  function datasetReady(){
+    return Array.isArray(window.DRAINED) && window.DRAINED.length === DRAINED_COUNT;
+  }
+
+  (function(){
+    var input = el("addrIn"), btn = el("addrBtn"), out = el("addrOut");
+    var SET = null;
+
+    // verdict drives three things at once: the field outline, a labelled chip, and the detail line.
+    // "neutral" is used for every non-answer (empty, malformed, unsupported browser) so a typo
+    // can never render as a green all-clear.
+    function say(msg, tone, label){
+      input.classList.remove("ok","hit");
+      var chip = "";
+      if (tone === "ok" || tone === "hit"){
+        input.classList.add(tone);
+        chip = '<div class="verdict-wrap"><span class="verdict ' + tone + '">' + label + '</span></div>';
+      }
+      out.className = "result" + (tone === "hit" ? " hit" : tone === "fail" ? " fail" : " miss");
+      out.innerHTML = chip + msg;
+    }
+
+    function check(){
+      var a = (input.value || "").trim();
+      if (!a){ say("Enter a public bitcoin address to check.", "neutral"); return; }
+      if (/^(xpub|ypub|zpub|vpub|tpub)/i.test(a) || a.split(/\s+/).length > 2){
+        say("That looks like an extended key or a seed phrase. Do not paste either here. Enter a single public address.", "neutral");
+        return;
+      }
+      if (!/^(bc1[a-z0-9]{20,80}|[13][a-km-zA-HJ-NP-Z1-9]{20,40})$/.test(a)){
+        say("That does not look like a bitcoin address. Check for a stray space or a missing character.", "neutral");
+        return;
+      }
+      if (!datasetReady()){
+        say("The address list did not load, so this check cannot run. Reload the page. Do not read this as an all-clear.", "fail");
+        return;
+      }
+      if (!window.crypto || !crypto.subtle){
+        say("This browser cannot run the check locally, and this page will not send your address anywhere. Look the address up on mempool.space instead.", "neutral");
+        return;
+      }
+      say("Checking locally...", "neutral");
+      crypto.subtle.digest("SHA-256", new TextEncoder().encode(a)).then(function(buf){
+        var h = Array.prototype.map.call(new Uint8Array(buf), function(b){
+          return ("0"+b.toString(16)).slice(-2);
+        }).join("").slice(0,16);
+        if (!datasetReady()){
+          say("The address list did not load, so this check cannot run. Reload the page. Do not read this as an all-clear.", "fail");
+          return;
+        }
+        if (!SET) SET = new Set(window.DRAINED);
+        if (SET.has(h)){
+          say("Treat every wallet made on that Coldcard seed as compromised, including addresses that still hold a balance. Move any remaining funds to a wallet built from a newly generated seed, then read the Coinkite advisory.", "hit", "Drained");
+        } else {
+          say("This address is not among the 1,195 drained in the sweep. That is not a clean bill of health: only addresses holding funds were taken, so an empty wallet built on a weak seed is still at risk, and a separate wave into other addresses would not show up here. Check your firmware below.", "ok", "Not drained");
+        }
+      }).catch(function(){
+        say("The check could not run in this browser. Nothing was sent anywhere.", "neutral");
+      });
+    }
+
+    input.addEventListener("input", function(){
+      input.classList.remove("ok","hit");
+      if (out.innerHTML){ out.innerHTML = ""; out.className = "result"; }
+    });
+    if (!datasetReady()){
+      input.disabled = true; btn.disabled = true;
+      say("The address list could not be loaded, so checking is unavailable right now. Reload the page, and treat nothing here as an all-clear.", "fail");
+    }
+
+    btn.addEventListener("click", check);
+    input.addEventListener("keydown", function(e){ if (e.key === "Enter") check(); });
+  })();
+
+  freshness();
+
+  // The timer text still ticks every second. The chart's live edge moves a fraction of
+  // a pixel per second at this timescale, so redrawing it that often was pure battery
+  // burn, and measure() forced a layout each time.
+  var lastDraw = 0;
+  function maybeDraw(){
+    if (document.hidden) return;
+    var t = Date.now();
+    if (t - lastDraw < 30000) return;
+    lastDraw = t; draw();
+  }
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden) return;
+    // catch up immediately on return rather than waiting out the interval
+    lastDraw = 0;
+    refreshBalances(); refreshPrice(); refreshTip();
+    tickElapsed(); draw(); freshness();
+  });
+
+  setInterval(freshness, 15000);
+  setInterval(function(){ tickElapsed(); maybeDraw(); }, 1000);
+  setInterval(refreshPrice, 60000);
+  setInterval(refreshTip, 60000);
+  setInterval(refreshBalances, 60000);
+  window.addEventListener("resize", draw);
+
+})();
+</script>
+</body>
+</html>

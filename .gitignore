@@ -1,0 +1,19 @@
+# Working state. Regenerable, large, and some of it carries local filesystem paths.
+*-state.json
+*.log
+__pycache__/
+*.pyc
+.backup/
+
+# Deployment linkage. Ties the tree to a specific Vercel account and project.
+.vercel/
+public/.vercel/
+
+# Node location and RPC credentials live outside the repo, in ~/.coldcard-node.json
+# or the environment. Never commit either. See nodeconf.py.
+.coldcard-node.json
+*.local.json
+.env
+.env.*
+
+.DS_Store

@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coldcard Watch — what-if simulator</title>
+<link rel="icon" href="/bitcoin.svg">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0d0e11;color:#f2f4f7;font-family:"DM Sans",system-ui,sans-serif;line-height:1.6}
+main{max-width:900px;margin:0 auto;padding:64px 24px}
+h1{font-size:2rem;font-weight:500;letter-spacing:-.025em;margin:0 0 12px}
+p.l{color:#c9cfd6;max-width:68ch;margin:0 0 40px}
+.card{display:block;background:#14161a;border:1px solid #1e2128;border-radius:10px;padding:24px;
+  margin-bottom:12px;text-decoration:none;transition:border-color .15s cubic-bezier(.32,.72,0,1)}
+.card:hover{border-color:#8a5a12}
+.card .t{display:block;color:#f7931a;font-weight:500;font-size:1.05rem}
+.card .b{display:block;color:#a4acb6;font-size:.9rem;margin-top:6px}
+code{background:#1a1d22;padding:1px 6px;border-radius:4px;font-family:inherit}
+</style></head><body><main>
+<h1>What the site does next</h1>
+<p class="l">Each page below is the real dashboard running its own code against invented chain data.
+Nothing is drawn by hand: the balances, colours, rows and chart are produced by the same logic that runs
+in production. Destination addresses are placeholders and are not real.</p>
+<a class="card" href="/00-now.html"><span class="t">Right now</span><span class="b">Nothing has moved. This is the live state as of today.</span></a><a class="card" href="/01-partial.html"><span class="t">They move part of it</span><span class="b">The main vault sends 200 BTC to one new address and keeps the rest. The row goes red as “partly moved”, the destination is added and watched, and the timer restarts from the spend.</span></a><a class="card" href="/02-exchange.html"><span class="t">They empty the vault into an exchange</span><span class="b">All 562 BTC leaves in one transaction to a wallet already holding 9,000 BTC. The headline total does not jump, because only coins traced from the theft are counted.</span></a><a class="card" href="/03-everything.html"><span class="t">They move everything</span><span class="b">All four addresses spend. Every row is red, three destinations are picked up, and the chart line falls to the floor.</span></a><a class="card" href="/04-newdrain.html"><span class="t">They drain more wallets</span><span class="b">Fresh victim funds land in a known collector a few seconds after load. Watch the Most recent drain card turn red and rewrite itself. A brand new collection address would NOT be seen, and the page says so.</span></a><a class="card" href="/05-offline.html"><span class="t">The data sources go down</span><span class="b">Every request fails. The page refuses to present its seeded numbers as live. Look at the indicator in the header, top right: it stops saying live and greys out.</span></a><a class="card" href="/06-listbroken.html"><span class="t">The address list fails to load</span><span class="b">drained.js never arrives. Scroll to Was your address drained: the field is disabled and refuses to answer, rather than telling everyone they are safe.</span></a>
+</main></body></html>

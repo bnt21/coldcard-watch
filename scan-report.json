@@ -1,0 +1,4924 @@
+{
+ "scanned": [
+  960183,
+  960563
+ ],
+ "likely": [
+  {
+   "address": "bc1qh2jx85arya5eh4sy8g7qj3j2jtc956vt8x58v9",
+   "sweeps": 3,
+   "btc": 20.02845004,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960363
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 35.06596681,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qnzntycucsd8czcnvhnpn2882e0n5xk28m5ev9w",
+   "sweeps": 3,
+   "btc": 8.60208,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960375
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 1,
+   "balance_btc": 11.71735968,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qxgwq4fnvfx95es3ypyqhu2sy52rswzdzfat4eh",
+   "sweeps": 3,
+   "btc": 6.36769342,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960517
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 6.36769012,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qe8tjf3vgaa2267f8y905rf5j93mzhc6en6grst",
+   "sweeps": 4,
+   "btc": 3.83040751,
+   "fee_rate": 2.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960472
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qr4hxk5jt4hvaw4eju9p4ywwvryxfzxyuegdeyp",
+   "sweeps": 3,
+   "btc": 2.32592159,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960437
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 4,
+   "balance_btc": 2.41564199,
+   "looks_fresh": true
+  },
+  {
+   "address": "39XVhL6Bpyqe11jriAwJCSsUnAkKLQGUc2",
+   "sweeps": 3,
+   "btc": 1.5660595,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960343
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "3DqeLNdh4L55N6Rw1ckEnm3c8PiXEVh3oc",
+   "sweeps": 5,
+   "btc": 1.14693401,
+   "fee_rate": 1.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960348
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 3,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q4nsyg3zn0hy5vxqf3scjkl7mwfzt0szeztwm2w",
+   "sweeps": 4,
+   "btc": 1.0059191,
+   "fee_rate": 1.1,
+   "rbf_inputs": 4,
+   "blocks": [
+    960405
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q2g06k9xy6dvel4gdskcgccnvhglek7q652s6vz",
+   "sweeps": 5,
+   "btc": 0.67628039,
+   "fee_rate": 3.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960521
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.67626389,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q437lcdthj9n8p00ar8mcc67rz88f60cph2qfxx",
+   "sweeps": 6,
+   "btc": 0.61415082,
+   "fee_rate": 2.3,
+   "rbf_inputs": 6,
+   "blocks": [
+    960489
+   ],
+   "deposits_total": 6,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.61413606,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qlqzgnwqnztp929azydnakxl2akt3kk8dndvsqh",
+   "sweeps": 4,
+   "btc": 0.60337852,
+   "fee_rate": 2.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960477
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q36hgy5sukapll2pk2dd6nhmvz7ym8jej79fvj6",
+   "sweeps": 4,
+   "btc": 0.52431931,
+   "fee_rate": 2.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960477
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qfnm05nqfq39hg8c7nwn7knxenl4cxa3lj7v0az",
+   "sweeps": 3,
+   "btc": 0.48855468,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960398
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.48854478,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q0ldkmz26yss2j5cszr5slc03qd0sk5rqwl4x9l",
+   "sweeps": 3,
+   "btc": 0.46857501,
+   "fee_rate": 1.7,
+   "rbf_inputs": 3,
+   "blocks": [
+    960226
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q0gq8j65zwy9ge57r8mwd4krhzc9x8avm8q0q88",
+   "sweeps": 3,
+   "btc": 0.4443186,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960563
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.46646049,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qjaxjgpxna6qwj9z7wg0jau5kadn5zm3kh9vnnh",
+   "sweeps": 3,
+   "btc": 0.42153275,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960398
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.42152285,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qu6pvqsd6tt9uf0fzsxa4u3k5p5sj2regsuq8nx",
+   "sweeps": 3,
+   "btc": 0.41371636,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960285
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 4,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q0mh6rs0mjvv5ncdyqwhqma7hgup3aycucsc279",
+   "sweeps": 5,
+   "btc": 0.40960603,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960457
+   ],
+   "deposits_total": 9,
+   "unrelated_deposits": 4,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qcqdma6amjqyewxr7zafz9mdmg6z9trrpsnpdu6",
+   "sweeps": 3,
+   "btc": 0.3943262,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960553
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 5,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qcr9wcc6k0dlqgwfze3dfvwlj4xgvnrfylrz5k7",
+   "sweeps": 5,
+   "btc": 0.33994396,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960449
+   ],
+   "deposits_total": 6,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q4e4cccu59jtd5jln259q5tknam5846pr699vkd",
+   "sweeps": 3,
+   "btc": 0.3000667,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960499
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.1000234,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q49arzuw8uf86dkpp0vg8t7uux90esg4fl0ukz3",
+   "sweeps": 5,
+   "btc": 0.28628465,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960415
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qzrl67rtyaqdvtl78rlklxmraqjk7d9f6cf23jm",
+   "sweeps": 21,
+   "btc": 0.23973107,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960425
+   ],
+   "deposits_total": 26,
+   "unrelated_deposits": 5,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qzefckynah3p6uzenep59feqlnelkncuwt5dvqz",
+   "sweeps": 5,
+   "btc": 0.17785118,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960494
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 0,
+   "balance_btc": 4.49e-05,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qmpvnvusfewg6zw48yyd05r0l3ue8ghzqykjyv0",
+   "sweeps": 7,
+   "btc": 0.1461839,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960411
+   ],
+   "deposits_total": 9,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.18793469,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q5z9gl2kl736hhwkrpau9m8n8656veyu4phew4z",
+   "sweeps": 3,
+   "btc": 0.13354593,
+   "fee_rate": 2.3,
+   "rbf_inputs": 0,
+   "blocks": [
+    960400
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "3ErnFpNMLPuom6NiG86ecV7gcuEJC3K6KQ",
+   "sweeps": 3,
+   "btc": 0.13126272,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960340
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 5,
+   "balance_btc": 0.32726603,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1pj86nqzrcfev9sgsrz4r5jufvrqhygm2recxg27qnl36nmzmfewvqr6qd53",
+   "sweeps": 3,
+   "btc": 0.10370481,
+   "fee_rate": 4.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960322
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 4,
+   "balance_btc": 0.00011037,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q7w8zf54r70u9aemm6h7x6h9dgylq30ay0hyg9e",
+   "sweeps": 4,
+   "btc": 0.10337735,
+   "fee_rate": 2.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960228
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 4,
+   "balance_btc": 0.32198608,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qjdmdedskzr6ufnxfjq08knkwzcm4kxjfcmmqky",
+   "sweeps": 3,
+   "btc": 0.10273072,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960354
+   ],
+   "deposits_total": 6,
+   "unrelated_deposits": 3,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q0upst6xyu0wzvdpufzlmzce7swwd8w0vredqcy",
+   "sweeps": 6,
+   "btc": 0.10064714,
+   "fee_rate": 1.0,
+   "rbf_inputs": 6,
+   "blocks": [
+    960431
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.12552295,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qj4932z5ahrjrst75x97kamg8rp5n06pqwxj994",
+   "sweeps": 4,
+   "btc": 0.08963815,
+   "fee_rate": 4.6,
+   "rbf_inputs": 4,
+   "blocks": [
+    960528
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 3,
+   "balance_btc": 0.28008627,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qd3vke4wl9dex2ql73j60s2me9vee3enq7ck93z",
+   "sweeps": 3,
+   "btc": 0.08601087,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960467
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qqrtk5ngkysmulchq8glx7vzzezr0mrxa62cj0e",
+   "sweeps": 9,
+   "btc": 0.076895,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960403
+   ],
+   "deposits_total": 12,
+   "unrelated_deposits": 3,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q2wdtx2f9tuerd44ujkscczlf4cdk98rwr9ss4eq583f0w6aghu3qdy3slq",
+   "sweeps": 3,
+   "btc": 0.07143151,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960314
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q562qc9lwkfmd4z6dts6cp36zyz7afw383r263f",
+   "sweeps": 6,
+   "btc": 0.06043407,
+   "fee_rate": 2.1,
+   "rbf_inputs": 6,
+   "blocks": [
+    960346
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qfus6gug4uunq8zugcg7n6lavsr42kdd6a6ru5v",
+   "sweeps": 16,
+   "btc": 0.05583491,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960532,
+    960533,
+    960534
+   ],
+   "deposits_total": 19,
+   "unrelated_deposits": 3,
+   "balance_btc": 0.17922705,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q27r40a49ljdm7kkt849twsjaucevlyxlmysfmv",
+   "sweeps": 3,
+   "btc": 0.05212472,
+   "fee_rate": 3.4,
+   "rbf_inputs": 3,
+   "blocks": [
+    960412
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qsp9ys6xrxm32ss3vkc04lh6y5kmv3zsmakr8hc",
+   "sweeps": 7,
+   "btc": 0.04207879,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960511
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qjuw5frhng6x8954hmmafgyw28uhzcnlkrunqdk",
+   "sweeps": 5,
+   "btc": 0.040764,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960346
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 3,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q3tcpxwhayjw5w67d9rm8ggnnywlqg73qyc0myf",
+   "sweeps": 3,
+   "btc": 0.03532239,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960472
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.03531258,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qryu43s326r70fe568hn9shemu7dz28nwa60l3006thaepcrfxedqgeh40j",
+   "sweeps": 4,
+   "btc": 0.034511,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960539
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q6mhe9y0m49qk78hq60w6nry5ana43zhdezsm30",
+   "sweeps": 4,
+   "btc": 0.034176,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960411
+   ],
+   "deposits_total": 6,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.00513897,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qgzu09p27jah39p57j42wrlvluu8rhachtjgl5r",
+   "sweeps": 4,
+   "btc": 0.03224885,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960472
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.03223577,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qwq5364nlef5c0hwm3ja309kxyvr068hh8zqwvl",
+   "sweeps": 3,
+   "btc": 0.03145175,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960472
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.03144521,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q0l27a22ml7eyk74ve7zc5fqmwkwnw2yutjduqy",
+   "sweeps": 3,
+   "btc": 0.02980299,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960472
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.02979318,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qmvrpzw0z3nqpkv3qq9xn5vkuckw6a7la4ludt9",
+   "sweeps": 4,
+   "btc": 0.02930459,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960542
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.02929151,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qtzm6yqej9pm22szek50ar3nk64yp8jmcp5hujk",
+   "sweeps": 3,
+   "btc": 0.02660817,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960342
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.03684335,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q9l2lcg34m2nz5nhzp3tyy5z425u8azfr5r3tyx",
+   "sweeps": 8,
+   "btc": 0.02619483,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960236,
+    960237
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q9t8x324ejp5nyzuyalgh28pv36pe7h2k6elkjq",
+   "sweeps": 4,
+   "btc": 0.02603986,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960546
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.03196327,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qp8826k4825cka2qfe9kjnrss3u8225zd2y3vm2",
+   "sweeps": 3,
+   "btc": 0.025216,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960367
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 4,
+   "balance_btc": 0.00207118,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qrjgeffrat47ql20mvshhfvm5rhs54zh643l7gt",
+   "sweeps": 3,
+   "btc": 0.025059,
+   "fee_rate": 2.3,
+   "rbf_inputs": 0,
+   "blocks": [
+    960387
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 5,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qvam56g80m4zj425ms30xh05v6nqxy7t5sxg70s",
+   "sweeps": 3,
+   "btc": 0.02080982,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960375
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qk0qtw6j6y6tcwcaaua3t3nlts9n45c8m9tl9v0",
+   "sweeps": 3,
+   "btc": 0.0197608,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960472
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q20qclrwzarlrszfjqd5hvpxgrpd49d2l8yjxyh",
+   "sweeps": 3,
+   "btc": 0.019652,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960397
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qshae2c2yx257st3u2lax3er6w7sup8386clg03",
+   "sweeps": 4,
+   "btc": 0.01947688,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960553
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.01947248,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qtuy7jscfuats9pnt8p4du275qlg3txt0tneanl",
+   "sweeps": 3,
+   "btc": 0.01817,
+   "fee_rate": 2.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960392
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q4tgwr7mlrjx8p7jtm8maxfsjsyyksdysmpvger",
+   "sweeps": 3,
+   "btc": 0.01705849,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960459
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 4,
+   "balance_btc": 1.14976415,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qvwj9kc20gyhglew8kldglglwlgkwuhdwly6v6l",
+   "sweeps": 3,
+   "btc": 0.01576088,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960546
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 4,
+   "balance_btc": 0.03592781,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q4tky4q9mlu54ns9260csysh2xxn5mmc3t9ln38",
+   "sweeps": 162,
+   "btc": 0.01566027,
+   "fee_rate": 0.1,
+   "rbf_inputs": 24,
+   "blocks": [
+    960224,
+    960238,
+    960288,
+    960300,
+    960307,
+    960314
+   ],
+   "deposits_total": 192,
+   "unrelated_deposits": 30,
+   "balance_btc": 8.081e-05,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qtl3wdn7zvq637tutjypu0rs382n9rm0rhjxwxl",
+   "sweeps": 4,
+   "btc": 0.01420703,
+   "fee_rate": 2.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960236
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 3,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qa8x5yk0s3066u5hvf25qedgjkgq6y5nxwws2an",
+   "sweeps": 6,
+   "btc": 0.01269749,
+   "fee_rate": 3.0,
+   "rbf_inputs": 6,
+   "blocks": [
+    960215
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q2azwgxct3sk08lurv5v2ffxumt0r3ywuyddt7y",
+   "sweeps": 3,
+   "btc": 0.00770162,
+   "fee_rate": 1.8,
+   "rbf_inputs": 3,
+   "blocks": [
+    960267
+   ],
+   "deposits_total": 3,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.00769568,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qqgr5kztemwn7e543jus8xvyq6n8hh3upawh5s7",
+   "sweeps": 3,
+   "btc": 0.007488,
+   "fee_rate": 4.7,
+   "rbf_inputs": 0,
+   "blocks": [
+    960282
+   ],
+   "deposits_total": 6,
+   "unrelated_deposits": 3,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q2uv3e5avnrshq4z8spjyqqpfysanwekc6a5ww3",
+   "sweeps": 3,
+   "btc": 0.00670757,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960236
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q3nk846qer0tlexxwyv7k5fthsftj58slrz55mt",
+   "sweeps": 3,
+   "btc": 0.00512621,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960184
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qnqkdyenqpy6wmgxllza7pt6c6qxa6lk24d5vzf",
+   "sweeps": 3,
+   "btc": 0.00182629,
+   "fee_rate": 7.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960395
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 4,
+   "balance_btc": 0.00180319,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q64llst3rhp50g55y34wlf309jsv9rwu9vwhlss",
+   "sweeps": 3,
+   "btc": 0.00125908,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960499
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.00216385,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q6fjhh7l0ws0xqqa6uk87wksvc535qtapw3l7th",
+   "sweeps": 3,
+   "btc": 0.00111224,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960293
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qqwm94jcxfmdhst9nwrun3wfl562lrhf2x7eszs",
+   "sweeps": 4,
+   "btc": 0.00075637,
+   "fee_rate": 2.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960337
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qzu9r3k5dhqwp7p8qa76nhmvn9expkmrnc84td9",
+   "sweeps": 4,
+   "btc": 0.00064711,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960446
+   ],
+   "deposits_total": 6,
+   "unrelated_deposits": 2,
+   "balance_btc": 0.00066948,
+   "looks_fresh": true
+  },
+  {
+   "address": "3NoxDF7hLREHiB5BX6S7UdDMte5aAu3RzD",
+   "sweeps": 4,
+   "btc": 0.000616,
+   "fee_rate": 4.5,
+   "rbf_inputs": 4,
+   "blocks": [
+    960468
+   ],
+   "deposits_total": 8,
+   "unrelated_deposits": 4,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1qamgg7r3v5tykq5twhtzpdzrfkplz573wl2k7yn",
+   "sweeps": 6,
+   "btc": 0.00047171,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960273
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 1,
+   "balance_btc": 0.0005624,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q24zrxg0u43nme6amefrmdlwnftjhn8vqex3xad",
+   "sweeps": 3,
+   "btc": 0.00046692,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960406
+   ],
+   "deposits_total": 7,
+   "unrelated_deposits": 4,
+   "balance_btc": 8.766e-05,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1pnlxyjpvhhdvmjk8klklxn7aej8wg0hhuxsddn54sm2uhekse76msjmzelz",
+   "sweeps": 4,
+   "btc": 0.00028971,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960270
+   ],
+   "deposits_total": 4,
+   "unrelated_deposits": 0,
+   "balance_btc": 0.0,
+   "looks_fresh": true
+  },
+  {
+   "address": "bc1q9nmt3v3eul08mt22dgn8gf6rdyqp429dx0y0pe",
+   "sweeps": 3,
+   "btc": 9.751e-05,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960476
+   ],
+   "deposits_total": 5,
+   "unrelated_deposits": 2,
+   "balance_btc": 2.632e-05,
+   "looks_fresh": true
+  }
+ ],
+ "rejected": [
+  {
+   "address": "bc1qevjdfxydzslyxxrcnza7fwd2n8zvlqc0njtf4p",
+   "sweeps": 4,
+   "btc": 33.9900292,
+   "fee_rate": 10.3,
+   "rbf_inputs": 0,
+   "blocks": [
+    960359
+   ],
+   "deposits_total": 61,
+   "unrelated_deposits": 57,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q48fs72e0f8hyye887fyqsct0z5h03zmlckn5pr",
+   "sweeps": 29,
+   "btc": 8.74070616,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960368
+   ],
+   "deposits_total": 1735,
+   "unrelated_deposits": 1706,
+   "balance_btc": 321.34436533,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qrqlamjhy2qp0xj5mxv4sx7ra9qfmfxllf93l26",
+   "sweeps": 2517,
+   "btc": 6.31417538,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960183,
+    960185,
+    960187,
+    960188,
+    960189,
+    960191,
+    960192,
+    960199,
+    960200,
+    960204,
+    960205,
+    960207,
+    960208,
+    960209,
+    960210,
+    960211,
+    960212,
+    960213,
+    960214,
+    960219,
+    960223,
+    960230,
+    960231,
+    960235,
+    960238,
+    960240,
+    960251,
+    960254,
+    960258,
+    960259,
+    960262,
+    960264,
+    960271,
+    960275,
+    960276,
+    960282,
+    960286,
+    960287,
+    960288,
+    960289,
+    960290,
+    960295,
+    960303,
+    960304,
+    960305,
+    960306,
+    960307,
+    960308,
+    960309,
+    960310,
+    960311,
+    960312,
+    960315,
+    960316,
+    960322,
+    960324,
+    960327,
+    960340,
+    960342,
+    960345,
+    960352,
+    960355,
+    960357,
+    960358,
+    960362,
+    960367,
+    960368,
+    960374,
+    960377,
+    960378,
+    960380,
+    960381,
+    960383,
+    960384,
+    960385,
+    960387,
+    960392,
+    960393,
+    960396,
+    960398,
+    960400,
+    960401,
+    960402,
+    960403,
+    960405,
+    960408,
+    960409,
+    960410,
+    960413,
+    960415,
+    960419,
+    960422,
+    960423,
+    960427,
+    960428,
+    960429,
+    960430,
+    960432,
+    960435,
+    960436,
+    960439,
+    960448,
+    960449,
+    960450,
+    960453,
+    960454,
+    960457,
+    960464,
+    960466,
+    960467,
+    960469,
+    960471,
+    960472,
+    960476,
+    960479,
+    960481,
+    960482,
+    960485,
+    960486,
+    960488,
+    960489,
+    960490,
+    960492,
+    960497,
+    960502,
+    960512,
+    960513,
+    960514,
+    960516,
+    960519,
+    960523,
+    960524,
+    960528,
+    960529,
+    960530,
+    960532,
+    960533,
+    960534,
+    960535,
+    960536,
+    960537,
+    960538,
+    960539,
+    960540,
+    960542,
+    960543,
+    960545,
+    960546,
+    960547,
+    960549,
+    960551,
+    960552,
+    960556,
+    960561,
+    960563
+   ],
+   "deposits_total": 1490374,
+   "unrelated_deposits": 1487857,
+   "balance_btc": 71.68060424,
+   "looks_fresh": false
+  },
+  {
+   "address": "3HJTZufU2EgrKD2i11oFc7nh5dVSmahU5G",
+   "sweeps": 3,
+   "btc": 6.001995,
+   "fee_rate": 2.3,
+   "rbf_inputs": 3,
+   "blocks": [
+    960333
+   ],
+   "deposits_total": 11,
+   "unrelated_deposits": 8,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "3FdKV4n8JUqJ8d46jnsjchMhWpq6EL3oU1",
+   "sweeps": 3,
+   "btc": 2.93760057,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960366
+   ],
+   "deposits_total": 15,
+   "unrelated_deposits": 12,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qz0e4ht83j9q9yrfkh2q5p598hks07acmmses3k",
+   "sweeps": 18,
+   "btc": 2.80461818,
+   "fee_rate": 4.5,
+   "rbf_inputs": 0,
+   "blocks": [
+    960289,
+    960358,
+    960360
+   ],
+   "deposits_total": 63,
+   "unrelated_deposits": 45,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q3tpmzvs5pvqhd0llf7c02e4fzrlac0nltg62k0",
+   "sweeps": 16,
+   "btc": 2.40361476,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960238,
+    960366,
+    960501,
+    960508,
+    960539
+   ],
+   "deposits_total": 12637,
+   "unrelated_deposits": 12621,
+   "balance_btc": 150.26360289,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qnnplt8lnnxtweu882s2m78glatzewcs8fndzna",
+   "sweeps": 446,
+   "btc": 1.88526408,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960183,
+    960184,
+    960196,
+    960200,
+    960202,
+    960203,
+    960204,
+    960207,
+    960212,
+    960213,
+    960214,
+    960215,
+    960217,
+    960220,
+    960230,
+    960247,
+    960249,
+    960251,
+    960252,
+    960254,
+    960255,
+    960258,
+    960264,
+    960267,
+    960271,
+    960278,
+    960279,
+    960284,
+    960287,
+    960290,
+    960296,
+    960298,
+    960299,
+    960308,
+    960310,
+    960316,
+    960317,
+    960321,
+    960326,
+    960327,
+    960328,
+    960329,
+    960334,
+    960337,
+    960339,
+    960343,
+    960347,
+    960360,
+    960367,
+    960376,
+    960389,
+    960392,
+    960401,
+    960404,
+    960408,
+    960410,
+    960412,
+    960419,
+    960420,
+    960426,
+    960438,
+    960447,
+    960453,
+    960458,
+    960472,
+    960477,
+    960561
+   ],
+   "deposits_total": 10075,
+   "unrelated_deposits": 9629,
+   "balance_btc": 29.21771862,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qwznelkc6r32u0cc4t8nuqxhx6fhpww2nd6na9z",
+   "sweeps": 614,
+   "btc": 1.73763323,
+   "fee_rate": 2.0,
+   "rbf_inputs": 11,
+   "blocks": [
+    960183,
+    960204,
+    960206,
+    960207,
+    960246,
+    960247,
+    960270,
+    960280,
+    960289,
+    960291,
+    960296,
+    960333,
+    960343,
+    960344,
+    960346,
+    960348,
+    960363,
+    960366,
+    960395,
+    960396,
+    960402,
+    960405,
+    960419,
+    960421,
+    960422,
+    960438,
+    960440,
+    960442,
+    960454,
+    960455,
+    960466,
+    960472,
+    960485,
+    960486,
+    960498,
+    960508,
+    960536,
+    960538,
+    960539,
+    960556,
+    960557
+   ],
+   "deposits_total": 476464,
+   "unrelated_deposits": 475850,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "1PAmg48aSPP1SLpFHiU2dTAGF4CeUjH6Bx",
+   "sweeps": 9,
+   "btc": 1.15569449,
+   "fee_rate": 3.3,
+   "rbf_inputs": 0,
+   "blocks": [
+    960343,
+    960543
+   ],
+   "deposits_total": 701,
+   "unrelated_deposits": 692,
+   "balance_btc": 0.21898623,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qmc4etzlhu9fcn4ug8jvxp9upej7jue9umrydhg",
+   "sweeps": 59,
+   "btc": 1.04354292,
+   "fee_rate": 5.6,
+   "rbf_inputs": 7,
+   "blocks": [
+    960183,
+    960191,
+    960198,
+    960331,
+    960334,
+    960335,
+    960336,
+    960492,
+    960493,
+    960496,
+    960497,
+    960498
+   ],
+   "deposits_total": 20415,
+   "unrelated_deposits": 20356,
+   "balance_btc": 19.09723271,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q46e7kzw4tjk6nlgfj9u9dtdzsdwtljh98py6zf",
+   "sweeps": 11,
+   "btc": 0.95106,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960201,
+    960363,
+    960370
+   ],
+   "deposits_total": 138,
+   "unrelated_deposits": 127,
+   "balance_btc": 0.2142574,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qsdmhkys8k32axylk6txmxevar4v7gtn7j9cssx",
+   "sweeps": 129,
+   "btc": 0.86359152,
+   "fee_rate": 5.7,
+   "rbf_inputs": 4,
+   "blocks": [
+    960196,
+    960206,
+    960208,
+    960221,
+    960226,
+    960247,
+    960248,
+    960251,
+    960253,
+    960264,
+    960267,
+    960270,
+    960276,
+    960292,
+    960299,
+    960309,
+    960319,
+    960323,
+    960332,
+    960346,
+    960366,
+    960369,
+    960380,
+    960399,
+    960405,
+    960415,
+    960451,
+    960475,
+    960503,
+    960521,
+    960530,
+    960547
+   ],
+   "deposits_total": 1635,
+   "unrelated_deposits": 1506,
+   "balance_btc": 0.41130875,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1prjg2dgjtpzwg9vwsenndsgf622aesmjsqwj6a3qtmpyyu5pvhtqsl70nnt",
+   "sweeps": 63,
+   "btc": 0.80608059,
+   "fee_rate": 22.9,
+   "rbf_inputs": 0,
+   "blocks": [
+    960202,
+    960270,
+    960294,
+    960316,
+    960414,
+    960415,
+    960456,
+    960458,
+    960503,
+    960507,
+    960508
+   ],
+   "deposits_total": 545,
+   "unrelated_deposits": 482,
+   "balance_btc": 5.171e-05,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qa2nkvuhkcssnkyvtmsa025t0hwv8dcr7gm4424",
+   "sweeps": 4,
+   "btc": 0.79154776,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960420
+   ],
+   "deposits_total": 20,
+   "unrelated_deposits": 16,
+   "balance_btc": 8.02137897,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qw79fgc908d9y0867p042a9ljk7jyv5j3r5q8d6",
+   "sweeps": 33,
+   "btc": 0.79044504,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960258,
+    960272,
+    960285,
+    960348,
+    960361,
+    960407,
+    960412,
+    960419,
+    960455,
+    960467
+   ],
+   "deposits_total": 529,
+   "unrelated_deposits": 496,
+   "balance_btc": 12.50695965,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qy7plkteggyurauy9332tg7nhwy80xk2phuwfuc",
+   "sweeps": 151,
+   "btc": 0.62746876,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960203,
+    960206,
+    960216,
+    960220,
+    960276,
+    960287,
+    960289,
+    960292,
+    960299,
+    960309,
+    960317,
+    960320,
+    960324,
+    960330,
+    960335,
+    960344,
+    960352,
+    960368,
+    960380,
+    960392,
+    960393,
+    960408,
+    960428,
+    960450,
+    960462,
+    960470,
+    960477,
+    960479,
+    960500,
+    960501,
+    960503,
+    960516,
+    960529,
+    960533,
+    960541,
+    960545,
+    960562
+   ],
+   "deposits_total": 52309,
+   "unrelated_deposits": 52158,
+   "balance_btc": 4.01854453,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qvz4hlv45fz0nh2d02lmmunjtq85fgw46v9mv6k",
+   "sweeps": 8,
+   "btc": 0.62043993,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960296,
+    960491
+   ],
+   "deposits_total": 825,
+   "unrelated_deposits": 817,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q7w400z4cxjc6ym54954rtjfjwuac72eezaw0rc",
+   "sweeps": 38,
+   "btc": 0.61364279,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960220,
+    960238,
+    960247,
+    960254,
+    960306,
+    960368,
+    960394,
+    960542,
+    960551,
+    960562
+   ],
+   "deposits_total": 76573,
+   "unrelated_deposits": 76535,
+   "balance_btc": 3.36160796,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q43sutlppasms8yssd9xhtc74y8lkyuwljv72df",
+   "sweeps": 340,
+   "btc": 0.59730747,
+   "fee_rate": 1.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960184,
+    960185,
+    960199,
+    960203,
+    960207,
+    960210,
+    960215,
+    960216,
+    960217,
+    960220,
+    960221,
+    960248,
+    960251,
+    960254,
+    960257,
+    960263,
+    960268,
+    960271,
+    960276,
+    960277,
+    960287,
+    960293,
+    960296,
+    960297,
+    960303,
+    960315,
+    960317,
+    960318,
+    960326,
+    960333,
+    960337,
+    960344,
+    960354,
+    960357,
+    960360,
+    960361,
+    960368,
+    960373,
+    960376,
+    960381,
+    960388,
+    960397,
+    960398,
+    960400,
+    960404,
+    960410,
+    960415,
+    960418,
+    960420,
+    960441,
+    960444,
+    960459,
+    960460,
+    960463,
+    960465,
+    960481,
+    960485,
+    960489,
+    960494,
+    960500,
+    960502,
+    960508,
+    960511,
+    960515,
+    960531,
+    960538,
+    960541,
+    960545,
+    960551,
+    960558
+   ],
+   "deposits_total": 86133,
+   "unrelated_deposits": 85793,
+   "balance_btc": 1.43959378,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qz9vqzr9nhytkcgkxdd3577g4c4xta7u05tavlz",
+   "sweeps": 63,
+   "btc": 0.50914814,
+   "fee_rate": 5.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960324,
+    960326,
+    960327
+   ],
+   "deposits_total": 150,
+   "unrelated_deposits": 87,
+   "balance_btc": 1.42768359,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qvjd2x6ej8cg8rrkwx542yvccwjpc32y9v8k4kj",
+   "sweeps": 97,
+   "btc": 0.47858534,
+   "fee_rate": 1.8,
+   "rbf_inputs": 0,
+   "blocks": [
+    960285,
+    960287,
+    960288,
+    960291
+   ],
+   "deposits_total": 4220,
+   "unrelated_deposits": 4123,
+   "balance_btc": 0.48014473,
+   "looks_fresh": false
+  },
+  {
+   "address": "3P1DiT2PpXaMQWJK3n6SAU4VW5omA7RFXX",
+   "sweeps": 5,
+   "btc": 0.44492368,
+   "fee_rate": 1.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960513
+   ],
+   "deposits_total": 26,
+   "unrelated_deposits": 21,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q552mmzjtnelamyt2ttaz95e39wqgr8lc9cktfe",
+   "sweeps": 8,
+   "btc": 0.4357844,
+   "fee_rate": 4.5,
+   "rbf_inputs": 0,
+   "blocks": [
+    960283
+   ],
+   "deposits_total": 79,
+   "unrelated_deposits": 71,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qnh8s3mgup8gadkd2qgc30qmpz93d0l57068rtq",
+   "sweeps": 6,
+   "btc": 0.42404789,
+   "fee_rate": 2.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960326
+   ],
+   "deposits_total": 44,
+   "unrelated_deposits": 38,
+   "balance_btc": 2.62698772,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qfvhsntq6sat0k6kk8pk8wlgenrqtdxwhaeg42h",
+   "sweeps": 16,
+   "btc": 0.36230256,
+   "fee_rate": 3.6,
+   "rbf_inputs": 0,
+   "blocks": [
+    960206,
+    960221,
+    960261,
+    960281,
+    960331
+   ],
+   "deposits_total": 179567,
+   "unrelated_deposits": 179551,
+   "balance_btc": 0.28505121,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1p05uyewf40lk924cy4vzpwy3naz9mvpvc7207nkv26m0cswar8gvs7ga86u",
+   "sweeps": 37,
+   "btc": 0.313678,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960473,
+    960477
+   ],
+   "deposits_total": 662,
+   "unrelated_deposits": 625,
+   "balance_btc": 0.32240141,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qz456kzseak6dd07k4xtr2ed3y53ysgarjp40n9",
+   "sweeps": 62,
+   "btc": 0.313033,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960409,
+    960410
+   ],
+   "deposits_total": 6153,
+   "unrelated_deposits": 6091,
+   "balance_btc": 0.3128284,
+   "looks_fresh": false
+  },
+  {
+   "address": "3674a1z3hQfmJEun9nVABQmdBuy1Npqc5w",
+   "sweeps": 3,
+   "btc": 0.30786632,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960325
+   ],
+   "deposits_total": 11,
+   "unrelated_deposits": 8,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qjfgnk7twqz98ge7l36fps2k0y9tl3mlvf6zy04",
+   "sweeps": 16,
+   "btc": 0.3057987,
+   "fee_rate": 3.6,
+   "rbf_inputs": 0,
+   "blocks": [
+    960263,
+    960264,
+    960276,
+    960305,
+    960493
+   ],
+   "deposits_total": 615,
+   "unrelated_deposits": 599,
+   "balance_btc": 0.31726197,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1pdsn50z49qnngv23hmdcz75s6qg0t64w30dx5cm6d2yyhl9rjmehqtxe5ls",
+   "sweeps": 6,
+   "btc": 0.30456864,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960188,
+    960331
+   ],
+   "deposits_total": 138,
+   "unrelated_deposits": 132,
+   "balance_btc": 0.00020238,
+   "looks_fresh": false
+  },
+  {
+   "address": "3C1hXG8Cf1MwW78f6hSNu4oqMu85rLHbPP",
+   "sweeps": 3,
+   "btc": 0.27575715,
+   "fee_rate": 1.8,
+   "rbf_inputs": 3,
+   "blocks": [
+    960404
+   ],
+   "deposits_total": 11,
+   "unrelated_deposits": 8,
+   "balance_btc": 1.89998803,
+   "looks_fresh": false
+  },
+  {
+   "address": "1AFqswM87s7PeDCZ4jNkMwZvt9izdE9FBY",
+   "sweeps": 3,
+   "btc": 0.26383347,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960224
+   ],
+   "deposits_total": 60,
+   "unrelated_deposits": 57,
+   "balance_btc": 0.11258084,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qf2my39y2lfgp2pylnhu8q2xktqumlpjy2fur4d",
+   "sweeps": 9,
+   "btc": 0.26348691,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960543
+   ],
+   "deposits_total": 18,
+   "unrelated_deposits": 9,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q6nkmt3qhup34dwce28yuk60p5ycjhrrrfc3t45",
+   "sweeps": 9,
+   "btc": 0.2631524,
+   "fee_rate": 5.8,
+   "rbf_inputs": 0,
+   "blocks": [
+    960208,
+    960357,
+    960514
+   ],
+   "deposits_total": 2495,
+   "unrelated_deposits": 2486,
+   "balance_btc": 0.59560025,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q68a3lup5m3kct274e9tg4veaeawshq4qpf5x03",
+   "sweeps": 8,
+   "btc": 0.24797043,
+   "fee_rate": 4.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960514,
+    960521
+   ],
+   "deposits_total": 20,
+   "unrelated_deposits": 12,
+   "balance_btc": 3.81377936,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qe0a3f5xpt7spuunhp9fne473nprgkag93hvay5",
+   "sweeps": 8,
+   "btc": 0.24123066,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960221,
+    960395
+   ],
+   "deposits_total": 5415,
+   "unrelated_deposits": 5407,
+   "balance_btc": 0.04406219,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qgasymcrvkuxcqzpgg3ery27adkagr4plquunl2",
+   "sweeps": 28,
+   "btc": 0.241143,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960398,
+    960403,
+    960424,
+    960522,
+    960526
+   ],
+   "deposits_total": 127,
+   "unrelated_deposits": 99,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qrcc4x55rxlzv3m7vvt38pcdccyyutv7xtc3fxzd0k2r8qg6nxhrs3m6w9l",
+   "sweeps": 3,
+   "btc": 0.22996255,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960340
+   ],
+   "deposits_total": 9,
+   "unrelated_deposits": 6,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qhyz74kl6xygka9w8aqsnuj7hddt29wh3xy2a8p",
+   "sweeps": 8,
+   "btc": 0.21275697,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960546,
+    960549
+   ],
+   "deposits_total": 24,
+   "unrelated_deposits": 16,
+   "balance_btc": 1.63008171,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q4gvkh8ppm4sgdh7z8qsrt75nazqk0rflkjpjg2",
+   "sweeps": 4,
+   "btc": 0.17732212,
+   "fee_rate": 1.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960309
+   ],
+   "deposits_total": 152,
+   "unrelated_deposits": 148,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q9uhdlt3q94rn5pt5aeqfysxcndeyn277qam8ul",
+   "sweeps": 3,
+   "btc": 0.17320343,
+   "fee_rate": 4.6,
+   "rbf_inputs": 3,
+   "blocks": [
+    960533
+   ],
+   "deposits_total": 15,
+   "unrelated_deposits": 12,
+   "balance_btc": 1.42154282,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qh7ayr5j5urr6lh4878gkr00axx7gwxrd09hufh",
+   "sweeps": 12,
+   "btc": 0.15675286,
+   "fee_rate": 2.4,
+   "rbf_inputs": 0,
+   "blocks": [
+    960328,
+    960335,
+    960366,
+    960395
+   ],
+   "deposits_total": 2712,
+   "unrelated_deposits": 2700,
+   "balance_btc": 0.02407857,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1quluzptqpm2hgrx82pay26tf7myt25rc29s2lcc",
+   "sweeps": 3,
+   "btc": 0.15616805,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960493
+   ],
+   "deposits_total": 144,
+   "unrelated_deposits": 141,
+   "balance_btc": 1.04349072,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q8h45nxeua53ujm9kq4g5aww9m5fjfypatr85s6",
+   "sweeps": 3,
+   "btc": 0.14456268,
+   "fee_rate": 5.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960393
+   ],
+   "deposits_total": 1120,
+   "unrelated_deposits": 1117,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "3LCQjjSs65MQBivrABfs8qt2EgKhgT1NGC",
+   "sweeps": 4,
+   "btc": 0.14158997,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960340
+   ],
+   "deposits_total": 476,
+   "unrelated_deposits": 472,
+   "balance_btc": 0.43315344,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qvpvngaf90t86q246kkxz4jw03m9ycp2yzpe9av",
+   "sweeps": 35,
+   "btc": 0.13847797,
+   "fee_rate": 1.1,
+   "rbf_inputs": 4,
+   "blocks": [
+    960285,
+    960330,
+    960339,
+    960348,
+    960419,
+    960441,
+    960453,
+    960480,
+    960502
+   ],
+   "deposits_total": 1689,
+   "unrelated_deposits": 1654,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q7u00qqg4xgk0dlq4vpfmrx2gzr4st23uvueff4",
+   "sweeps": 39,
+   "btc": 0.11948208,
+   "fee_rate": 3.0,
+   "rbf_inputs": 7,
+   "blocks": [
+    960249,
+    960250,
+    960301,
+    960365,
+    960366
+   ],
+   "deposits_total": 55,
+   "unrelated_deposits": 16,
+   "balance_btc": 0.44466152,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q5v9lr3swrh8jylhze7j0neshswryrzdnmmt960",
+   "sweeps": 15,
+   "btc": 0.11913149,
+   "fee_rate": 4.0,
+   "rbf_inputs": 6,
+   "blocks": [
+    960202,
+    960298,
+    960460,
+    960462
+   ],
+   "deposits_total": 2320,
+   "unrelated_deposits": 2305,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qjptfuejhrr3m8e8wqwp6y4nvjte5nf2c7u53la",
+   "sweeps": 14,
+   "btc": 0.118232,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960266,
+    960271,
+    960427,
+    960432
+   ],
+   "deposits_total": 3505,
+   "unrelated_deposits": 3491,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qdrcd9rwu0l455kmsaxhfnqdlgztzvkc7rhgh48",
+   "sweeps": 17,
+   "btc": 0.10759966,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960246,
+    960301,
+    960458
+   ],
+   "deposits_total": 77,
+   "unrelated_deposits": 60,
+   "balance_btc": 1.90968454,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qmhr9kr0r3jh3ft0jh2a0hs2eqpcnhrrdyj04xv",
+   "sweeps": 18,
+   "btc": 0.09987656,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960240,
+    960244,
+    960245,
+    960246
+   ],
+   "deposits_total": 24,
+   "unrelated_deposits": 6,
+   "balance_btc": 0.32399539,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qh0rnjdcl22pk0k2dfp7778r0zc64xe0asxjtt6",
+   "sweeps": 20,
+   "btc": 0.0969376,
+   "fee_rate": 2.0,
+   "rbf_inputs": 7,
+   "blocks": [
+    960383,
+    960385,
+    960390,
+    960458
+   ],
+   "deposits_total": 2035,
+   "unrelated_deposits": 2015,
+   "balance_btc": 0.45484467,
+   "looks_fresh": false
+  },
+  {
+   "address": "31puTnvPbG4gEfq5v5LroqVa8wj78uVQdt",
+   "sweeps": 3,
+   "btc": 0.09356136,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960354
+   ],
+   "deposits_total": 51,
+   "unrelated_deposits": 48,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "1FWteERAfujMTaKjN2wFxwiyQi7boKWFQU",
+   "sweeps": 3,
+   "btc": 0.0931748,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960346
+   ],
+   "deposits_total": 188,
+   "unrelated_deposits": 185,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qtasz4cz330h0zu7uvxjfma2sagq37c0t7ajkh6",
+   "sweeps": 167,
+   "btc": 0.09214647,
+   "fee_rate": 5.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960276,
+    960277,
+    960428
+   ],
+   "deposits_total": 1411,
+   "unrelated_deposits": 1244,
+   "balance_btc": 0.73907615,
+   "looks_fresh": false
+  },
+  {
+   "address": "13PSws5zbztekRZ4MdDKuNMTcyeoxxx74V",
+   "sweeps": 3,
+   "btc": 0.088995,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960249
+   ],
+   "deposits_total": 704,
+   "unrelated_deposits": 701,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qwzeantk0nvm22kdj3e4sut4lp8fe7l5sww0zdx",
+   "sweeps": 10,
+   "btc": 0.08740824,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960270,
+    960271,
+    960366
+   ],
+   "deposits_total": 2277,
+   "unrelated_deposits": 2267,
+   "balance_btc": 1.7027903,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qjh7z47yezqu8fcjn75kxqll7cmcun0l7gsxpsy",
+   "sweeps": 10,
+   "btc": 0.087024,
+   "fee_rate": 3.5,
+   "rbf_inputs": 0,
+   "blocks": [
+    960521
+   ],
+   "deposits_total": 79,
+   "unrelated_deposits": 69,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "18VJNMGyvSLYmhYTypjtQwFLyBuoeLpcVV",
+   "sweeps": 4,
+   "btc": 0.08555482,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960377
+   ],
+   "deposits_total": 19,
+   "unrelated_deposits": 15,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qw4hfvn9hg0fq2u04ga68hc8s2c2ygwgqdvegzx",
+   "sweeps": 18,
+   "btc": 0.08511438,
+   "fee_rate": 2.3,
+   "rbf_inputs": 3,
+   "blocks": [
+    960397,
+    960411,
+    960415,
+    960438,
+    960462
+   ],
+   "deposits_total": 63,
+   "unrelated_deposits": 45,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "3QfuQEVAAZuqrJZLKor4QUWFMtJ2cepv1B",
+   "sweeps": 7,
+   "btc": 0.08108484,
+   "fee_rate": 4.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960204,
+    960253
+   ],
+   "deposits_total": 302,
+   "unrelated_deposits": 295,
+   "balance_btc": 0.00345644,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qannmfkqrdnsrpfmwgfpfgn0kun0x95agjgu5v5",
+   "sweeps": 3,
+   "btc": 0.08033492,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960215
+   ],
+   "deposits_total": 5204,
+   "unrelated_deposits": 5201,
+   "balance_btc": 1.04301857,
+   "looks_fresh": false
+  },
+  {
+   "address": "33zhCnpKF1WsSs5rb6QHwY6t7fUxFko5Bg",
+   "sweeps": 6,
+   "btc": 0.07998771,
+   "fee_rate": 4.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960202,
+    960254
+   ],
+   "deposits_total": 5405,
+   "unrelated_deposits": 5399,
+   "balance_btc": 1.092e-05,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qh74m5frr5j08sha48ups8fhvu3lj2zr2r3tnc6",
+   "sweeps": 23,
+   "btc": 0.07884831,
+   "fee_rate": 1.2,
+   "rbf_inputs": 3,
+   "blocks": [
+    960250,
+    960264,
+    960267,
+    960268,
+    960284,
+    960286,
+    960290
+   ],
+   "deposits_total": 70,
+   "unrelated_deposits": 47,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qvqctchmqvzskckq0gry26hxq9l6u7ymfw2t6ej",
+   "sweeps": 25,
+   "btc": 0.07740761,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960385,
+    960391,
+    960393,
+    960394
+   ],
+   "deposits_total": 100,
+   "unrelated_deposits": 75,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qkdks0gslgtw4wr4ah85wxh2krmn22m5y56lk5a",
+   "sweeps": 23,
+   "btc": 0.0745971,
+   "fee_rate": 5.1,
+   "rbf_inputs": 3,
+   "blocks": [
+    960183,
+    960275,
+    960287,
+    960397,
+    960448,
+    960456,
+    960501
+   ],
+   "deposits_total": 31543,
+   "unrelated_deposits": 31520,
+   "balance_btc": 6.18604708,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qmfmc2pvwhfjmerktfjgnhm9e3p9s6d9g6h74h8",
+   "sweeps": 9,
+   "btc": 0.07418312,
+   "fee_rate": 2.6,
+   "rbf_inputs": 0,
+   "blocks": [
+    960296,
+    960302,
+    960447
+   ],
+   "deposits_total": 526,
+   "unrelated_deposits": 517,
+   "balance_btc": 5.05502374,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qygyal3amx9daelrxf90xm6u7h55hhvt0n00glu",
+   "sweeps": 3,
+   "btc": 0.07340336,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960251
+   ],
+   "deposits_total": 16,
+   "unrelated_deposits": 13,
+   "balance_btc": 1.10894047,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qrjdetjclxhgkzx6e6x2mzm283ual06zu3l5vx9",
+   "sweeps": 12,
+   "btc": 0.07199588,
+   "fee_rate": 3.6,
+   "rbf_inputs": 0,
+   "blocks": [
+    960345
+   ],
+   "deposits_total": 79,
+   "unrelated_deposits": 67,
+   "balance_btc": 0.23958471,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q3nryenf86kyux02njqfy6h8apj5862c60f20df",
+   "sweeps": 9,
+   "btc": 0.070246,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960429,
+    960540
+   ],
+   "deposits_total": 489,
+   "unrelated_deposits": 480,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "3JrKUTtBgRoLh5JFH6SUAZVTuGi4RFBM6S",
+   "sweeps": 15,
+   "btc": 0.06779501,
+   "fee_rate": 3.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960381,
+    960383,
+    960384
+   ],
+   "deposits_total": 2269,
+   "unrelated_deposits": 2254,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qtfp3lcr0rdl9d3ll8tnrhusxrlx76s5gdmwef2",
+   "sweeps": 6,
+   "btc": 0.06485365,
+   "fee_rate": 4.4,
+   "rbf_inputs": 6,
+   "blocks": [
+    960457
+   ],
+   "deposits_total": 52,
+   "unrelated_deposits": 46,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qrgl0yu3zuglvcgrdsglc5a8zdsud6n023naqaz",
+   "sweeps": 9,
+   "btc": 0.06178913,
+   "fee_rate": 2.9,
+   "rbf_inputs": 0,
+   "blocks": [
+    960248,
+    960262,
+    960312
+   ],
+   "deposits_total": 218706,
+   "unrelated_deposits": 218697,
+   "balance_btc": 5.67450537,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qfccxjraqwnkc8sh5dv9dgmvp2vwjnr7kzlpg6v",
+   "sweeps": 12,
+   "btc": 0.06104133,
+   "fee_rate": 2.3,
+   "rbf_inputs": 3,
+   "blocks": [
+    960397,
+    960441,
+    960450,
+    960476
+   ],
+   "deposits_total": 48,
+   "unrelated_deposits": 36,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qj3hen3qxhxhwcmlwdyh964fu0eaa06p8nx492n",
+   "sweeps": 7,
+   "btc": 0.058482,
+   "fee_rate": 2.0,
+   "rbf_inputs": 7,
+   "blocks": [
+    960247
+   ],
+   "deposits_total": 135,
+   "unrelated_deposits": 128,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qcycs7h6eynyk5adm73w7g8mu0hw4d28ue7fwfh",
+   "sweeps": 10,
+   "btc": 0.05461318,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960246,
+    960458,
+    960532
+   ],
+   "deposits_total": 22,
+   "unrelated_deposits": 12,
+   "balance_btc": 0.07140264,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q5fm35y0f8r40t99x3fe6krgadhf23pn7pkgucy",
+   "sweeps": 3,
+   "btc": 0.05246202,
+   "fee_rate": 10.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960365
+   ],
+   "deposits_total": 92,
+   "unrelated_deposits": 89,
+   "balance_btc": 5.00821804,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qqkuvgdj770e94ectahmu4f20fuxzm4aqupxxfk",
+   "sweeps": 6,
+   "btc": 0.049976,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960317
+   ],
+   "deposits_total": 514,
+   "unrelated_deposits": 508,
+   "balance_btc": 0.00582265,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qazyqu8vh5z5s4n2gfp2u6pglq3fevhrrvuakj6",
+   "sweeps": 16,
+   "btc": 0.04868298,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960375,
+    960378
+   ],
+   "deposits_total": 132,
+   "unrelated_deposits": 116,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qd6nmxanglpwfxamzrc6dmex3rdfxz34c4xd899",
+   "sweeps": 8,
+   "btc": 0.04862578,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960209,
+    960340
+   ],
+   "deposits_total": 240,
+   "unrelated_deposits": 232,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qrkdc5nn4gjdf0t0ezvp5v2ttm4hfaqju44fr0w",
+   "sweeps": 16,
+   "btc": 0.0481138,
+   "fee_rate": 5.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960206,
+    960365,
+    960418,
+    960500,
+    960540
+   ],
+   "deposits_total": 598,
+   "unrelated_deposits": 582,
+   "balance_btc": 0.00271445,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qmcx2377el75jxxg8y5673srdgj7v0jgjn4y0u2",
+   "sweeps": 13,
+   "btc": 0.04750627,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960204,
+    960283,
+    960361,
+    960446
+   ],
+   "deposits_total": 95603,
+   "unrelated_deposits": 95590,
+   "balance_btc": 0.03278251,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q9ydc5yps3eyesm82d6km5ujp7jlsylgwdjdrxg",
+   "sweeps": 9,
+   "btc": 0.04608051,
+   "fee_rate": 4.0,
+   "rbf_inputs": 9,
+   "blocks": [
+    960393
+   ],
+   "deposits_total": 164,
+   "unrelated_deposits": 155,
+   "balance_btc": 0.1125024,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qrc3phep9zg54narnvxynhawnh38l0tfahk2aj9",
+   "sweeps": 11,
+   "btc": 0.04405917,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960204,
+    960343,
+    960507
+   ],
+   "deposits_total": 1339,
+   "unrelated_deposits": 1328,
+   "balance_btc": 0.08656752,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q2a96f8srmnjkm7n36v6002zmqraqm8jlr3d25n",
+   "sweeps": 5,
+   "btc": 0.04372329,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960283
+   ],
+   "deposits_total": 43,
+   "unrelated_deposits": 38,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qnsl702mvrccgyr5t5f5w4kmgm2uv06vnde2ewl",
+   "sweeps": 13,
+   "btc": 0.04292392,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960365,
+    960394,
+    960458
+   ],
+   "deposits_total": 19,
+   "unrelated_deposits": 6,
+   "balance_btc": 0.2698998,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1ppak7t5x6pkahy3eltdmp3s80u86g7znpv8gzx3d33vhvrdmzrx9sma6zc3",
+   "sweeps": 3,
+   "btc": 0.03998924,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960340
+   ],
+   "deposits_total": 592,
+   "unrelated_deposits": 589,
+   "balance_btc": 0.10861794,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qzqrvqrjlm98jpv7yxn0puwz2nrc9n963c28euw",
+   "sweeps": 109,
+   "btc": 0.03994956,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960278,
+    960279,
+    960409,
+    960410
+   ],
+   "deposits_total": 2203,
+   "unrelated_deposits": 2094,
+   "balance_btc": 0.0005488,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q94xfawx8hnzuvdygrgassrgwxcpzrnzpk7fgm3",
+   "sweeps": 4,
+   "btc": 0.03970866,
+   "fee_rate": 4.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960486
+   ],
+   "deposits_total": 20,
+   "unrelated_deposits": 16,
+   "balance_btc": 0.00800589,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q8w49476pgk02f7g838gjr2usuu9ln8yc5ct2rz",
+   "sweeps": 3,
+   "btc": 0.03880888,
+   "fee_rate": 2.3,
+   "rbf_inputs": 3,
+   "blocks": [
+    960435
+   ],
+   "deposits_total": 749,
+   "unrelated_deposits": 746,
+   "balance_btc": 1.31267288,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qx2uspdh29kck26pd3n2rzf78mv4940jkw64r9q",
+   "sweeps": 3,
+   "btc": 0.03854484,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960414
+   ],
+   "deposits_total": 82,
+   "unrelated_deposits": 79,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qx275k5k9t805vwu7tzg303enue9vsy6v34gtal",
+   "sweeps": 7,
+   "btc": 0.036266,
+   "fee_rate": 3.5,
+   "rbf_inputs": 0,
+   "blocks": [
+    960282
+   ],
+   "deposits_total": 137,
+   "unrelated_deposits": 130,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qf0s9vpsm6gqvmv43k5vmkps6n8gy6fh9kq3d05",
+   "sweeps": 4,
+   "btc": 0.03488,
+   "fee_rate": 4.7,
+   "rbf_inputs": 0,
+   "blocks": [
+    960520
+   ],
+   "deposits_total": 182,
+   "unrelated_deposits": 178,
+   "balance_btc": 0.0003637,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qtzj4y4x2n9zmqyeh2zvpz2vszgjue6zmvvmc3q",
+   "sweeps": 7,
+   "btc": 0.03453096,
+   "fee_rate": 2.0,
+   "rbf_inputs": 7,
+   "blocks": [
+    960375
+   ],
+   "deposits_total": 52,
+   "unrelated_deposits": 45,
+   "balance_btc": 0.16101603,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qmlj438ajgaszqf7maep3auaaaxzp7jgplf40t6",
+   "sweeps": 4,
+   "btc": 0.034523,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960526
+   ],
+   "deposits_total": 49,
+   "unrelated_deposits": 45,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qtklrt4pgsugy2z46yufg6ej78v6857hthepkzk",
+   "sweeps": 4,
+   "btc": 0.03411883,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960391
+   ],
+   "deposits_total": 280,
+   "unrelated_deposits": 276,
+   "balance_btc": 0.00090046,
+   "looks_fresh": false
+  },
+  {
+   "address": "16t9QGnEMj4b43FtzDiWzrp5KAjw45jVcM",
+   "sweeps": 3,
+   "btc": 0.03362799,
+   "fee_rate": 3.9,
+   "rbf_inputs": 3,
+   "blocks": [
+    960490
+   ],
+   "deposits_total": 284,
+   "unrelated_deposits": 281,
+   "balance_btc": 0.00032022,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q8sdv3ewd0d8tcd83qgja52dr5hgxlgxp9hvepv",
+   "sweeps": 4,
+   "btc": 0.033378,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960265
+   ],
+   "deposits_total": 111,
+   "unrelated_deposits": 107,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "1K3rRmxTNw4uU9xnWZijD7v4z5aBWVT8gA",
+   "sweeps": 4,
+   "btc": 0.03329,
+   "fee_rate": 2.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960263
+   ],
+   "deposits_total": 1303,
+   "unrelated_deposits": 1299,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "1AEu8e7xM6PQfSb4WxMEPR7mYckKpE5ek9",
+   "sweeps": 6,
+   "btc": 0.03264944,
+   "fee_rate": 3.0,
+   "rbf_inputs": 6,
+   "blocks": [
+    960411
+   ],
+   "deposits_total": 49,
+   "unrelated_deposits": 43,
+   "balance_btc": 0.27383126,
+   "looks_fresh": false
+  },
+  {
+   "address": "1MxJGhmuX6xE5Qbk7FX2HNAN4d2SREDoii",
+   "sweeps": 10,
+   "btc": 0.03115346,
+   "fee_rate": 5.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960413,
+    960414
+   ],
+   "deposits_total": 87,
+   "unrelated_deposits": 77,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "1F61qynTrtZUy9KoJX8zje6F3CGpU1YyZk",
+   "sweeps": 4,
+   "btc": 0.031127,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960530
+   ],
+   "deposits_total": 408,
+   "unrelated_deposits": 404,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1ql6fdsq8543szuu2adpmwnm9e297s0knykxsuvl",
+   "sweeps": 6,
+   "btc": 0.03087992,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960257,
+    960440
+   ],
+   "deposits_total": 4312,
+   "unrelated_deposits": 4306,
+   "balance_btc": 6.46931383,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q25xr2t9jzk7j8qv9hnjtph78vqwx0ppx6lkfkn",
+   "sweeps": 13,
+   "btc": 0.03011072,
+   "fee_rate": 9.2,
+   "rbf_inputs": 4,
+   "blocks": [
+    960206,
+    960332,
+    960491,
+    960501
+   ],
+   "deposits_total": 1954,
+   "unrelated_deposits": 1941,
+   "balance_btc": 1.41173342,
+   "looks_fresh": false
+  },
+  {
+   "address": "1P398V7hq6piKCfjzADia5RPpueL9MUmJ5",
+   "sweeps": 14,
+   "btc": 0.02974284,
+   "fee_rate": 1.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960285,
+    960326,
+    960427,
+    960441
+   ],
+   "deposits_total": 10913,
+   "unrelated_deposits": 10899,
+   "balance_btc": 0.00050174,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qycevwvaj2fc70yqeprw0s4048deqlfwspcgv3r",
+   "sweeps": 4,
+   "btc": 0.0290343,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960405
+   ],
+   "deposits_total": 48,
+   "unrelated_deposits": 44,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "12TymjpdQzsjqQCTNUabd51wS9uqe9ajPp",
+   "sweeps": 4,
+   "btc": 0.027689,
+   "fee_rate": 1.4,
+   "rbf_inputs": 4,
+   "blocks": [
+    960536
+   ],
+   "deposits_total": 252,
+   "unrelated_deposits": 248,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qw3d3pzjvapzqxet4p5rsy03aakqa9dzqdxvy3f",
+   "sweeps": 5,
+   "btc": 0.02756553,
+   "fee_rate": 3.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960403
+   ],
+   "deposits_total": 80,
+   "unrelated_deposits": 75,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qhhhulfn25s6sc60kkgvkxaxctm9pu9kgnutmpd",
+   "sweeps": 4,
+   "btc": 0.02703623,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960380
+   ],
+   "deposits_total": 55,
+   "unrelated_deposits": 51,
+   "balance_btc": 0.03200991,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qet94lk94wk9lxsm2juvshk09tlkvmkkzhhrryp",
+   "sweeps": 8,
+   "btc": 0.0262186,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960508
+   ],
+   "deposits_total": 166,
+   "unrelated_deposits": 158,
+   "balance_btc": 6.69538324,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qpzfv2fuuqrgzcsd499wptdurwrj03hjh9s455d",
+   "sweeps": 3,
+   "btc": 0.026099,
+   "fee_rate": 4.7,
+   "rbf_inputs": 0,
+   "blocks": [
+    960437
+   ],
+   "deposits_total": 442,
+   "unrelated_deposits": 439,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "15qTAAqdxgJaSPqiFv9LCsSByachhEgwyq",
+   "sweeps": 3,
+   "btc": 0.026084,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960530
+   ],
+   "deposits_total": 20,
+   "unrelated_deposits": 17,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qadpcwrwsw3due04p0qxp4lmune7ncedpzfnkn3",
+   "sweeps": 6,
+   "btc": 0.02606336,
+   "fee_rate": 4.0,
+   "rbf_inputs": 6,
+   "blocks": [
+    960393
+   ],
+   "deposits_total": 251,
+   "unrelated_deposits": 245,
+   "balance_btc": 0.86952659,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qamnu8ya7p0k63n8rsrhgwezff5sx62eg4xkqza",
+   "sweeps": 3,
+   "btc": 0.025952,
+   "fee_rate": 3.5,
+   "rbf_inputs": 0,
+   "blocks": [
+    960544
+   ],
+   "deposits_total": 648,
+   "unrelated_deposits": 645,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "14AN296v4o37fBeSKANrUTZvHAXCDwf9wo",
+   "sweeps": 3,
+   "btc": 0.025875,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960530
+   ],
+   "deposits_total": 22,
+   "unrelated_deposits": 19,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qumpl5k34j5404jjxtzmmfn90nevt2xlnvj9x6v",
+   "sweeps": 5,
+   "btc": 0.02538031,
+   "fee_rate": 4.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960398
+   ],
+   "deposits_total": 48,
+   "unrelated_deposits": 43,
+   "balance_btc": 0.00033407,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qsd7qt0742pln87lq8ghdql7dwwwse9w2e2rk95",
+   "sweeps": 4,
+   "btc": 0.02500369,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960387
+   ],
+   "deposits_total": 126,
+   "unrelated_deposits": 122,
+   "balance_btc": 0.2056467,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qeyq3l7xfln56uwmphj46uejns6ejzjjs80n23c",
+   "sweeps": 7,
+   "btc": 0.02418774,
+   "fee_rate": 4.0,
+   "rbf_inputs": 7,
+   "blocks": [
+    960392
+   ],
+   "deposits_total": 138,
+   "unrelated_deposits": 131,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qplq0zm8r4k6kd4zncc0zfmcs8edcavl2wzwpjk",
+   "sweeps": 4,
+   "btc": 0.02305892,
+   "fee_rate": 7.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960439
+   ],
+   "deposits_total": 17,
+   "unrelated_deposits": 13,
+   "balance_btc": 0.11946088,
+   "looks_fresh": false
+  },
+  {
+   "address": "17cNh38nqvBMksGU14buHnFAgE78KZurwC",
+   "sweeps": 6,
+   "btc": 0.02153099,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960549
+   ],
+   "deposits_total": 58,
+   "unrelated_deposits": 52,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qfmsszlwn2kwtgusgpy946y6k6vjcgl55eltq67",
+   "sweeps": 4,
+   "btc": 0.02099126,
+   "fee_rate": 4.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960503
+   ],
+   "deposits_total": 103,
+   "unrelated_deposits": 99,
+   "balance_btc": 0.62179225,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qx975f82qyx3scr6cqn4ue7qs0qwrs5essy2jhj",
+   "sweeps": 4,
+   "btc": 0.02076709,
+   "fee_rate": 1.1,
+   "rbf_inputs": 4,
+   "blocks": [
+    960545
+   ],
+   "deposits_total": 14,
+   "unrelated_deposits": 10,
+   "balance_btc": 0.00466211,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qjv40a7mae2f9j57l538ys7qu9cpyc5cgjsnagv",
+   "sweeps": 3,
+   "btc": 0.02060258,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960381
+   ],
+   "deposits_total": 60,
+   "unrelated_deposits": 57,
+   "balance_btc": 0.00330881,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q300ycqvryaryx37sqdstr7253qp0qncg9xwajw",
+   "sweeps": 7,
+   "btc": 0.02048032,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960377
+   ],
+   "deposits_total": 138,
+   "unrelated_deposits": 131,
+   "balance_btc": 0.09307917,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qsumf68x20uqw03yw070vn2z0d4zzvddqe8terh",
+   "sweeps": 6,
+   "btc": 0.02045902,
+   "fee_rate": 4.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960261,
+    960438
+   ],
+   "deposits_total": 1230,
+   "unrelated_deposits": 1224,
+   "balance_btc": 0.61209372,
+   "looks_fresh": false
+  },
+  {
+   "address": "14WQA9zJWJZrLFm6c5943cvb7ZP9tqtSti",
+   "sweeps": 4,
+   "btc": 0.020022,
+   "fee_rate": 4.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960422
+   ],
+   "deposits_total": 144,
+   "unrelated_deposits": 140,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q4ydwhaa23ct29nes476gqup5nc6lsms2umkr9n",
+   "sweeps": 4,
+   "btc": 0.01998506,
+   "fee_rate": 4.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960201
+   ],
+   "deposits_total": 39,
+   "unrelated_deposits": 35,
+   "balance_btc": 0.00680197,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qmxuzku7s57cjlllc704sqqvtyutfqwfvdlur9q",
+   "sweeps": 3,
+   "btc": 0.019973,
+   "fee_rate": 3.5,
+   "rbf_inputs": 0,
+   "blocks": [
+    960260
+   ],
+   "deposits_total": 71,
+   "unrelated_deposits": 68,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qm49q74fxtqcac8waptp3ajffeapfdj58afjlp0",
+   "sweeps": 8,
+   "btc": 0.01992288,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960405,
+    960406
+   ],
+   "deposits_total": 274,
+   "unrelated_deposits": 266,
+   "balance_btc": 0.03144806,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q82q0llzme09j9eetyuxepwkjl4w8a05smt8aha",
+   "sweeps": 3,
+   "btc": 0.01887715,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960394
+   ],
+   "deposits_total": 57,
+   "unrelated_deposits": 54,
+   "balance_btc": 0.04354365,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qddpseayzkzde2ruzyg74anpnfxt72l7y090kt7",
+   "sweeps": 5,
+   "btc": 0.01868264,
+   "fee_rate": 4.8,
+   "rbf_inputs": 0,
+   "blocks": [
+    960282
+   ],
+   "deposits_total": 5769,
+   "unrelated_deposits": 5764,
+   "balance_btc": 0.88823407,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qu47nvxxztzq6vhavcwm74m74v28fa9g0nkvjsq",
+   "sweeps": 3,
+   "btc": 0.01790635,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960488
+   ],
+   "deposits_total": 381,
+   "unrelated_deposits": 378,
+   "balance_btc": 0.02030077,
+   "looks_fresh": false
+  },
+  {
+   "address": "3EENV8HQJqvzUfZoKkxnp9TpQSv4oAtKan",
+   "sweeps": 3,
+   "btc": 0.016741,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960254
+   ],
+   "deposits_total": 122,
+   "unrelated_deposits": 119,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q76dv59fynwfjyrpp2x9qjk37h7ev6m22562hgq",
+   "sweeps": 5,
+   "btc": 0.01665905,
+   "fee_rate": 3.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960376
+   ],
+   "deposits_total": 20,
+   "unrelated_deposits": 15,
+   "balance_btc": 0.01664255,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qnqrf30qt6mpxpd7wylc9r9u7sftwaucln938q0",
+   "sweeps": 6,
+   "btc": 0.01663215,
+   "fee_rate": 3.0,
+   "rbf_inputs": 6,
+   "blocks": [
+    960376
+   ],
+   "deposits_total": 127,
+   "unrelated_deposits": 121,
+   "balance_btc": 5.7e-05,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qs9l8emad2xzjkskehq6cgqujezshlpfktayk2f",
+   "sweeps": 7,
+   "btc": 0.01582305,
+   "fee_rate": 1.2,
+   "rbf_inputs": 4,
+   "blocks": [
+    960267,
+    960284
+   ],
+   "deposits_total": 37,
+   "unrelated_deposits": 30,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1pymkf2u99r0glnmykgcszly05e3w9zrsygt96xa0n0gacca6pvrnsfn9dtz",
+   "sweeps": 8,
+   "btc": 0.01580425,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960261,
+    960265
+   ],
+   "deposits_total": 22,
+   "unrelated_deposits": 14,
+   "balance_btc": 0.19581217,
+   "looks_fresh": false
+  },
+  {
+   "address": "1DADNbi2hyagGZmt6GT76aKwyiZSXsBPWh",
+   "sweeps": 6,
+   "btc": 0.01544502,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960262,
+    960265
+   ],
+   "deposits_total": 1140,
+   "unrelated_deposits": 1134,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q934tgwuk4d4aljkys79p8vc8hhm4u2a3gjlld9",
+   "sweeps": 4,
+   "btc": 0.01543832,
+   "fee_rate": 3.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960560
+   ],
+   "deposits_total": 115,
+   "unrelated_deposits": 111,
+   "balance_btc": 0.02561526,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qfcesztcruwvzuhnwneujrfe96daeqagefg9xl6",
+   "sweeps": 3,
+   "btc": 0.01501362,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960398
+   ],
+   "deposits_total": 34,
+   "unrelated_deposits": 31,
+   "balance_btc": 9.597e-05,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qp6fz3g2qce2tmkuk73plkt8dlx8d2rkpmlyfqt",
+   "sweeps": 3,
+   "btc": 0.01466857,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960375
+   ],
+   "deposits_total": 42,
+   "unrelated_deposits": 39,
+   "balance_btc": 0.00105538,
+   "looks_fresh": false
+  },
+  {
+   "address": "16rxLYaRyrzQDTzXG8qZJMtSs4C6YRD4a4",
+   "sweeps": 11,
+   "btc": 0.01381,
+   "fee_rate": 2.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960284,
+    960285,
+    960502
+   ],
+   "deposits_total": 2839,
+   "unrelated_deposits": 2828,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qqt23tj3jcnzwe27a9nqv5tralwsf66cpngtfxd",
+   "sweeps": 3,
+   "btc": 0.01372344,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960393
+   ],
+   "deposits_total": 167,
+   "unrelated_deposits": 164,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "1aYymUKDgJ1WSW6uJbCzhchepFAgxU8Z6",
+   "sweeps": 3,
+   "btc": 0.013371,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960397
+   ],
+   "deposits_total": 238,
+   "unrelated_deposits": 235,
+   "balance_btc": 0.00417932,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q27lu7wdafn2qwf7chsk5tg5daqcmrjaty6t57z",
+   "sweeps": 3,
+   "btc": 0.01299039,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960469
+   ],
+   "deposits_total": 10,
+   "unrelated_deposits": 7,
+   "balance_btc": 0.10301341,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qx0kyjxzhj03j8l9667y7pw3sadla7t7kn6avy6",
+   "sweeps": 3,
+   "btc": 0.01266822,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960395
+   ],
+   "deposits_total": 84,
+   "unrelated_deposits": 81,
+   "balance_btc": 0.00017794,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qdee5wyrnwgg0du9glqndpfgjtnlfnnqh7u6und",
+   "sweeps": 3,
+   "btc": 0.01169014,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960521
+   ],
+   "deposits_total": 235,
+   "unrelated_deposits": 232,
+   "balance_btc": 0.16211169,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qtkrm0dj507zd3zqg9dlymgcd28jlwjxdvna6md",
+   "sweeps": 4,
+   "btc": 0.011552,
+   "fee_rate": 5.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960395
+   ],
+   "deposits_total": 36,
+   "unrelated_deposits": 32,
+   "balance_btc": 0.13302139,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q5324g674f4lcyymguht4pefpk9ctfhysjn8cjv",
+   "sweeps": 5,
+   "btc": 0.01144794,
+   "fee_rate": 4.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960398
+   ],
+   "deposits_total": 142,
+   "unrelated_deposits": 137,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qwsflt574lu29cycj6al7zlfadca23pd4vfafmv",
+   "sweeps": 4,
+   "btc": 0.01143092,
+   "fee_rate": 2.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960380
+   ],
+   "deposits_total": 106,
+   "unrelated_deposits": 102,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q8zqzpq5mr82evl609a8qtlqehpuuwrd3j8awz6",
+   "sweeps": 7,
+   "btc": 0.01141477,
+   "fee_rate": 3.6,
+   "rbf_inputs": 0,
+   "blocks": [
+    960269,
+    960376
+   ],
+   "deposits_total": 1689,
+   "unrelated_deposits": 1682,
+   "balance_btc": 0.37248436,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qn0u3s0xcngyqrs5rjk988uxxyc0kvzgqvhx06m",
+   "sweeps": 3,
+   "btc": 0.01120235,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960429
+   ],
+   "deposits_total": 117,
+   "unrelated_deposits": 114,
+   "balance_btc": 0.01242393,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qnuvtdu5mxk9krymwtqdt0egztasnn0sd2uvzw9",
+   "sweeps": 3,
+   "btc": 0.01109436,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960375
+   ],
+   "deposits_total": 46,
+   "unrelated_deposits": 43,
+   "balance_btc": 0.00292506,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qwwggnkgqs924lngwkg60fu8l0763rmyt4ur4ps",
+   "sweeps": 4,
+   "btc": 0.01096277,
+   "fee_rate": 4.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960393
+   ],
+   "deposits_total": 67,
+   "unrelated_deposits": 63,
+   "balance_btc": 0.00084056,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qk7pwhj50lfhfllm7nv5jgksmq24jz94m0dql02",
+   "sweeps": 3,
+   "btc": 0.0109483,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960391
+   ],
+   "deposits_total": 87,
+   "unrelated_deposits": 84,
+   "balance_btc": 0.16753083,
+   "looks_fresh": false
+  },
+  {
+   "address": "3NaxxbdVM22tjyLLno2Jtqqo6A1DiHjcaK",
+   "sweeps": 3,
+   "btc": 0.01028516,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960375
+   ],
+   "deposits_total": 154,
+   "unrelated_deposits": 151,
+   "balance_btc": 0.08567775,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qfc2s4ctaeydcullk9fpe5ttvg87j6jnqs9est8",
+   "sweeps": 4,
+   "btc": 0.01007404,
+   "fee_rate": 4.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960398
+   ],
+   "deposits_total": 14,
+   "unrelated_deposits": 10,
+   "balance_btc": 0.04710987,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qkjj92grfu9lf2laq7hp900pyqvjn5u5n3nefnd",
+   "sweeps": 3,
+   "btc": 0.00983773,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960343
+   ],
+   "deposits_total": 11,
+   "unrelated_deposits": 8,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qrnu6aw02usd4keep4tvc0595dt5jg87m74ea5m",
+   "sweeps": 4,
+   "btc": 0.00947472,
+   "fee_rate": 2.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960514
+   ],
+   "deposits_total": 68,
+   "unrelated_deposits": 64,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qw8ex7kmxknjcpcfhd880qrgedhscvcrugngvpe",
+   "sweeps": 3,
+   "btc": 0.00925551,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960403
+   ],
+   "deposits_total": 142,
+   "unrelated_deposits": 139,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qyplxykelkct4zavyn63uzz3q3zxewamq9fy7qt",
+   "sweeps": 6,
+   "btc": 0.009184,
+   "fee_rate": 2.1,
+   "rbf_inputs": 0,
+   "blocks": [
+    960251,
+    960290
+   ],
+   "deposits_total": 80,
+   "unrelated_deposits": 74,
+   "balance_btc": 6.699e-05,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q9pqupq2dgls0657nm0urj0nkxcxuckgh5577r8",
+   "sweeps": 3,
+   "btc": 0.00885055,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960374
+   ],
+   "deposits_total": 288,
+   "unrelated_deposits": 285,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q09xjalskfqd2qlt09t38xw9ve2y7fqpplxf0vf",
+   "sweeps": 3,
+   "btc": 0.00870186,
+   "fee_rate": 7.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960395
+   ],
+   "deposits_total": 23,
+   "unrelated_deposits": 20,
+   "balance_btc": 0.13412593,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qprdqzuj2jkaygcklsmthjlu4uqe55dn4sp2yfd",
+   "sweeps": 3,
+   "btc": 0.00868913,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960379
+   ],
+   "deposits_total": 110,
+   "unrelated_deposits": 107,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1p30qtn0hzma6trgyg0ghedm9nlf7lkryfyrtj4r82cxfp3cxqk0ps99nf7q",
+   "sweeps": 3,
+   "btc": 0.00866826,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960208
+   ],
+   "deposits_total": 762,
+   "unrelated_deposits": 759,
+   "balance_btc": 0.20933408,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qw27ndhjp58grqyue4kh2m9ux56qy4t0g9gwnem",
+   "sweeps": 3,
+   "btc": 0.0086444,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960387
+   ],
+   "deposits_total": 61,
+   "unrelated_deposits": 58,
+   "balance_btc": 0.00160734,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qf2fghj808gnx79ta2a7wlc7y2syfs2t5x2a0ng",
+   "sweeps": 3,
+   "btc": 0.00845958,
+   "fee_rate": 1.4,
+   "rbf_inputs": 0,
+   "blocks": [
+    960361
+   ],
+   "deposits_total": 19461,
+   "unrelated_deposits": 19458,
+   "balance_btc": 4.7634407,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q8jtdtqmdjq9hal9zdz38k62ax7qau5dkncp9j2",
+   "sweeps": 3,
+   "btc": 0.007768,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960554
+   ],
+   "deposits_total": 210,
+   "unrelated_deposits": 207,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qg8saazsegsk0hcegfmxz3zr0tkg4zndeur5gze",
+   "sweeps": 7,
+   "btc": 0.00776721,
+   "fee_rate": 1.4,
+   "rbf_inputs": 0,
+   "blocks": [
+    960244,
+    960489
+   ],
+   "deposits_total": 145,
+   "unrelated_deposits": 138,
+   "balance_btc": 0.00340497,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qwhqrm4glk9ud9puqkkqj64p9gpwdk4a5y32wyj",
+   "sweeps": 3,
+   "btc": 0.00764648,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960368
+   ],
+   "deposits_total": 64,
+   "unrelated_deposits": 61,
+   "balance_btc": 0.13326687,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qgvlh7c0vfj0aadmx85kqx9dmllzpsgeqvuxc3x",
+   "sweeps": 3,
+   "btc": 0.00760114,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960390
+   ],
+   "deposits_total": 370,
+   "unrelated_deposits": 367,
+   "balance_btc": 7.141e-05,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q2xgpqep7w6elvxlz5te8zdydqxs3k7na2jm8ge",
+   "sweeps": 3,
+   "btc": 0.00745256,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960549
+   ],
+   "deposits_total": 786,
+   "unrelated_deposits": 783,
+   "balance_btc": 3.87247078,
+   "looks_fresh": false
+  },
+  {
+   "address": "3KohtUyBemvUHsUZAM8tY1a9nbSuEHrGY5",
+   "sweeps": 3,
+   "btc": 0.00743997,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960536
+   ],
+   "deposits_total": 26,
+   "unrelated_deposits": 23,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qlw3cm5y609qwmx3v2padx59nwqsglwrppvvgfy",
+   "sweeps": 3,
+   "btc": 0.00715025,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960380
+   ],
+   "deposits_total": 134,
+   "unrelated_deposits": 131,
+   "balance_btc": 0.00240075,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qj96jsrgprgm0peyhw37gkuva6jjnt3a8x7xke6",
+   "sweeps": 6,
+   "btc": 0.00695305,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960340,
+    960501
+   ],
+   "deposits_total": 836,
+   "unrelated_deposits": 830,
+   "balance_btc": 3.44974443,
+   "looks_fresh": false
+  },
+  {
+   "address": "31vKHtKchV42TY1pKD8wAVJupzWWp2tvPc",
+   "sweeps": 3,
+   "btc": 0.00629737,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960410
+   ],
+   "deposits_total": 39,
+   "unrelated_deposits": 36,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "15STFPSaKeSjDqsacWiU9AxFv37ZQmKP99",
+   "sweeps": 3,
+   "btc": 0.00626067,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960424
+   ],
+   "deposits_total": 43,
+   "unrelated_deposits": 40,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q05rujwusqxwv28f569dr3yjhqzwmcnq46dl64g",
+   "sweeps": 3,
+   "btc": 0.00588,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960459
+   ],
+   "deposits_total": 142,
+   "unrelated_deposits": 139,
+   "balance_btc": 0.04785594,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qhsmuvcuu95ymntkvmmqw844c2hx436k994hm75",
+   "sweeps": 3,
+   "btc": 0.00587998,
+   "fee_rate": 11.4,
+   "rbf_inputs": 3,
+   "blocks": [
+    960439
+   ],
+   "deposits_total": 17,
+   "unrelated_deposits": 14,
+   "balance_btc": 0.00024173,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qdc9gexhg56s7eptpzdxdv2lvtz5jxgmkdlx8mk",
+   "sweeps": 4,
+   "btc": 0.00565247,
+   "fee_rate": 6.8,
+   "rbf_inputs": 4,
+   "blocks": [
+    960190
+   ],
+   "deposits_total": 55,
+   "unrelated_deposits": 51,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q8y4yqs9xd38zrh3dn2xkz383nlw4v09f4awj4j",
+   "sweeps": 3,
+   "btc": 0.00556884,
+   "fee_rate": 8.1,
+   "rbf_inputs": 3,
+   "blocks": [
+    960424
+   ],
+   "deposits_total": 69,
+   "unrelated_deposits": 66,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qw55nyd0zrp576m9acs8e8tmtnku94x7hxzfls9",
+   "sweeps": 12,
+   "btc": 0.00555809,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960543,
+    960546
+   ],
+   "deposits_total": 346,
+   "unrelated_deposits": 334,
+   "balance_btc": 0.11119926,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qtpn20zava0x27e03qaznsry26a3vkjp2fuw8qf",
+   "sweeps": 3,
+   "btc": 0.00507885,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960403
+   ],
+   "deposits_total": 46,
+   "unrelated_deposits": 43,
+   "balance_btc": 4.333e-05,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qn9hmk4avjssfr7g68p2x8lweqzm5xepfmjhpsu",
+   "sweeps": 18,
+   "btc": 0.00433122,
+   "fee_rate": 4.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960309
+   ],
+   "deposits_total": 48,
+   "unrelated_deposits": 30,
+   "balance_btc": 0.01057753,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q2ljp2tmc5pznxhtmutlcaajjyprkkxhzmvl20g",
+   "sweeps": 3,
+   "btc": 0.00423143,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960262
+   ],
+   "deposits_total": 19,
+   "unrelated_deposits": 16,
+   "balance_btc": 0.00253752,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q36dd8ues3nljmnhqxlr4zgw5ewh0ql3z3pxv4h",
+   "sweeps": 4,
+   "btc": 0.00382962,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960389
+   ],
+   "deposits_total": 21494,
+   "unrelated_deposits": 21490,
+   "balance_btc": 0.33034559,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q4stqwe496kzkk80m9r2h74csml7f0vmcnw3yhz",
+   "sweeps": 4,
+   "btc": 0.00380222,
+   "fee_rate": 4.7,
+   "rbf_inputs": 0,
+   "blocks": [
+    960183
+   ],
+   "deposits_total": 613,
+   "unrelated_deposits": 609,
+   "balance_btc": 0.1784961,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qf882awjx2a6w4m8j9dfw8qjay7yak6uqj83v3k",
+   "sweeps": 3,
+   "btc": 0.00366253,
+   "fee_rate": 11.4,
+   "rbf_inputs": 3,
+   "blocks": [
+    960402
+   ],
+   "deposits_total": 25,
+   "unrelated_deposits": 22,
+   "balance_btc": 0.0012531,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qxlqfvt78uwj4wrt8rvy8j6eqlkvv3pkm0fjwye",
+   "sweeps": 13,
+   "btc": 0.00358739,
+   "fee_rate": 1.0,
+   "rbf_inputs": 13,
+   "blocks": [
+    960535
+   ],
+   "deposits_total": 31,
+   "unrelated_deposits": 18,
+   "balance_btc": 0.00383442,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1pczezafee0xd2amt8q7xvc0k92khnfnwr6zsgcsaefnvk5whr7l4slwxpq7",
+   "sweeps": 3,
+   "btc": 0.0032113,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960250
+   ],
+   "deposits_total": 4162,
+   "unrelated_deposits": 4159,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q7rv6xw326w007mayz5mx8qgmx6vnml8atg3rel",
+   "sweeps": 13,
+   "btc": 0.00301464,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960542,
+    960546
+   ],
+   "deposits_total": 50,
+   "unrelated_deposits": 37,
+   "balance_btc": 0.006563,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q5rkfr0wte7hxjcwh5v7qln9tfnj2390dlhralw",
+   "sweeps": 7,
+   "btc": 0.00283603,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960539,
+    960540
+   ],
+   "deposits_total": 25,
+   "unrelated_deposits": 18,
+   "balance_btc": 0.00050799,
+   "looks_fresh": false
+  },
+  {
+   "address": "3LJG1NAzpkXdip87LQuQ7rWX3186f4RYCH",
+   "sweeps": 3,
+   "btc": 0.002587,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960552
+   ],
+   "deposits_total": 367,
+   "unrelated_deposits": 364,
+   "balance_btc": 0.00344676,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qrfn5dc73mtchdf8aytrzjthr0cxc662g0q007a",
+   "sweeps": 3,
+   "btc": 0.00243695,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960246
+   ],
+   "deposits_total": 45,
+   "unrelated_deposits": 42,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q7k7xftl2jh4uzgpmsm9rt484vuu3tz2yvn8amj",
+   "sweeps": 4,
+   "btc": 0.0022292,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960202
+   ],
+   "deposits_total": 22,
+   "unrelated_deposits": 18,
+   "balance_btc": 0.00083927,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q2kd9xwwjw63sgazmfd8suy47c9ege5me6ggeay",
+   "sweeps": 13,
+   "btc": 0.00201572,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960542,
+    960546
+   ],
+   "deposits_total": 20,
+   "unrelated_deposits": 7,
+   "balance_btc": 0.00327403,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qyhzcl5uz5hfe29h8wj24d9chjudsr99xlwdl3s",
+   "sweeps": 8,
+   "btc": 0.00179234,
+   "fee_rate": 1.0,
+   "rbf_inputs": 8,
+   "blocks": [
+    960530
+   ],
+   "deposits_total": 26,
+   "unrelated_deposits": 18,
+   "balance_btc": 0.00292802,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qxhn0g2h09ulfncyu9fqxuzfwnnyvyd50667jl5",
+   "sweeps": 4,
+   "btc": 0.00161624,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960549
+   ],
+   "deposits_total": 17,
+   "unrelated_deposits": 13,
+   "balance_btc": 0.07119688,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qpn495k6tt98nmwudxx3ag6cn3qmw3wzhf0eahf",
+   "sweeps": 3,
+   "btc": 0.00160531,
+   "fee_rate": 4.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960316
+   ],
+   "deposits_total": 148,
+   "unrelated_deposits": 145,
+   "balance_btc": 0.01139272,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qxvpw6c3q0fnap0thz9f6w58d89750x29ey6w90",
+   "sweeps": 20,
+   "btc": 0.00153217,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960517,
+    960542,
+    960546
+   ],
+   "deposits_total": 88,
+   "unrelated_deposits": 68,
+   "balance_btc": 0.0030956,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qf7vrx95sh4ljg3dq8afczdqzwwc246pt0q02ht",
+   "sweeps": 6,
+   "btc": 0.00152207,
+   "fee_rate": 1.0,
+   "rbf_inputs": 6,
+   "blocks": [
+    960250
+   ],
+   "deposits_total": 46,
+   "unrelated_deposits": 40,
+   "balance_btc": 0.00057002,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qyhkzvmkawv74q838n2k08elguekpjm2f85wjpq",
+   "sweeps": 3,
+   "btc": 0.00147852,
+   "fee_rate": 2.9,
+   "rbf_inputs": 3,
+   "blocks": [
+    960473
+   ],
+   "deposits_total": 1682,
+   "unrelated_deposits": 1679,
+   "balance_btc": 0.07797116,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qvyu2ssgrxqua2t7q8g82ad5hgh9rs7z2kc0lss",
+   "sweeps": 3,
+   "btc": 0.00140361,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960455
+   ],
+   "deposits_total": 22,
+   "unrelated_deposits": 19,
+   "balance_btc": 0.05081991,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q09g6zznn7ajknfvy9m49qu8p4x4p97s24xyt49",
+   "sweeps": 3,
+   "btc": 0.00131638,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960523
+   ],
+   "deposits_total": 28,
+   "unrelated_deposits": 25,
+   "balance_btc": 0.00358746,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qfkqlsutkyeqha9l6z6wt2ax6997wy0krf94ulu",
+   "sweeps": 3,
+   "btc": 0.00119301,
+   "fee_rate": 2.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960327
+   ],
+   "deposits_total": 280,
+   "unrelated_deposits": 277,
+   "balance_btc": 0.00045179,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qzx3q970yrezgqe7w4vgr2854l0t49dee56k4ut",
+   "sweeps": 3,
+   "btc": 0.00118431,
+   "fee_rate": 1.2,
+   "rbf_inputs": 0,
+   "blocks": [
+    960257
+   ],
+   "deposits_total": 36,
+   "unrelated_deposits": 33,
+   "balance_btc": 0.002743,
+   "looks_fresh": false
+  },
+  {
+   "address": "142YWYuE9KdQR5UHzdG79RFK5xFKoPPoBD",
+   "sweeps": 3,
+   "btc": 0.00100317,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960266
+   ],
+   "deposits_total": 208,
+   "unrelated_deposits": 205,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q6ujupx9mg37qhwnn5p83lzjyug6g6knrwzdkd0",
+   "sweeps": 7,
+   "btc": 0.00096485,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960362,
+    960553
+   ],
+   "deposits_total": 32,
+   "unrelated_deposits": 25,
+   "balance_btc": 0.00388746,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qvzcjzh4mqxhsgkdw72lprhcu6ylakl9zprv9a4",
+   "sweeps": 9,
+   "btc": 0.00092234,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960504,
+    960526
+   ],
+   "deposits_total": 29,
+   "unrelated_deposits": 20,
+   "balance_btc": 0.00406956,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q7nkq6rvaf8avessv8qjm59cw0lpjerclyccjzs",
+   "sweeps": 3,
+   "btc": 0.00086107,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960528
+   ],
+   "deposits_total": 11,
+   "unrelated_deposits": 8,
+   "balance_btc": 0.00099701,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qr3rzc5z8v62qxx0gqq5v9w7vaxdfyqnfw4epkp",
+   "sweeps": 3,
+   "btc": 0.00084482,
+   "fee_rate": 3.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960215
+   ],
+   "deposits_total": 32,
+   "unrelated_deposits": 29,
+   "balance_btc": 0.0015006,
+   "looks_fresh": false
+  },
+  {
+   "address": "1JzUk2r1uiyDUk8sZ7ZuzWvBp9LF5BBNn2",
+   "sweeps": 7,
+   "btc": 0.00078379,
+   "fee_rate": 2.8,
+   "rbf_inputs": 0,
+   "blocks": [
+    960416,
+    960447
+   ],
+   "deposits_total": 28,
+   "unrelated_deposits": 21,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q0c75wxmc00mwyax82xwpj7cyngvrq5r6ks4ppe",
+   "sweeps": 4,
+   "btc": 0.00073977,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960495
+   ],
+   "deposits_total": 12,
+   "unrelated_deposits": 8,
+   "balance_btc": 0.00089642,
+   "looks_fresh": false
+  },
+  {
+   "address": "1Bh3R56PH9xRWL7zZh76dXkVKsBiytnmKQ",
+   "sweeps": 4,
+   "btc": 0.00069295,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960185
+   ],
+   "deposits_total": 38,
+   "unrelated_deposits": 34,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qf6a82eew7pk8gmad79hntr2y3a0amkymac97cc",
+   "sweeps": 3,
+   "btc": 0.00062555,
+   "fee_rate": 2.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960491
+   ],
+   "deposits_total": 161,
+   "unrelated_deposits": 158,
+   "balance_btc": 0.00062259,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q2dha8xfwlqqlwjw2cm63yvs49m8l386cktrvhl",
+   "sweeps": 3,
+   "btc": 0.00062221,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960533
+   ],
+   "deposits_total": 15,
+   "unrelated_deposits": 12,
+   "balance_btc": 0.00094283,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q6v9tpk6q80k9q4wpdtwfeus4va2lxstt36pm6g",
+   "sweeps": 3,
+   "btc": 0.00061741,
+   "fee_rate": 4.6,
+   "rbf_inputs": 0,
+   "blocks": [
+    960307
+   ],
+   "deposits_total": 35,
+   "unrelated_deposits": 32,
+   "balance_btc": 0.00294821,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qxtdrn23q8520rfxhchqg80yd92llxkj449vqql",
+   "sweeps": 4,
+   "btc": 0.00056861,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960184
+   ],
+   "deposits_total": 33,
+   "unrelated_deposits": 29,
+   "balance_btc": 0.00110138,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q77ljevu6mmhc4zg0yzts6lj7h60l63fnlxgptu",
+   "sweeps": 4,
+   "btc": 0.00056289,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960213
+   ],
+   "deposits_total": 126,
+   "unrelated_deposits": 122,
+   "balance_btc": 0.00152149,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q8w47cyt36f8k4ycmmzgcdtgyp539rs6urx97vq",
+   "sweeps": 3,
+   "btc": 0.00048919,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960546
+   ],
+   "deposits_total": 116,
+   "unrelated_deposits": 113,
+   "balance_btc": 0.03979378,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q7vk6p9ntskur0grct85mf4neux2tpgue7zaxdr",
+   "sweeps": 3,
+   "btc": 0.00048705,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960529
+   ],
+   "deposits_total": 18,
+   "unrelated_deposits": 15,
+   "balance_btc": 0.00086851,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qvv970flg0hymzw8re2ut0puyfjl8m7y9cuw0qj",
+   "sweeps": 4,
+   "btc": 0.00038153,
+   "fee_rate": 1.0,
+   "rbf_inputs": 4,
+   "blocks": [
+    960546
+   ],
+   "deposits_total": 18,
+   "unrelated_deposits": 14,
+   "balance_btc": 0.00050899,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qddt3f3wypgsjdfr9rnr0jcswtu9cxmt2tdwyxw",
+   "sweeps": 3,
+   "btc": 0.00036974,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960546
+   ],
+   "deposits_total": 23,
+   "unrelated_deposits": 20,
+   "balance_btc": 0.00290074,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q0a06frmzme4q6fvlqs5czzlqqyl0pcgfzc870l",
+   "sweeps": 6,
+   "btc": 0.00035396,
+   "fee_rate": 1.0,
+   "rbf_inputs": 6,
+   "blocks": [
+    960494
+   ],
+   "deposits_total": 43,
+   "unrelated_deposits": 37,
+   "balance_btc": 0.0013672,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qc9zeg09eaxf4aqy2her9cmyu5yl2y4prjwa703",
+   "sweeps": 5,
+   "btc": 0.00032295,
+   "fee_rate": 2.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960545
+   ],
+   "deposits_total": 228,
+   "unrelated_deposits": 223,
+   "balance_btc": 0.02107799,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qzq0mw9tsk4fwy0hum3t0h90fst04fvxaj24dad",
+   "sweeps": 3,
+   "btc": 0.00032072,
+   "fee_rate": 3.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960405
+   ],
+   "deposits_total": 14,
+   "unrelated_deposits": 11,
+   "balance_btc": 0.0416743,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1quvec6tq3h2wfxjqkuhxasayraxaa7jgdp7hjct",
+   "sweeps": 5,
+   "btc": 0.00023197,
+   "fee_rate": 1.0,
+   "rbf_inputs": 5,
+   "blocks": [
+    960553
+   ],
+   "deposits_total": 30,
+   "unrelated_deposits": 25,
+   "balance_btc": 0.00086277,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qp5lh6l2pewpkj0y9nkdwdv0hq9hs5kklxcrh8j",
+   "sweeps": 3,
+   "btc": 0.0002283,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960535
+   ],
+   "deposits_total": 10,
+   "unrelated_deposits": 7,
+   "balance_btc": 0.0,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q8g0hg6c7x6ps9jp2s0s066f5cuzz8y9vdsrx9y",
+   "sweeps": 3,
+   "btc": 0.00021618,
+   "fee_rate": 1.0,
+   "rbf_inputs": 3,
+   "blocks": [
+    960209
+   ],
+   "deposits_total": 80,
+   "unrelated_deposits": 77,
+   "balance_btc": 0.00061798,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1q7p5jt2x8h9wgvwq38v0u78nh4c6zj6mdljq7p5",
+   "sweeps": 3,
+   "btc": 0.00016284,
+   "fee_rate": 4.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960446
+   ],
+   "deposits_total": 13,
+   "unrelated_deposits": 10,
+   "balance_btc": 0.00071424,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qahgqg70d9qt0u2j59mwfzt6xzm0rws4vdxcp90",
+   "sweeps": 3,
+   "btc": 0.00015492,
+   "fee_rate": 1.0,
+   "rbf_inputs": 0,
+   "blocks": [
+    960504
+   ],
+   "deposits_total": 57,
+   "unrelated_deposits": 54,
+   "balance_btc": 0.00035595,
+   "looks_fresh": false
+  },
+  {
+   "address": "bc1qwvy78hvhp4zj50p9dnu804cq30gdculr478rmc",
+   "sweeps": 3,
+   "btc": 9.853e-05,
+   "fee_rate": 1.4,
+   "rbf_inputs": 3,
+   "blocks": [
+    960541
+   ],
+   "deposits_total": 70,
+   "unrelated_deposits": 67,
+   "balance_btc": 0.00097947,
+   "looks_fresh": false
+  }
+ ]
+}

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How addresses get tracked</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0e11; --surface:#14161a; --surface-2:#1a1d22;
+  --line:#24282f; --line-soft:#1e2128;
+  --ink:#f2f4f7; --ink-2:#c9cfd6; --ink-3:#a4acb6;
+  --accent:#f7931a; --moved:#e5484d; --safe:#3fb950;
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-6:24px;--sp-8:32px;--sp-12:48px;--sp-16:64px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.6;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
+  -webkit-font-smoothing:antialiased;
+}
+main{max-width:1080px;margin:0 auto;padding:0 var(--sp-6) var(--sp-16)}
+h1{font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:500;letter-spacing:-.025em;line-height:1.2;margin:0}
+h2{font-size:1rem;font-weight:500;color:var(--ink-2);margin:var(--sp-12) 0 var(--sp-4)}
+p{color:var(--ink-2);margin:0 0 var(--sp-4);text-wrap:pretty}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(247,147,26,.28)}
+a:hover{border-bottom-color:var(--accent)}
+code{font-family:inherit;color:var(--ink);background:var(--surface-2);
+  border:1px solid var(--line-soft);border-radius:4px;padding:1px 5px;font-size:.9em}
+
+.top{padding:var(--sp-16) 0 var(--sp-2);border-bottom:1px solid var(--line-soft)}
+.eyebrow{font-size:.8rem;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;margin:0 0 var(--sp-3)}
+.lede{font-size:1.1rem;color:var(--ink-2);max-width:64ch;margin-top:var(--sp-4)}
+
+/* method cards */
+.grid{display:grid;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);
+  border-radius:10px;overflow:hidden;margin-top:var(--sp-4)}
+.m{background:var(--surface);padding:var(--sp-6)}
+.m-head{display:flex;align-items:baseline;gap:var(--sp-3);flex-wrap:wrap;margin-bottom:var(--sp-4)}
+.m-name{font-size:1.05rem;font-weight:500;letter-spacing:-.01em}
+.m-file{font-size:.8rem;color:var(--ink-3)}
+.m-head .tag{margin-left:auto}
+.tag{font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;
+  border-radius:99px;border:1px solid var(--line);color:var(--ink-3);white-space:nowrap}
+.tag.pub{color:#8ad19a;border-color:rgba(63,185,80,.35);background:rgba(63,185,80,.08)}
+.tag.hold{color:#ffb37a;border-color:rgba(247,147,26,.35);background:rgba(247,147,26,.08)}
+.tag.note{color:var(--ink-2)}
+.tag.new{color:var(--accent);border-color:rgba(247,147,26,.5)}
+
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-6)}
+@media (max-width:800px){.facts{grid-template-columns:1fr}}
+.f .k{font-size:.74rem;color:var(--ink-3);letter-spacing:.05em;text-transform:uppercase;
+  display:block;margin-bottom:var(--sp-2)}
+.f .v{font-size:.9rem;color:var(--ink-2);line-height:1.55}
+.f.blind .v{color:#e8a0a2}
+.result{margin:var(--sp-6) 0 0;padding-top:var(--sp-4);border-top:1px solid var(--line-soft);
+  font-size:.86rem;color:var(--ink-2)}
+.result strong{color:var(--accent);font-weight:500}
+
+/* coverage table */
+table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:var(--sp-4)}
+th{text-align:left;font-weight:500;color:var(--ink-3);font-size:.76rem;letter-spacing:.05em;
+  text-transform:uppercase;padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--line)}
+td{padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--line-soft);color:var(--ink-2);vertical-align:top}
+td:first-child{color:var(--ink)}
+tr:last-child td{border-bottom:none}
+.yes{color:var(--safe)}
+.no{color:var(--moved)}
+.na{color:var(--ink-3)}
+.wrap{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}
+.scroll{overflow-x:auto}
+
+.note{background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;
+  padding:var(--sp-6);margin-top:var(--sp-4)}
+.note p:last-child{margin-bottom:0}
+.note.warn{border-color:rgba(229,72,77,.3);background:#171315}
+.foot{margin-top:var(--sp-16);padding-top:var(--sp-6);border-top:1px solid var(--line-soft);
+  font-size:.82rem;color:var(--ink-3)}
+</style>
+</head>
+<body>
+<main>
+
+<div class="top">
+  <p class="eyebrow">Coldcard Watch</p>
+  <h1>How addresses get tracked</h1>
+  <p class="lede">Eight methods run against the chain and against X. Each one keys on a different
+  signal, each proves a different amount, and each is blind to something. The blind spots are the
+  useful column: Wave 3 got through because the first six all key on a funnel, and Wave 3 has no
+  funnel.</p>
+</div>
+
+<h2>The methods</h2>
+<div class="grid">
+
+  <div class="m">
+    <div class="m-head">
+      <span class="m-name">Co-spend</span>
+      <span class="m-file">co-spend.py, autopilot.py tier 1</span>
+      <span class="tag pub">Auto-publishes</span>
+    </div>
+    <div class="facts">
+      <div class="f"><span class="k">Keys on</span><span class="v">Two addresses signing the same
+        transaction. Walks outward from known attacker addresses through shared inputs.</span></div>
+      <div class="f"><span class="k">Proves</span><span class="v">Common ownership, deterministically.
+        One signer held both keys. This is the only test on the project treated as proof.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Anything unspent. An address
+        that has never signed cannot co-spend, so a fresh vault is invisible until it moves.</span></div>
+    </div>
+  </div>
+
+  <div class="m">
+    <div class="m-head">
+      <span class="m-name">Collector fingerprint</span>
+      <span class="m-file">cluster.py, autopilot.py tier 2</span>
+      <span class="tag hold">Notify first</span>
+    </div>
+    <div class="facts">
+      <div class="f"><span class="k">Keys on</span><span class="v">A collector that took many sweeps
+        at one uniform hardcoded fee, all no-change, in a tight block window, with no unrelated
+        history.</span></div>
+      <div class="f"><span class="k">Proves</span><span class="v">Machine behaviour. Uniformity, not
+        magnitude: 92 of 93 sweeps at exactly 10.0 sat/vB is a script, whatever the absolute
+        fee.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Any theft without a shared
+        collector. The whole test is a funnel test.</span></div>
+    </div>
+  </div>
+
+  <div class="m">
+    <div class="m-head">
+      <span class="m-name">Block scan, single sweeps</span>
+      <span class="m-file">scan.py</span>
+      <span class="tag note">Report only</span>
+    </div>
+    <div class="facts">
+      <div class="f"><span class="k">Keys on</span><span class="v">Several one-input, one-output,
+        no-change sweeps landing in the same block, paying the same address at one identical fee
+        rate.</span></div>
+      <div class="f"><span class="k">Proves</span><span class="v">Nothing on its own. It discovers
+        candidates the site was never told about, then freshness-checks each destination.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Batched sweeps, where one
+        transaction carries many victims. It reads those as a single ordinary spend.</span></div>
+    </div>
+  </div>
+
+  <div class="m">
+    <div class="m-head">
+      <span class="m-name">Block scan, batched sweeps</span>
+      <span class="m-file">scan-batched.py</span>
+      <span class="tag note">Report only</span>
+    </div>
+    <div class="facts">
+      <div class="f"><span class="k">Keys on</span><span class="v">Many distinct single-sig segwit
+        inputs, exactly one output, no change, at a fee rate five or more times the block's own
+        median.</span></div>
+      <div class="f"><span class="k">Proves</span><span class="v">Nothing on its own. An owner
+        consolidating produces the same shape, so the fee overpay is the only separator.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Sweeps under its
+        five-input floor, and the second hop. It sees the sweep and stops there.</span></div>
+    </div>
+  </div>
+
+  <div class="m">
+    <div class="m-head">
+      <span class="m-name">No-collector, two-hop signer fingerprint</span>
+      <span class="m-file">wave3.py</span>
+      <span class="tag new">New, review only</span>
+    </div>
+    <div class="facts">
+      <div class="f"><span class="k">Keys on</span><span class="v">The signer, not the destination.
+        Version 2, locktime 0, one nSequence across every input, one output, homogeneous P2WPKH
+        inputs at distinct addresses, no input coin older than block 674,951, then a full no-change
+        forward into a fresh P2WSH that sits unspent.</span></div>
+      <div class="f"><span class="k">Proves</span><span class="v">That one piece of software built
+        every transaction in the set. It survives the funnel being deleted, because those fields
+        are what the tool fills in rather than where it sends.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Intent. This shape is also
+        exactly what Coinkite's advisory told owners to do, so it can rank candidates and can never
+        publish one.</span></div>
+    </div>
+    <p class="result">First run over blocks 960396 to 960471 rebuilt 231 chains into 230 vaults
+    holding <strong>203.25 BTC</strong>, against Galaxy's 293 vaults and 207.73 BTC, so 97.8% of the
+    value and 78% of the vaults. It found the one Wave 3 chain a third party has published in full.
+    The fee constant reads 200.85 to 201.44 sat/vB rather than the "roughly 200" Galaxy gave, and
+    215 of the 222 sweeps inside that band went on to terminate in a fresh unspent P2WSH.</p>
+  </div>
+
+  <div class="m">
+    <div class="m-head">
+      <span class="m-name">Live block watch</span>
+      <span class="m-file">watch-blocks.py</span>
+      <span class="tag note">Telegram</span>
+    </div>
+    <div class="facts">
+      <div class="f"><span class="k">Keys on</span><span class="v">The same pattern as scan.py,
+        applied to every block since the last run, forever.</span></div>
+      <div class="f"><span class="k">Proves</span><span class="v">Nothing. It converts discovery from
+        something that arrives by tweet into something the chain reports first.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Everything scan.py is blind
+        to, inherited whole. It reuses that pattern test exactly.</span></div>
+    </div>
+  </div>
+
+  <div class="m">
+    <div class="m-head">
+      <span class="m-name">Victim reports on X</span>
+      <span class="m-file">x-watch.py</span>
+      <span class="tag pub">Auto-publishes when proven</span>
+    </div>
+    <div class="facts">
+      <div class="f"><span class="k">Keys on</span><span class="v">People naming their own drained
+        address. Replies to the tracked threads, quote tweets, links to the site, and a keyword
+        sweep, every 30 minutes.</span></div>
+      <div class="f"><span class="k">Proves</span><span class="v">The chain decides, not the tweet.
+        A local Claude call reads the tweet for a claim; <code>verify_addr</code> then checks
+        it.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Victims who stay quiet, and
+        to anyone who does not yet know. A 1,395-tweet backfill found no unlisted provable
+        victim.</span></div>
+    </div>
+  </div>
+
+  <div class="m">
+    <div class="m-head">
+      <span class="m-name">Movement monitor</span>
+      <span class="m-file">coldcard-watch-monitor.py</span>
+      <span class="tag note">Telegram</span>
+    </div>
+    <div class="facts">
+      <div class="f"><span class="k">Keys on</span><span class="v">Balance changes on the addresses
+        already tracked. Runs on the always-on box so it keeps watching with the Mac
+        off.</span></div>
+      <div class="f"><span class="k">Proves</span><span class="v">That the coins moved, and where the
+        next hop landed. This is what caught the first attacker movement.</span></div>
+      <div class="f blind"><span class="k">Blind to</span><span class="v">Any address not already on
+        the list. It watches what is tracked; it does not find anything new.</span></div>
+    </div>
+  </div>
+
+</div>
+
+<h2>What each method would have caught</h2>
+<div class="wrap scroll">
+<table>
+  <thead>
+    <tr><th>Method</th><th>Waves 1 and 2</th><th>Wave 3</th><th>Why</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Co-spend</td>
+      <td class="yes">Yes, once spent</td>
+      <td class="no">No</td>
+      <td>All 293 vaults are unspent. Nothing to link.</td>
+    </tr>
+    <tr>
+      <td>Collector fingerprint</td>
+      <td class="yes">Yes</td>
+      <td class="no">No</td>
+      <td>Requires a shared collector. Wave 3 has none.</td>
+    </tr>
+    <tr>
+      <td>Block scan, single sweeps</td>
+      <td class="yes">Yes</td>
+      <td class="no">No</td>
+      <td>Wave 3 batches about six victims per transaction.</td>
+    </tr>
+    <tr>
+      <td>Block scan, batched sweeps</td>
+      <td class="na">Partly</td>
+      <td class="na">The sweep only</td>
+      <td>Saw the 201 sat/vB shape. Never traced the park into the vault.</td>
+    </tr>
+    <tr>
+      <td>Two-hop signer fingerprint</td>
+      <td class="yes">Yes</td>
+      <td class="yes">Yes, 97.8% of the value</td>
+      <td>Keys on fields the attacker cannot drop without changing tools.</td>
+    </tr>
+    <tr>
+      <td>Live block watch</td>
+      <td class="yes">Yes</td>
+      <td class="no">No</td>
+      <td>Inherits the scan.py pattern, and its blind spot with it.</td>
+    </tr>
+    <tr>
+      <td>Victim reports on X</td>
+      <td class="na">Some</td>
+      <td class="na">Some</td>
+      <td>Depends entirely on a victim noticing and posting.</td>
+    </tr>
+    <tr>
+      <td>Movement monitor</td>
+      <td class="na">After the fact</td>
+      <td class="na">After the fact</td>
+      <td>Watches the tracked set. Finds nothing new by design.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>The publish gate</h2>
+<div class="note">
+  <p>Detection and publication are separate. Every method above feeds candidates into one tiered
+  gate in <code>autopilot.py</code>, and only two tiers can write to the site.</p>
+  <p><strong>Tier 1 is co-spend proof.</strong> It is deterministic and auto-published, and only when
+  the vault is clean and unspent. A co-spend-proven address whose funds already peeled through
+  further hops is held instead, because tracing where the money sits is a judgement call.</p>
+  <p><strong>Tier 2 is a fingerprint match plus a credible source.</strong> The cluster matches the
+  drain fingerprint and is independently reported by a research account on the watchlist. It is
+  currently gated to notify first (<code>TIER2_AUTOPUBLISH</code> is off) until it is proven on a
+  real case.</p>
+  <p><strong>Tier 3 is a fingerprint match and nothing else.</strong> It is held for a person. A
+  batched sweep at a normal fee is shape-identical to an owner moving to safety, so it gets a
+  Telegram message and never a site edit. The new two-hop detector sits here.</p>
+  <p>The publish decision is code. <code>claude -p</code> is used only to read a tweet and judge
+  whether a source attributes an address, which is evidence gathering rather than the final say.</p>
+</div>
+
+<h2>Why the shape can never be enough</h2>
+<div class="note warn">
+  <p>Coinkite's advisory told every affected owner to generate a new seed, verify a fresh receive
+  address, and move the remaining funds. Following it produces a full drain, no change output, a
+  never-before-seen destination, an urgency fee, and often a two-hop path into multisig. That is the
+  Wave 3 shape.</p>
+  <p>The population of owners who did this is plausibly larger than the population of victims, so
+  even a low per-transaction error rate yields a candidate list where innocent rescues outnumber
+  thefts. Tightening the fingerprint does not fix that, because it is a base rate rather than a
+  threshold.</p>
+  <p>Galaxy Research state the same limit on their own work: the pattern tells them the transactions
+  share an attacker, and it does not capture the attack itself, which looks the same as if a coin
+  owner chose to move coins. They also note they have not tested whether the addresses they identify
+  were in fact generated with low entropy. Naming an address as a victim on shape alone is an
+  inference they decline to make, and this project holds the same line.</p>
+</div>
+
+<p class="foot">This page is local and never deploys with the site. Sources are the detector modules
+in <code>~/CLAUDE/personal/coldcard-watch/</code>, Clay Garrett of Block for the original field
+fingerprint, and Galaxy Research for the wave figures and the block ranges.</p>
+
+</main>
+</body>
+</html>

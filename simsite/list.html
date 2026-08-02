@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Every address drained in the Coldcard sweep</title>
+<meta name="description" content="All 1,195 bitcoin addresses drained on 30 July 2026, with the amount taken from each and the block it happened in. Sortable and filterable.">
+<link rel="icon" href="/bitcoin.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0e11; --surface:#14161a; --surface-2:#1a1d22;
+  --line:#24282f; --line-soft:#1e2128;
+  --ink:#f2f4f7; --ink-2:#c9cfd6; --ink-3:#a4acb6;
+  --accent:#f7931a; --accent-deep:#8a5a12;
+  --ease:cubic-bezier(0.32,0.72,0,1); --t-fast:150ms;
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-6:24px;--sp-8:32px;--sp-12:48px;--sp-16:64px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.6;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
+  -webkit-font-smoothing:antialiased;
+}
+main{max-width:1080px;margin:0 auto;padding:0 var(--sp-6) var(--sp-16)}
+a{color:var(--accent);text-decoration:none}
+
+.shell{position:sticky;top:0;z-index:50;background:rgba(13,14,17,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+.shell-in{max-width:1080px;margin:0 auto;padding:var(--sp-3) var(--sp-6);display:flex;align-items:center;gap:var(--sp-4)}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem;color:var(--ink)}
+.brand img{width:22px;height:22px;display:block}
+.back{margin-left:auto;font-size:.85rem;color:var(--ink-3);border-bottom:1px solid var(--line);padding-bottom:1px}
+.back:hover{color:var(--accent)}
+
+h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;margin:var(--sp-12) 0 var(--sp-8);line-height:1.2}
+
+.controls{display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center;margin-bottom:var(--sp-4)}
+.controls input,.controls select{
+  background:var(--surface);border:1px solid var(--line);color:var(--ink);
+  font:inherit;font-size:.9rem;padding:var(--sp-2) var(--sp-3);border-radius:8px;
+  transition:border-color var(--t-fast) var(--ease);
+}
+.controls input:focus,.controls select:focus{outline:none;border-color:var(--accent-deep)}
+.controls input::placeholder{color:#7f8794}
+#q{flex:1 1 300px;min-width:0}
+#minAmt{width:150px}
+.count{font-size:.85rem;color:var(--ink-3);margin-bottom:var(--sp-4)}
+.count b{color:var(--ink-2);font-weight:500;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.count .n{display:inline-block;min-width:4.6ch;text-align:right}
+.count .btc{display:inline-block;min-width:12.9ch;text-align:right}
+
+.tbl{width:100%;border-collapse:collapse;border:1px solid var(--line-soft);border-radius:10px;overflow:hidden}
+.tbl thead th{
+  background:var(--surface-2);text-align:left;font-weight:500;font-size:.78rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
+  padding:var(--sp-3) var(--sp-4);cursor:pointer;user-select:none;white-space:nowrap;
+  border-bottom:1px solid var(--line-soft);
+}
+.tbl thead th:hover{color:var(--ink)}
+.tbl thead th .ar{opacity:.35;margin-left:var(--sp-1)}
+.tbl thead th[aria-sort] .ar{opacity:1;color:var(--accent)}
+.tbl td{padding:var(--sp-3) var(--sp-4);border-top:1px solid var(--line-soft);font-size:.88rem;
+  word-break:normal;overflow-wrap:normal;vertical-align:baseline}
+.tbl tbody tr:nth-child(even){background:rgba(255,255,255,.012)}
+.c-rank{color:#7f8794;width:56px;text-align:right;white-space:nowrap}
+.c-addr a{color:var(--ink-2);word-break:break-all;line-height:1.45}
+.c-addr a:hover{color:var(--accent)}
+.c-amt{text-align:right;white-space:nowrap;color:var(--accent);font-weight:500;min-width:11.6ch}
+.c-usd{text-align:right;white-space:nowrap;color:var(--ink-3);font-size:.82rem;min-width:9.5ch}
+.c-when{white-space:nowrap;color:var(--ink-3);font-size:.82rem}
+.c-blk{white-space:nowrap;color:var(--ink-3);font-size:.82rem;text-align:right;min-width:7.5ch}
+.empty{padding:var(--sp-12);text-align:center;color:var(--ink-3)}
+.note{margin-top:var(--sp-8);color:var(--ink-3);font-size:.85rem;max-width:70ch}
+@media (max-width:720px){
+  .c-usd,.c-blk{display:none}
+  .c-rank{width:40px}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="shell-in">
+    <a class="brand" href="/"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></a>
+    <a class="back" href="/">back to the dashboard</a>
+  </div>
+</div>
+
+<main>
+  <h1>Every address drained in the sweep</h1>
+  <div class="controls">
+    <input id="q" type="text" spellcheck="false" autocomplete="off" placeholder="Filter by address" aria-label="Filter by address">
+    <input id="minAmt" type="text" inputmode="decimal" autocomplete="off" placeholder="Min BTC" aria-label="Minimum amount in BTC">
+    <select id="blk" aria-label="Filter by block"><option value="">Every block</option></select>
+  </div>
+
+  <div class="count" id="count">Loading…</div>
+
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th class="c-rank" data-sort="rank" scope="col">#</th>
+        <th data-sort="addr" scope="col">Address<span class="ar">↕</span></th>
+        <th class="c-amt" data-sort="amt" aria-sort="descending" scope="col">Taken<span class="ar">↓</span></th>
+        <th class="c-usd" data-sort="amt" scope="col">Value</th>
+        <th class="c-when" data-sort="time" scope="col">Time<span class="ar">↕</span></th>
+        <th class="c-blk" data-sort="time" scope="col">Block</th>
+      </tr>
+    </thead>
+    <tbody id="body"><tr><td colspan="6" class="empty">Loading the list…</td></tr></tbody>
+  </table>
+
+  <p class="note">
+    These addresses belong to the people who were robbed. They are listed because the transactions are
+    public on the Bitcoin blockchain and the same set has already been published elsewhere, not because
+    anyone here is accused of anything. One person can hold many addresses, so the number of victims is
+    smaller than 1,195 and is not knowable from the chain.
+  </p>
+</main>
+
+<script src="/drains.js"></script>
+<script>
+(function(){
+  "use strict";
+  var D = window.DRAINS;
+  var body = document.getElementById("body");
+  var countEl = document.getElementById("count");
+
+  if (!D || !Array.isArray(D.rows) || !D.rows.length){
+    body.innerHTML = '<tr><td colspan="6" class="empty">The list could not be loaded. Reload the page.</td></tr>';
+    countEl.textContent = "";
+    return;
+  }
+
+  var price = 62949;
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function fmt(n,d){ return n.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}); }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+  // block index -> readable time, computed once
+  var BT = D.blocks.map(function(b){
+    var d = new Date(b.t*1000);
+    return {
+      h: b.h,
+      label: String(d.getUTCDate()).padStart(2,"0")+" "+MONTHS[d.getUTCMonth()]+" "+
+             String(d.getUTCHours()).padStart(2,"0")+":"+String(d.getUTCMinutes()).padStart(2,"0")+":"+
+             String(d.getUTCSeconds()).padStart(2,"0"),
+      t: b.t
+    };
+  });
+
+  var sel = document.getElementById("blk");
+  BT.forEach(function(b,i){
+    var o = document.createElement("option");
+    o.value = String(i);
+    o.textContent = "Block " + b.h.toLocaleString("en-US") + " · " + b.label.split(" ").slice(2).join(" ");
+    sel.appendChild(o);
+  });
+
+  function parseAmount(v){
+    v = String(v == null ? "" : v).trim().replace(/,/g, "");
+    if (!v) return NaN;
+    if (v.charAt(0) === ".") v = "0" + v;      // ".5" -> "0.5"
+    if (v.charAt(v.length-1) === ".") v += "0"; // "0." -> "0.0"
+    var n = parseFloat(v);
+    return isFinite(n) ? n : NaN;
+  }
+
+  var sortKey = "amt", sortDir = -1;
+
+  function compare(a,b){
+    var r;
+    if (sortKey === "amt") r = a[1] - b[1];
+    else if (sortKey === "addr") r = a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0;
+    else if (sortKey === "time") r = (BT[a[2]].t - BT[b[2]].t) || (a[1] - b[1]);
+    else r = 0;
+    return r * sortDir;
+  }
+
+  function render(){
+    var q = document.getElementById("q").value.trim().toLowerCase();
+    var minv = parseAmount(document.getElementById("minAmt").value);
+    var bi = sel.value === "" ? -1 : parseInt(sel.value,10);
+
+    var rows = D.rows.filter(function(r){
+      if (q && r[0].toLowerCase().indexOf(q) === -1) return false;
+      if (!isNaN(minv) && r[1]/1e8 < minv) return false;
+      if (bi >= 0 && r[2] !== bi) return false;
+      return true;
+    });
+    rows.sort(compare);
+
+    var total = rows.reduce(function(s,r){ return s + r[1]; }, 0);
+    // reserved widths, so shrinking 1,195 to 391 cannot drag the rest of the line left
+    countEl.innerHTML = 'Showing <b class="n">' + rows.length.toLocaleString("en-US") +
+                        '</b> of <b class="n">1,195</b> addresses · <b class="btc">' +
+                        fmt(total/1e8, 8) + '</b> BTC';
+
+    if (!rows.length){
+      body.innerHTML = '<tr><td colspan="6" class="empty">Nothing matches that filter.</td></tr>';
+      return;
+    }
+
+    var html = new Array(rows.length);
+    for (var i = 0; i < rows.length; i++){
+      var r = rows[i], b = BT[r[2]], btc = r[1]/1e8;
+      html[i] = '<tr>'+
+        '<td class="c-rank">'+(i+1)+'</td>'+
+        '<td class="c-addr"><a href="https://mempool.space/address/'+esc(r[0])+'" target="_blank" rel="noopener">'+esc(r[0])+'</a></td>'+
+        '<td class="c-amt">'+fmt(btc,8)+'</td>'+
+        '<td class="c-usd">$'+fmt(btc*price,0)+'</td>'+
+        '<td class="c-when">'+b.label+' UTC</td>'+
+        '<td class="c-blk">'+b.h.toLocaleString("en-US")+'</td>'+
+      '</tr>';
+    }
+    body.innerHTML = html.join("");
+  }
+
+  // sorting
+  var heads = document.querySelectorAll(".tbl thead th[data-sort]");
+  heads.forEach(function(th){
+    th.addEventListener("click", function(){
+      var k = th.dataset.sort;
+      if (k === "rank") return;
+      if (sortKey === k) sortDir = -sortDir;
+      else { sortKey = k; sortDir = (k === "addr") ? 1 : -1; }
+      heads.forEach(function(h){
+        h.removeAttribute("aria-sort");
+        var ar = h.querySelector(".ar"); if (ar) ar.textContent = "↕";
+      });
+      document.querySelectorAll('.tbl thead th[data-sort="'+k+'"]').forEach(function(h){
+        h.setAttribute("aria-sort", sortDir === 1 ? "ascending" : "descending");
+        var ar = h.querySelector(".ar"); if (ar) ar.textContent = sortDir === 1 ? "↑" : "↓";
+      });
+      render();
+    });
+  });
+
+  var t;
+  function debounced(){ clearTimeout(t); t = setTimeout(render, 120); }
+  ["q","minAmt"].forEach(function(id){
+    var elx = document.getElementById(id);
+    elx.addEventListener("input", debounced);
+    elx.addEventListener("change", render);
+    elx.addEventListener("keydown", function(e){
+      if (e.key === "Enter"){ clearTimeout(t); render(); }
+    });
+  });
+  sel.addEventListener("change", render);
+
+  // live price, so the value column is not frozen at build time
+  fetch("https://mempool.space/api/v1/prices",{cache:"no-store"})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){ if (d && d.USD){ price = d.USD; render(); } })
+    .catch(function(){});
+
+  render();
+})();
+</script>
+</body>
+</html>

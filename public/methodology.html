@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How these addresses were identified</title>
+<meta name="description" content="The method behind Coldcard Sweep Watch: how victim and attacker addresses are told apart, what evidence each cluster rests on, and what this method cannot see.">
+<link rel="icon" href="/bitcoin.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0e11; --surface:#14161a; --surface-2:#1a1d22;
+  --line:#24282f; --line-soft:#1e2128;
+  --ink:#f2f4f7; --ink-2:#c9cfd6; --ink-3:#a4acb6;
+  --accent:#f7931a; --moved:#e5484d;
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-6:24px;--sp-8:32px;--sp-12:48px;--sp-16:64px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);
+  font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.65;font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased}
+main{max-width:1180px;margin:0 auto;padding:0 var(--sp-6) var(--sp-16)}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(247,147,26,.28)}
+a:hover{border-bottom-color:var(--accent)}
+.shell{position:sticky;top:0;z-index:50;background:rgba(13,14,17,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft)}
+.shell-in{max-width:1180px;margin:0 auto;padding:var(--sp-3) var(--sp-6);display:flex;align-items:center;gap:var(--sp-4)}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem;color:var(--ink)}
+.brand img{width:22px;height:22px;display:block}
+.shell-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-4)}
+.nav{display:flex;gap:var(--sp-4);align-items:center}
+.nav a{font-size:.85rem;color:var(--ink-3);border-bottom:1px solid transparent;padding-bottom:1px;
+  white-space:nowrap;transition:color 150ms cubic-bezier(0.32,0.72,0,1)}
+.nav a:hover{color:var(--ink)}
+.nav a[aria-current]{color:var(--ink);border-bottom-color:var(--accent)}
+.tick{display:flex;align-items:center;gap:var(--sp-2);font-size:.85rem;color:var(--ink-3)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+.live .dot{animation:pulse 2.4s cubic-bezier(0.32,0.72,0,1) infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.8)}}
+.tick.stale .dot{background:#7f8794;animation:none}
+.tick.stale{color:#7f8794}
+.tick.offline{background:rgba(229,72,77,.14);border:1px solid rgba(229,72,77,.5);color:#ff9ea1;
+  font-weight:500;padding:var(--sp-1) var(--sp-3);border-radius:999px}
+.tick.offline .dot{background:#e5484d;animation:none}
+@media (max-width:620px){.nav{gap:var(--sp-3)}.nav a{font-size:.8rem}}
+  white-space:nowrap;transition:color 150ms cubic-bezier(0.32,0.72,0,1)}
+.nav a:hover{color:var(--ink)}
+.nav a[aria-current]{color:var(--ink);border-bottom-color:var(--accent)}
+@media (max-width:620px){.nav{gap:var(--sp-3)}.nav a{font-size:.8rem}}
+h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;line-height:1.2;margin:var(--sp-12) 0 var(--sp-6);text-wrap:balance}
+h2{font-size:1.2rem;font-weight:500;letter-spacing:-.015em;margin:var(--sp-12) 0 var(--sp-3)}
+p{color:var(--ink-2);margin:0 0 var(--sp-4);max-width:74ch}
+ul{color:var(--ink-2);padding-left:var(--sp-6);margin:0 0 var(--sp-4);max-width:74ch}
+li{margin-bottom:var(--sp-2)}
+code{background:var(--surface-2);border-radius:4px;padding:1px 6px;font-family:inherit;
+  font-variant-numeric:tabular-nums;color:var(--ink);font-size:.92em;word-break:break-all}
+.floor{background:rgba(247,147,26,.08);border:1px solid rgba(247,147,26,.35);border-radius:8px;
+  padding:var(--sp-4) var(--sp-6);margin:var(--sp-6) 0;color:var(--ink-2);line-height:1.55;max-width:80ch}
+.floor strong{color:var(--ink);font-weight:500}
+table{width:100%;max-width:1000px;border-collapse:collapse;margin:var(--sp-6) 0;font-size:.9rem}
+th{text-align:left;font-weight:500;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);padding:var(--sp-3) var(--sp-3);border-bottom:1px solid var(--line);vertical-align:bottom}
+td{padding:var(--sp-3);border-top:1px solid var(--line-soft);color:var(--ink-2);vertical-align:top;
+  word-break:normal;overflow-wrap:normal}
+td:first-child{white-space:nowrap;color:var(--ink)}
+.warn{color:var(--ink-3);font-size:.9rem}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="shell-in">
+    <div class="brand"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></div>
+    <div class="shell-right">
+      <nav class="nav"><a href="/">Dashboard</a><a href="/list.html">Address list</a><a href="/methodology.html" aria-current="page">Methodology</a></nav>
+      <div class="tick live" id="tickWrap"><span class="dot"></span><span id="tickText">live</span></div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <h1>How these addresses were identified</h1>
+
+  <div class="floor">
+    <strong>Everything here is a verified minimum.</strong> The figures come from clusters that have been
+    found and checked. They are not a total, and they are not an estimate of the total. More clusters
+    almost certainly exist.
+  </div>
+
+  <h2>Telling a victim apart from a thief</h2>
+  <p>
+    Each theft is one transaction with one input and one output. The input address is the victim, because
+    that is where the money leaves. The output is the attacker, because that is where it arrives. Nothing
+    is inferred from the addresses themselves. Direction does the work.
+  </p>
+  <p>
+    Those output addresses collect a batch of sweeps and then forward everything to a second address that
+    holds the funds. So each cluster has a collector, which fills and empties, and a vault, which fills
+    once and then goes quiet. The dashboard watches the vaults, because that is where the money sits.
+  </p>
+
+  <h2>Telling a theft apart from someone moving to safety</h2>
+  <p>
+    This is the part that cannot be proven from the chain alone, so here is the actual reasoning. Four
+    things appear in every sweep and rarely together otherwise:
+  </p>
+  <ul>
+    <li>One input, one output, and <strong>no change output</strong>. The address is emptied exactly.</li>
+    <li>Every input is a single-signature native segwit key, the default path of the affected wallet.</li>
+    <li>Every transaction in a batch pays an <strong>identical hardcoded fee rate</strong>, unrelated to what
+      the network was charging.</li>
+    <li>The proceeds consolidate once and then never move.</li>
+  </ul>
+  <p>
+    No single mark settles it on its own. An owner rescuing coins one UTXO per transaction, to keep
+    their histories separate, produces the same shape the tool does. What an owner cannot produce is
+    <strong>convergence</strong> with hundreds of strangers, and there are two kinds of it in this
+    incident. An address is listed on this site only when its sweep shows one of them, and never on
+    shape alone.
+  </p>
+  <p>
+    <strong>Convergence of destination.</strong> Hundreds of sweeps land inside one window, every one
+    paying the same fee rate regardless of what the network was charging, and every one paying into
+    the same address. A rescue goes to the owner's own wallet, and a thousand separate owners cannot
+    share one destination. The first, second and fifth clusters are listed on this test.
+  </p>
+  <p>
+    <strong>Convergence of fee.</strong> Wave 3 removed the shared destination deliberately, giving
+    each drained wallet its own fresh address and then its own fresh P2WSH vault, 214 of them sharing
+    nothing, which is why this site missed the wave for two days. What it did not remove is the fee.
+    Its 215 sweeps all paid within a hair of 201 sat/vB while the network was charging under 3, and a
+    rate that constant across transactions sharing no address is a number hardcoded in a script rather
+    than 215 strangers independently choosing the same urgent fee. Sixteen further chains matched the
+    shape but paid scattered rates, and they were left off rather than published on shape alone.
+  </p>
+  <p>
+    Three further marks hold across that wave, and are set out here because the fee should not carry
+    it alone. The oldest coin anywhere in the set was created in block 677,217, about two weeks after
+    the vulnerable firmware shipped: nothing in the set predates the flaw, which is what a population
+    of addresses generated by that firmware would look like. All 214 vaults are still unspent, where
+    an owner who moves coins to safety goes on to use the wallet they moved to. And Galaxy Research
+    reported a wave of this size in this window from their own separate analysis, which is harder to
+    account for if these sweeps were owners rescuing their own coins.
+  </p>
+
+
+  <h2>What each cluster rests on</h2>
+  <table>
+    <thead><tr><th>When</th><th>Size</th><th>Fee rate</th><th>How it was found</th></tr></thead>
+    <tbody>
+      <tr><td>30 Jul<br>01:10&ndash;01:51</td><td>1,195 addresses<br>1,082.65 BTC</td><td>30.0 sat/vB</td>
+        <td>Reported by researchers at AnchorWatch, Block and Galaxy. Reconstructed here independently; the
+          total matched the published figure to the satoshi.</td></tr>
+      <tr><td>31 Jul<br>04:54&ndash;08:36</td><td>1,126 addresses<br>45.97 BTC</td><td>50.2 sat/vB</td>
+        <td>Reported by Kevin Kelbie, past the end of Block's transaction scan. Verified here on-chain.
+          Every input signals replace-by-fee, which the earlier batch does not.</td></tr>
+      <tr><td>31 Jul<br>19:53</td><td>13 addresses<br>0.19 BTC</td><td>2.0 sat/vB</td>
+        <td>Reported in a reply by @jmassu. Verified here: twelve single-input sweeps in one block, then a
+          consolidation into an address that has not moved.</td></tr>
+      <!-- xrow --><tr><td>31 Jul<br>04:54&ndash;08:36</td><td>352 addresses<br>30.18 BTC</td><td>10.0 sat/vB</td><td>A second wave-2 collector, reported by Galaxy Research on 1 Aug and verified here on-chain: 352 addresses swept into one address that has not moved, at a fee unrelated to the network rate. Distinct from the 50.2 sat/vB batch above.</td></tr><!-- /xrow --><!-- xrow --><tr><td>31 Jul<br>12:23&ndash;22:25</td><td>1,626 addresses<br>200.33 BTC</td><td>201.0 sat/vB</td><td>Reported by Galaxy Research on 1 Aug as a third wave and reconstructed here independently from the chain. No shared collector: each drained wallet was swept into its own fresh address and forwarded into its own fresh P2WSH vault, 214 of them, all unspent. Galaxy published no addresses for this wave, so every address here comes from this reconstruction; their reported total of 207.73 BTC is 2.2% above what is shown, and the difference is small chains this site has not confirmed.</td></tr><!-- /xrow -->
+    </tbody>
+  </table>
+  <p class="warn">
+    Three different hardcoded fee rates, and only the second batch signals replace-by-fee. That is either
+    one operator changing their tooling or more than one operator working the same flaw. There is no way
+    to tell from the chain, and this page does not claim to know.
+  </p>
+
+  <h2>How new clusters are found</h2>
+  <p>
+    Every block since the first drain is read and tested against the pattern above, and the scan keeps
+    running forward as new blocks are mined. A cluster nobody has reported still surfaces here, because
+    the search is over the chain itself rather than over a list of addresses somebody supplied.
+  </p>
+  <p>
+    Blocks come from a Bitcoin Core node directly, so the scan does not depend on a third party's API or
+    rate limit. When a group of sweeps in a single block pays into one address at one identical fee rate,
+    that address becomes a candidate. Each candidate is then checked for freshness, because an exchange
+    processing withdrawals produces a similar-looking burst: one rejected candidate had 476,464 prior
+    deposits, which no collector in this incident has.
+  </p>
+  <p>
+    Anything that survives both tests raises an alert for a person to examine. A false accusation against
+    an exchange or an uninvolved wallet would be worse than a slow addition, so a human confirms every
+    cluster before it appears.
+  </p>
+
+  <h2>Reports from the people who were robbed</h2>
+  <p>
+    The block scan starts from the chain and works outward, so it can only find a cluster that matches the
+    pattern above. A theft that used a different tool, or that nobody has connected to the known operators,
+    can stay invisible to it. The people who were actually robbed are the other source, and several of them
+    have posted their own drained address in public.
+  </p>
+  <p>
+    So the reports are watched too. An agent reads the replies and quotes on the threads about this
+    incident, the posts that link here, and a standing search for people describing a Coldcard theft, and
+    it pulls any bitcoin address out of them. A tweet is only a lead. Every address it surfaces is checked
+    against the chain before anything happens, because a post can name the wrong address, quote the thief's
+    address rather than the victim's, or be mistaken.
+  </p>
+  <p>
+    That check decides what follows, on two levels:
+  </p>
+  <ul>
+    <li>When the drained funds land in a known attacker address, directly or through one hop that the
+      attacker signs alongside an address already known to be theirs, ownership is proven by the
+      transaction itself. Those are added and the totals updated.</li>
+    <li>When the sweep matches the theft pattern but connects to nothing already known, it is held for a
+      person to review rather than published on a match alone.</li>
+    <li>When the address looks like a collector, receiving batched sweeps rather than losing funds, it is
+      never treated as a victim. It is flagged as a possible new operator address instead.</li>
+  </ul>
+  <p>
+    This runs on an always-on server that stays watching around the clock, so a report posted in the middle
+    of the night is checked within the hour. What it cannot reach: a private or deleted account, a report
+    that shows the loss only in a screenshot with no address in the text, and any claim the chain does not
+    support; none of those appear here, which is the same standard the rest of the page holds to.
+  </p>
+
+  <h2>What this cannot see</h2>
+  <p>
+    The detector now looks for two shapes rather than one, but both are still shapes. A thief who
+    uses an address type other than single-signature native segwit, varies the fee from one sweep to
+    the next, or spreads a theft thinly enough that no block holds a group would still not match it.
+    Wave 3 is the worked example: removing the shared collector made every detector on this site blind
+    to it until the fee constant was used instead. The freshness test is also a judgement, not a proof: it sorts by how much unrelated history an
+    address carries, and an unusual case can land on the wrong side of that line.
+  </p>
+  <p>
+    An address can therefore be missing from this set for two different reasons: it was never drained, or
+    the pattern failed to catch the theft. Because the checker cannot tell those apart, a result of
+    <strong>not in the verified set</strong> leaves the question open rather than settling it.
+  </p>
+
+  <h2>What the checker actually does</h2>
+  <p>
+    The list of drained addresses is hashed and shipped with the page. When an address is entered, the
+    browser hashes it and looks for a match locally. Nothing is transmitted and nothing is logged. If the
+    list fails to load, the tool disables itself rather than reporting everything as clean.
+  </p>
+
+  <h2>Sources and how to check the work</h2>
+  <p>
+    Block data for the scanning comes from a Bitcoin Core node. Address balances and histories come from
+    <a href="https://blockstream.info/" rel="noopener">Blockstream's Esplora</a>, with
+    <a href="https://blockchain.info/" rel="noopener">blockchain.info</a> used to read many addresses in one
+    request and <a href="https://mempool.space/" rel="noopener">mempool.space</a> as the fallback and the
+    source of the exchange rate. Figures that appeared in more than one source were compared before being
+    published, and the totals here match the independently published ones to the satoshi.
+  </p>
+  <p>
+    Every address on this site links to a block explorer, so any claim can be checked without trusting the
+    page. Vendor detail comes from the
+    <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">Coinkite advisory</a>
+    and <a href="https://engineering.block.xyz/blog/predictable-rng-fallback-and-32-bit-reseed-in-coldcard-firmware" rel="noopener">Block's
+    engineering analysis</a>.
+  </p>
+  <p class="warn">
+    If you know of a drained address or a collection address that is missing here, it belongs in the set.
+    A report from someone who was there still beats a pattern match.
+  </p>
+</main>
+<script>
+(function(){
+  "use strict";
+  // The indicator has to be earned, not decorative: it reports whether this page can
+  // actually reach the chain right now, using the same wording as the dashboard.
+  var wrap=document.getElementById("tickWrap"), txt=document.getElementById("tickText");
+  var lastOk=0, everOk=false, failedOnce=false, bootTs=Date.now(), BOOT_GRACE=20000;
+  function paint(){
+    if(!everOk){
+      // nothing is reported for the first 20 seconds, so a refresh or tab switch
+      // never changes this indicator; a real outage still surfaces after that
+      if((Date.now()-bootTs) < BOOT_GRACE){
+        wrap.classList.remove("stale"); wrap.classList.remove("offline");
+        txt.textContent="live"; return;
+      }
+      wrap.classList.add("stale"); wrap.classList.add("offline"); txt.textContent="no connection"; return;
+    }
+    wrap.classList.remove("offline");
+    var age=Math.floor(Date.now()/1000)-lastOk;
+    if(age>180){ wrap.classList.add("stale");
+      txt.textContent="last checked "+(age<3600?Math.floor(age/60)+"m":Math.floor(age/3600)+"h")+" ago"; }
+    else { wrap.classList.remove("stale"); txt.textContent="live"; }
+  }
+  function ping(){
+    if(document.hidden) return;
+    fetch("https://blockstream.info/api/blocks/tip/height",{cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw 0; return r.text(); })
+      .then(function(){ lastOk=Math.floor(Date.now()/1000); everOk=true; paint(); })
+      .catch(function(){ failedOnce=true; paint(); });
+  }
+  document.addEventListener("visibilitychange",function(){ if(!document.hidden) ping(); });
+  paint(); ping();
+  setInterval(ping,60000);
+  setInterval(paint,15000);
+})();
+</script>
+</body>
+</html>

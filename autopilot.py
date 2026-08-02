@@ -500,8 +500,13 @@ def _fingerprint_candidates():
             continue
         span = fp["block_span"]
         tight = span and (span[1] - span[0]) <= TIGHT_WINDOW
+        # MIN_CLUSTER_BTC was declared and never applied, so a 0.00056 BTC address
+        # reached the proposed tier. With TIER2_AUTOPUBLISH on, that would have put
+        # dust on a public page that calls addresses attacker-controlled. A real
+        # cluster of this theft holds real money; the floor is what says so.
+        enough = fp["balance"] >= MIN_CLUSTER_BTC * 1e8
         if (fp["fee_uniform"] and fp["no_change_ratio"] >= 0.9 and fp["fresh"]
-                and fp["unspent"] and fp["victims"] >= 3 and tight):
+                and fp["unspent"] and fp["victims"] >= 3 and tight and enough):
             out.append((coll, fp))
         time.sleep(0.2)
     return out, w3

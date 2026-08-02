@@ -279,6 +279,51 @@ class Hop2(unittest.TestCase):
         self.assertTrue(r["parked"])
 
 
+class AutopilotGates(unittest.TestCase):
+    """The tiering decides what may reach a public page unattended."""
+
+    def gate(self, **over):
+        """The accept test from _fingerprint_candidates, with one fingerprint."""
+        import autopilot
+        fp = {"fee_uniform": True, "no_change_ratio": 1.0, "fresh": True,
+              "unspent": True, "victims": 5, "block_span": (960400, 960410),
+              "balance": 5_000_000}
+        fp.update(over)
+        span = fp["block_span"]
+        tight = span and (span[1] - span[0]) <= autopilot.TIGHT_WINDOW
+        enough = fp["balance"] >= autopilot.MIN_CLUSTER_BTC * 1e8
+        return (fp["fee_uniform"] and fp["no_change_ratio"] >= 0.9 and fp["fresh"]
+                and fp["unspent"] and fp["victims"] >= 3 and tight and enough)
+
+    def test_a_real_cluster_passes(self):
+        self.assertTrue(self.gate())
+
+    def test_dust_is_rejected(self):
+        """A 0.00056 BTC address reached the proposed tier because the declared
+        floor was never applied. With auto-publish on, that is dust on a public
+        page calling addresses attacker-controlled."""
+        self.assertFalse(self.gate(balance=56_240))
+
+    def test_the_floor_is_the_declared_constant(self):
+        import autopilot
+        self.assertFalse(self.gate(balance=int(autopilot.MIN_CLUSTER_BTC * 1e8) - 1))
+        self.assertTrue(self.gate(balance=int(autopilot.MIN_CLUSTER_BTC * 1e8)))
+
+    def test_a_varying_fee_is_rejected(self):
+        self.assertFalse(self.gate(fee_uniform=False))
+
+    def test_a_spent_vault_is_rejected(self):
+        self.assertFalse(self.gate(unspent=False))
+
+    def test_a_wide_block_span_is_rejected(self):
+        self.assertFalse(self.gate(block_span=(960000, 960400)))
+
+    def test_tier2_autopublish_stays_off(self):
+        """It gates whether a heuristic match can publish with nobody watching."""
+        import autopilot
+        self.assertFalse(autopilot.TIER2_AUTOPUBLISH)
+
+
 class SiteInvariants(unittest.TestCase):
     def test_cross_file_invariants_hold(self):
         """rows == hashes == DRAINED_COUNT across every coupled surface."""

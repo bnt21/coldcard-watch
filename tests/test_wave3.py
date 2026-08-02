@@ -33,9 +33,9 @@ import wave3  # noqa: E402
 BAND_LO, BAND_HI = 195.0, 210.0
 
 # What the site says today. Any change to these is a deliberate act, not a side effect.
-PUBLISHED_VAULTS = 214
-PUBLISHED_HELD_SATS = 20033487536
-PUBLISHED_VICTIMS = 1626
+PUBLISHED_VAULTS = 293
+PUBLISHED_HELD_SATS = 20772939540
+PUBLISHED_VICTIMS = 1894
 
 
 def load(name):
@@ -51,28 +51,38 @@ def published_chains(report):
 
 
 class PublishedSet(unittest.TestCase):
-    """The frozen artefacts still agree with each other and with the live site."""
+    """The frozen artefacts still agree with each other and with the live site.
+
+    The 195-210 band below reproduces the FIRST pass, which keyed on the sweep fee and
+    found 214 of the wave. The wave is 293: every park moved onward in block 960520 at a
+    hardcoded ~10.05 sat/vB, and that second-hop constant is what actually spans it. The
+    band tests are kept because that subset is still a real, checkable population."""
 
     @classmethod
     def setUpClass(cls):
         cls.report = load("wave3-report.json")
         cls.frozen = load("wave3-set.json")
 
-    def test_selection_reproduces_the_published_vault_count(self):
-        vaults = {s["hop2"]["vault"] for s in published_chains(self.report)}
-        self.assertEqual(len(vaults), PUBLISHED_VAULTS)
+    # The 195-210 band reproduces the FIRST pass over blocks 960396-960471, which keyed
+    # on the sweep fee and found 214 of the wave. It is still a real population and worth
+    # pinning; it is simply not the whole wave, so it is no longer the published total.
+    FIRST_PASS_VAULTS = 214
+    FIRST_PASS_SATS = 20033487536
 
-    def test_selection_reproduces_the_published_total(self):
+    def test_the_first_pass_subset_is_stable(self):
+        vaults = {s["hop2"]["vault"] for s in published_chains(self.report)}
+        self.assertEqual(len(vaults), self.FIRST_PASS_VAULTS)
+
+    def test_the_first_pass_subset_total_is_stable(self):
         seen = {}
         for s in published_chains(self.report):
             h = s["hop2"]
             seen.setdefault(h["vault"], h.get("vault_balance") or 0)
-        self.assertEqual(sum(seen.values()), PUBLISHED_HELD_SATS)
+        self.assertEqual(sum(seen.values()), self.FIRST_PASS_SATS)
 
-    def test_frozen_set_matches_the_report(self):
-        self.assertEqual(len(self.frozen["vaults"]), PUBLISHED_VAULTS)
-        self.assertEqual(self.frozen["held_sats"], PUBLISHED_HELD_SATS)
-        self.assertEqual(len(self.frozen["victims"]), PUBLISHED_VICTIMS)
+    def test_frozen_set_matches_the_first_pass(self):
+        self.assertEqual(len(self.frozen["vaults"]), self.FIRST_PASS_VAULTS)
+        self.assertEqual(self.frozen["held_sats"], self.FIRST_PASS_SATS)
 
     def test_every_published_vault_is_unspent(self):
         """An unspent vault is the claim being made. A spent one is a different claim."""
@@ -87,6 +97,15 @@ class PublishedSet(unittest.TestCase):
         self.assertEqual(site["held"], PUBLISHED_HELD_SATS)
         self.assertEqual(site["victims"], PUBLISHED_VICTIMS)
         self.assertEqual(sum(b for _, b in site["vaults"]), PUBLISHED_HELD_SATS)
+
+    def test_the_published_set_contains_the_first_pass(self):
+        """The whole wave must be a superset of what the first pass proved."""
+        import re as _re
+        with open(os.path.join(ROOT, "public", "wave3.js"), encoding="utf-8") as f:
+            site = json.loads(_re.search(r"window\.WAVE3=(.*);", f.read(), _re.S).group(1))
+        live = {a for a, _ in site["vaults"]}
+        for s in published_chains(self.report):
+            self.assertIn(s["hop2"]["vault"], live)
 
     def test_canary_chain_is_present(self):
         """The one wave-3 chain a third party published in full. If this is missing the

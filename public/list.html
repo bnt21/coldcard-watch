@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Verified drained addresses, Coldcard thefts</title>
-<meta name="description" content="The 4,312 bitcoin addresses confirmed drained on 30 and 31 July 2026, with the amount taken from each and the block it happened in. Sortable and filterable.">
+<meta name="description" content="The 4,580 bitcoin addresses confirmed drained on 30 and 31 July 2026, with the amount taken from each and the block it happened in. Sortable and filterable.">
 <link rel="icon" href="/bitcoin.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,12 +151,12 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;l
     These addresses belong to the people who were robbed. They are listed because the transactions are
     public on the Bitcoin blockchain and the same set has already been published elsewhere, not because
     anyone here is accused of anything. One person can hold many addresses, so the number of victims is
-    smaller than 4,312 and is not knowable from the chain.
+    smaller than 4,580 and is not knowable from the chain.
   </p>
 </main>
 <section id="wave3" style="max-width:1080px;margin:0 auto;padding:48px 24px">
   <h2 style="font-size:1rem;font-weight:500;color:#c9cfd6;margin:0 0 8px">Wave 3 vaults</h2>
-  <p style="color:#c9cfd6;margin:0 0 16px;font-size:.92rem">214 addresses holding 200.3349 BTC between them, one for each drained wallet rather than a shared collector. Every one is unspent. Balances here are a snapshot the scanner refreshes, not a live stream.</p>
+  <p style="color:#c9cfd6;margin:0 0 16px;font-size:.92rem">293 addresses holding 207.7294 BTC between them, one for each drained wallet rather than a shared collector. Every one is unspent. Balances here are a snapshot the scanner refreshes, not a live stream.</p>
   <div id="w3list" style="display:grid;gap:1px;background:#1e2128;border:1px solid #1e2128;border-radius:10px;overflow:hidden;font-size:.82rem"></div>
 </section>
 <script src="/wave3.js"></script>
@@ -237,9 +237,9 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;l
     rows.sort(compare);
 
     var total = rows.reduce(function(s,r){ return s + r[1]; }, 0);
-    // reserved widths, so shrinking 4,312 to 391 cannot drag the rest of the line left
+    // reserved widths, so shrinking 4,580 to 391 cannot drag the rest of the line left
     countEl.innerHTML = 'Showing <b class="n">' + rows.length.toLocaleString("en-US") +
-                        '</b> of <b class="n">4,312</b> addresses · <b class="btc">' +
+                        '</b> of <b class="n">4,580</b> addresses · <b class="btc">' +
                         fmt(total/1e8, 8) + '</b> BTC';
 
     if (!rows.length){

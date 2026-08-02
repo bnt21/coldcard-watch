@@ -55,8 +55,19 @@ import nodeconf
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
 STATE = os.path.join(HERE, "wave3-state.json")
+# The report path carries the window. A fixed path meant scanning a different range
+# overwrote the published window's report in place, which is how a forward probe
+# silently destroyed the evidence behind 214 published vaults.
 REPORT = os.path.join(DATA, "wave3-report.json")
 REVIEW = os.path.join(DATA, "wave3-review.json")
+
+
+def _paths_for(start, end):
+    if (start, end) == GALAXY["blocks"]:
+        return REPORT, REVIEW          # the canonical window keeps the canonical name
+    tag = f"{start}-{end}"
+    return (os.path.join(DATA, f"wave3-report-{tag}.json"),
+            os.path.join(DATA, f"wave3-review-{tag}.json"))
 
 # Node location comes from local config or the environment, never from this file.
 # With none set, nodeconf reports no node and the caller uses public block APIs.
@@ -301,6 +312,8 @@ def main():
     ap.add_argument("--no-hop2", action="store_true", help="stop after the sweep pass")
     a = ap.parse_args()
 
+    global REPORT, REVIEW
+    REPORT, REVIEW = _paths_for(a.start, a.end)
     print(f"wave3: blocks {a.start}..{a.end}  "
           f"(fee >= {a.fee_multiple}x block median and >= {a.min_rate} sat/vB, "
           f"inputs newer than block {FIRMWARE_EPOCH})")

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Coldcard Sweep Watch: is the stolen bitcoin still sitting there?</title>
-<meta name="description" content="A live chart of the 1,359.18 BTC drained from Coldcard wallets on 30 and 31 July 2026. The line extends in real time for as long as the coins are left untouched.">
+<meta name="description" content="A live chart of the 1,366.58 BTC drained from Coldcard wallets on 30 and 31 July 2026. The line extends in real time for as long as the coins are left untouched.">
 <link rel="icon" href="/bitcoin.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -216,7 +216,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
 <section class="top">
   <h1>Bitcoin Drained from Coldcards</h1>
-  <div class="total"><span id="totalBtc">1,359.1829</span><span class="unit">BTC</span></div>
+  <div class="total"><span id="totalBtc">1,366.5774</span><span class="unit">BTC</span></div>
   <div class="sub"><span id="totalUsd">$71,048,000</span><span class="q" id="priceSrc">at $62,949 per bitcoin</span></div>
 </section>
 
@@ -240,7 +240,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
 <section class="tool">
   <h2>Was your address drained?</h2>
-  <p class="tool-lede">Paste a public bitcoin address to check it against the 4,312 addresses confirmed drained so far. The check runs entirely inside your browser against a hashed list. Nothing is sent anywhere and nothing is logged.</p>
+  <p class="tool-lede">Paste a public bitcoin address to check it against the 4,580 addresses confirmed drained so far. The check runs entirely inside your browser against a hashed list. Nothing is sent anywhere and nothing is logged.</p>
   <div class="check">
     <input id="addrIn" type="text" spellcheck="false" autocomplete="off"
            placeholder="bc1... or 1... or 3..." aria-label="Public bitcoin address to check">
@@ -261,7 +261,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     <div class="ld-when"><span id="ldWhen">31 July 2026, 08:36:17 UTC</span><span id="ldMeta">block 960,369</span><a id="ldTx" target="_blank" rel="noopener" href="https://mempool.space/tx/b1000cdee4011ae085649f24ab09cea7a8fa4a97c8e365b07cc41cfb6ee06f00">view transaction</a></div>
   </div>
   <div class="lastdrain totaldrain">
-    <div class="ld-amt"><span id="tdCount">4,312</span></div>
+    <div class="ld-amt"><span id="tdCount">4,580</span></div>
     <div class="ld-addr">addresses drained, verified</div>
     <div class="ld-when"><a href="/list.html">view the full list</a></div>
   </div>
@@ -948,7 +948,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   })();
 
   /* ---------- local address check ---------- */
-  var DRAINED_COUNT = 4312;   // must match drained.js exactly
+  var DRAINED_COUNT = 4580;   // must match drained.js exactly
   function datasetReady(){
     return Array.isArray(window.DRAINED) && window.DRAINED.length === DRAINED_COUNT;
   }

@@ -24,6 +24,13 @@ import publish
 T0 = 1785373820                    # chart origin, first drain block time
 FRESH_MAX_UNRELATED = 8            # a collector's history is the incident; a service has more
 
+# Both walks below page through an address's whole history 25 transactions at a
+# time. A real collector in this incident has a few hundred; a service has
+# hundreds of thousands, and nothing stopped the walk from following it forever.
+# One unbounded walk is what let a run sit for four hours holding the pipeline
+# lock. 200 pages is 5,000 transactions, far past any genuine cluster here.
+MAX_PAGES = 200
+
 
 def _read(p):
     return open(p, encoding="utf-8").read()
@@ -34,7 +41,9 @@ def collector_victims(coll):
     Deterministic: reads the confirmed chain history."""
     victims, seen = {}, set()
     last = None
-    while True:
+    pages = 0
+    while pages < MAX_PAGES:
+        pages += 1
         path = f"/address/{coll}/txs/chain" + (f"/{last}" if last else "")
         page = publish.esplora(path)
         if not page:
@@ -71,7 +80,9 @@ def cluster_fingerprint(coll):
          "forwards_to_anchor": None, "evidence": []}
     txs = []
     last = None
-    while True:
+    pages = 0
+    while pages < MAX_PAGES:
+        pages += 1
         page = publish.esplora(f"/address/{coll}/txs/chain" + (f"/{last}" if last else ""))
         if not page:
             break
@@ -200,11 +211,19 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
         sweep["events"].append([h2t[h] - T0, d["sats"], _wave_for(sweep, h2t[h])])
 
     new_n = len(rows)
-    old_total = 112866326171
-    # recompute the displayed total from the CURRENT wallet set + this collector
+    # Recompute the displayed total the SAME way the page's heldTotal() does:
+    # sum of every seed/traced wallet's attributed value PLUS the wave-3 pool held
+    # in wave3.js. Summing only attributed:N drops the wave-3 contribution
+    # (~200 BTC) and regresses the headline, so wave3.held is added back here.
     idx = _read(os.path.join(publish.PUBLIC, "index.html"))
     wallet_sats = [int(x) for x in re.findall(r'attributed:(\d+)', idx)]
-    new_total = sum(wallet_sats) + balance
+    wave3_held = 0
+    w3path = os.path.join(publish.PUBLIC, "wave3.js")
+    if os.path.exists(w3path):
+        m3 = re.search(r'"held"\s*:\s*(\d+)', _read(w3path))
+        if m3:
+            wave3_held = int(m3.group(1))
+    new_total = sum(wallet_sats) + wave3_held + balance
     old_total_disp = re.search(r'id="totalBtc">([\d,.]+)<', idx).group(1)
     new_total_disp = f"{new_total/1e8:,.4f}"
     of, nf = f"{old_n:,}", f"{new_n:,}"

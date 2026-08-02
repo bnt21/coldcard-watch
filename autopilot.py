@@ -62,6 +62,27 @@ TIGHT_WINDOW = 30        # a real cluster's sweeps land within this many blocks
 # has shown itself correct on real cases; it is a one-line change.
 TIER2_AUTOPUBLISH = False
 
+# Every network call here already had a timeout, and the run still wedged for four
+# hours. Per-call timeouts bound a call; they do not bound a program that makes an
+# unbounded number of calls. _get retries four times at up to 90s, _rawblock makes two
+# of those per block, and the fingerprint walk pages through an address's whole
+# history, so the worst case multiplied out to most of a day.
+#
+# So the run carries its own wall clock and stops at it. The cron's `timeout 900` is
+# still there as a backstop, but a SIGKILL is a bad way to end: this way the run exits
+# on its own terms with its checkpoint written and a line in the log saying why.
+RUN_BUDGET = 600
+_started = time.time()
+
+
+def over_budget():
+    return (time.time() - _started) > RUN_BUDGET
+
+
+def budget_note(where):
+    print(f"autopilot: stopped early in {where} at the {RUN_BUDGET}s budget "
+          f"({time.time() - _started:.0f}s elapsed); progress is checkpointed")
+
 
 # ------------------------------------------------------------- audit + lock
 
@@ -106,6 +127,9 @@ def cospend_expand(st, dry=False):
     # Bounded per run and checkpointed every few addresses, so a slow or interrupted
     # cycle still makes durable progress and the next run resumes where it left off.
     while frontier and len(known) < MAX_KNOWN and processed < COSPEND_PER_RUN:
+        if over_budget():
+            budget_note('co-spend expansion')
+            break
         a = frontier.pop()
         expanded.add(a)
         processed += 1
@@ -247,7 +271,8 @@ def run(dry=False, cospend_only=False):
         publish.save_state(st)
     done = [p for p in published if p and p.get("added")]
     print(f"autopilot: {len(done)} cluster(s) added, "
-          f"total now {done[-1]['new_total'] if done else 'unchanged'}")
+          f"total now {done[-1]['new_total'] if done else 'unchanged'} "
+          f"[{time.time() - _started:.0f}s]")
     return 0
 
 
@@ -450,6 +475,9 @@ def scan_recent_for_candidates(max_blocks=12):
     byrate = {}    # rate -> {dests:set, sats, blocks:set}    fee convergence (wave 3)
     reached = start - 1
     for h in range(start, end + 1):
+        if over_budget():
+            budget_note('the block scan')
+            break
         try:
             blk = _rawblock(h)
         except Exception:
@@ -513,6 +541,16 @@ def scan_recent_for_candidates(max_blocks=12):
     st["last"] = reached
     if reached >= start:
         json.dump(st, open(SCAN_STATE, "w"))
+    # Say what was covered. A scan that examined no blocks and a scan that found
+    # nothing used to print the same summary and exit zero, which is how this sat 432
+    # blocks behind for days while every cycle looked clean. An absence has to be
+    # visible or it is indistinguishable from a quiet day.
+    if reached < start:
+        print(f"autopilot: scanned NO blocks (wanted {start}..{end}, tip {tip}); "
+              f"the first fetch failed, so nothing advanced")
+    else:
+        print(f"autopilot: scanned {start}..{reached} ({reached - start + 1} blocks), "
+              f"{tip - reached} behind the tip")
 
     cands = []
     for dst, g in groups.items():
@@ -543,6 +581,9 @@ def _fingerprint_candidates():
     out = []
     collectors, w3 = scan_recent_for_candidates()
     for coll in collectors:
+        if over_budget():
+            budget_note('fingerprint confirmation')
+            break
         try:
             fp = cluster.cluster_fingerprint(coll)
         except Exception:

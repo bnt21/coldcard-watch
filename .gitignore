@@ -1,3 +1,8 @@
+# Syncthing's in-flight temp copies. These appear and vanish mid-sync, and one got
+# swept into a commit by `git add -A` during an edit. The leak gate caught it.
+.syncthing.*
+*.tmp
+
 # Working state. Regenerable, large, and some of it carries local filesystem paths.
 *-state.json
 *.log

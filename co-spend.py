@@ -26,9 +26,10 @@ import time
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPORT_IN = os.path.join(HERE, "scan-batched-report.json")
+DATA = os.path.join(HERE, "data")
+REPORT_IN = os.path.join(DATA, "scan-batched-report.json")
 STATE = os.path.join(HERE, "co-spend-state.json")
-REPORT = os.path.join(HERE, "co-spend-report.json")
+REPORT = os.path.join(DATA, "co-spend-report.json")
 UA = {"User-Agent": "coldcard-co-spend/1.0"}
 
 # Confirmed attacker addresses only. No candidates, no inferences.

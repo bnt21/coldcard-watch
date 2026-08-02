@@ -29,12 +29,13 @@ import sys
 import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(HERE, "data")
 spec = importlib.util.spec_from_file_location("w3", os.path.join(HERE, "wave3.py"))
 w3 = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(w3)
 
-REPORT = os.path.join(HERE, "wave3-report.json")
-OUT = os.path.join(HERE, "wave3-set.json")
+REPORT = os.path.join(DATA, "wave3-report.json")
+OUT = os.path.join(DATA, "wave3-set.json")
 
 
 def main():

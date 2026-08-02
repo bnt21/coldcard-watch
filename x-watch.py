@@ -38,7 +38,7 @@ import urllib.request
 
 import publish
 
-ROOT_TWEET = "2083331338522820667"          # @bradytc_ launch thread
+ROOT_TWEET = "2083331338522820667"          # the launch thread
 SEED_CONVERSATIONS = [ROOT_TWEET, "2083545024231567362"]   # + @americanhodl8 thread
 API = "https://api.x.com/2"
 UA = {"User-Agent": "coldcard-x-watch/1.0"}
@@ -368,8 +368,8 @@ def notify_pending(env, addr, v, cls, dry):
     lines += ["",
               "The sweep matches the drain pattern but does not connect to a known "
               "cluster, so nothing was published.",
-              f"To publish: tell Dobby  approve {addr}",
-              f"To dismiss: tell Dobby  reject {addr}",
+              f"To publish: reply  approve {addr}",
+              f"To dismiss: reply  reject {addr}",
               f"  https://mempool.space/address/{addr}"]
     publish.send_telegram("\n".join(lines), env, dry)
 

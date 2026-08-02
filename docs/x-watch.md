@@ -2,7 +2,7 @@
 
 Watches X for people reporting their own drained addresses, verifies each claim on
 the chain, and adds the proven ones to coldcard-watch.vercel.app. Runs on the
-Hetzner box (dobby-bridge) so it keeps watching with the Mac off.
+always-on box so it keeps watching with the workstation off.
 
 ## Pieces
 
@@ -25,7 +25,7 @@ Hetzner box (dobby-bridge) so it keeps watching with the Mac off.
   deterministic and is **published automatically**.
 - A result is **pattern** when the sweep matches the drain fingerprint (1-in/1-out, no change, a
   known hardcoded fee rate, inside the drain window) but connects to nothing known.
-  **Held for Brady.** A Telegram message names the address and asks.
+  **Held for a person.** A Telegram message names the address and asks.
 - A result is **collector** when the address receives batched single-input sweeps, so it looks like
   a thief's collector, not a victim. Never auto-published; flagged as a possible new
   operator address for review.
@@ -38,7 +38,7 @@ When a Telegram message says a drain was reported but only pattern-matched, the
 decision is one command **on the Hetzner box**:
 
 ```
-ssh dobby@dobby-bridge
+ssh <user>@<box>
 cd ~/CLAUDE/personal/coldcard-watch
 python3 publish.py --list-pending          # see everything waiting, with evidence
 python3 publish.py --approve <ADDR>         # re-verifies, then publishes + deploys
@@ -49,7 +49,7 @@ python3 publish.py --reject  <ADDR>         # drops it
 since become provable is upgraded, and one that still does not hold up is refused.
 Add `--dry-run` to `--approve` to see the edit without deploying.
 
-The cc-connect Dobby (Telegram bot) can run these for Brady, so "approve `<addr>`" or
+The Telegram bot can run these too, so "approve `<addr>`" or
 "reject `<addr>`" in the Telegram thread, and it runs the command on the box.
 
 ## Adding an address by hand

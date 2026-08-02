@@ -36,8 +36,9 @@ import urllib.request
 import nodeconf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(HERE, "data")
 STATE = os.path.join(HERE, "scan-state.json")
-REPORT = os.path.join(HERE, "scan-report.json")
+REPORT = os.path.join(DATA, "scan-report.json")
 
 FIRST_DRAIN_BLOCK = 960183
 UA = {"User-Agent": "coldcard-scan/1.0"}
@@ -76,7 +77,7 @@ def is_p2wpkh(addr):
 
 
 # ---- Bitcoin Core over the StartOS LAN interface ------------------------------
-# Reading blocks from Brady's own node instead of a public API: no rate limit, no
+# Reading blocks from a local node instead of a public API: no rate limit, no
 # third party, and about five times faster. Falls back to blockchain.info if the
 # node cannot be reached, so the scan still runs away from home.
 # Node location comes from local config or the environment, never from this file.
@@ -94,7 +95,8 @@ def rpc(method, params=None):
     s = socket.create_connection((nodeconf.node()["addr"], 443), timeout=120)
     ss = ctx.wrap_socket(s, server_hostname=nodeconf.node().get("host") or nodeconf.node()["addr"])
     auth = base64.b64encode(f"bitcoin:{_pw()}".encode()).decode()
-    ss.sendall((f"POST / HTTP/1.1\r\nHost: {nodeconf.node().get("host") or nodeconf.node()["addr"]}\r\nAuthorization: Basic {auth}\r\n"
+    host = nodeconf.node().get("host") or nodeconf.node()["addr"]
+    ss.sendall((f"POST / HTTP/1.1\r\nHost: {host}\r\nAuthorization: Basic {auth}\r\n"
                 f"Content-Type: text/plain\r\nContent-Length: {len(body)}\r\n"
                 f"Connection: close\r\n\r\n{body}").encode())
     buf = b""

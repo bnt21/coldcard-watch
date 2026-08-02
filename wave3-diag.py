@@ -17,11 +17,12 @@ import sys
 import importlib.util
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(HERE, "data")
 spec = importlib.util.spec_from_file_location("w3", os.path.join(HERE, "wave3.py"))
 w3 = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(w3)
 
-DIAG = os.path.join(HERE, "wave3-diag.json")
+DIAG = os.path.join(DATA, "wave3-diag.json")
 
 
 def main():

@@ -34,8 +34,9 @@ import urllib.request
 import nodeconf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(HERE, "data")
 STATE = os.path.join(HERE, "scan-batched-state.json")
-REPORT = os.path.join(HERE, "scan-batched-report.json")
+REPORT = os.path.join(DATA, "scan-batched-report.json")
 
 # Node location comes from local config or the environment, never from this file.
 # With none set, nodeconf reports no node and the caller uses public block APIs.
@@ -62,7 +63,8 @@ def rpc(method, params=None):
     s = socket.create_connection((nodeconf.node()["addr"], 443), timeout=120)
     ss = ctx.wrap_socket(s, server_hostname=nodeconf.node().get("host") or nodeconf.node()["addr"])
     auth = base64.b64encode(f"bitcoin:{pw()}".encode()).decode()
-    ss.sendall((f"POST / HTTP/1.1\r\nHost: {nodeconf.node().get("host") or nodeconf.node()["addr"]}\r\nAuthorization: Basic {auth}\r\n"
+    host = nodeconf.node().get("host") or nodeconf.node()["addr"]
+    ss.sendall((f"POST / HTTP/1.1\r\nHost: {host}\r\nAuthorization: Basic {auth}\r\n"
                 f"Content-Type: text/plain\r\nContent-Length: {len(body)}\r\n"
                 f"Connection: close\r\n\r\n{body}").encode())
     buf = b""

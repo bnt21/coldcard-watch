@@ -23,6 +23,7 @@ import re
 import shutil
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import publish
 
 MEth = os.path.join(publish.PUBLIC, "methodology.html")

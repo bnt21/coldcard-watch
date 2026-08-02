@@ -89,7 +89,7 @@ one-line command. Watch a few land correctly, then set it `True`. Tier 1 is alwa
 
 ## Running on the box
 
-Cron (dobby crontab): autopilot at `:15,:45`, x-watch at `:00,:30`, both on one shared
+Cron (on the always-on box): autopilot at `:15,:45`, x-watch at `:00,:30`, both on one shared
 lock (`~/.coldcard-pipeline.lock`) because they share publish's state file, and the
 lock serialises them so they never race. A run is co-spend (~17s, checkpointed) + a 20-block
 fingerprint scan (~3 min via blockchain.info) + tiering. The scan advances forward and

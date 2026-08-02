@@ -39,7 +39,7 @@ PUBLISHED_VICTIMS = 1626
 
 
 def load(name):
-    with open(os.path.join(ROOT, name), encoding="utf-8") as f:
+    with open(os.path.join(ROOT, "data", name), encoding="utf-8") as f:
         return json.load(f)
 
 

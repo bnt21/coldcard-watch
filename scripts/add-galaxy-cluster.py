@@ -17,6 +17,7 @@ import re
 import shutil
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import publish
 
 COLL = "bc1qmd5m5ktv7m5ffujxv4248fxv36myvdx79n8jp6"

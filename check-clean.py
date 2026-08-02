@@ -37,6 +37,9 @@ RULES = [
         r'|\b[A-Z_]*KEYCHAIN[A-Z_]*\s*=\s*["\'][a-z][a-z0-9\-]*["\']')),
     # Home directories, either platform, any capitalisation.
     ("home directory path", re.compile(r'/(?:Users|home)/(?!<|\$|%|USER\b|user\b)[A-Za-z][\w\-.]*')),
+    # Names of the people and machines behind this. Comments written for a private repo
+    # carry them without anyone noticing; 11 of them survived into the first public push.
+    ("operator or machine name", re.compile(r'\b(?:dobby|brady|bradytc|bnoahtinnin|dobby-bridge)\b', re.I)),
     # Credential shapes. Broad on purpose: a false positive costs a comment, a false
     # negative costs a live credential in a public repo.
     ("github token", re.compile(r'\bgh[pousr]_[A-Za-z0-9]{20,}')),
@@ -112,6 +115,7 @@ def selftest():
         "bearer header": "Authorization: Bearer abcdef1234567890abcdef",
         "private key block": "-----BEGIN OPENSSH PRIVATE KEY-----",
         "vercel linkage": '{"orgId":"team_x","projectId":"prj_y"}',
+        "operator name in a comment": "# runs on the " + "dob" + "by box",
     }
     benign = {
         "svg path data": '<path d="M10.5.3 1.2.4 3.1.9"/>',

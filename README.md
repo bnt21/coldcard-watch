@@ -27,6 +27,21 @@ following the vendor advisory, because the advisory told owners to do the same t
 | `nodeconf.py` | Where block data comes from, with no address hardcoded anywhere. |
 | `public/` | The site itself, plus the published datasets. |
 
+## Layout
+
+```
+wave3.py  scan.py  scan-batched.py  co-spend.py  cluster.py   the detectors
+autopilot.py  x-watch.py  publish.py  wave3-refresh.py        the pipeline
+nodeconf.py  check-clean.py                                   config and the leak gate
+data/        the datasets, including the chains left off
+docs/        autopilot and X-pipeline notes
+scripts/     one-off migrations, kept for the record rather than for reuse
+sim/         mockups of site states, used while designing the page
+tests/       run with: python3 -m unittest discover -s tests
+```
+
+Python 3.9 or newer, standard library only. No dependencies to install.
+
 ## Running it
 
 Nothing here needs a node to be useful, but a node makes the block scans roughly five
@@ -112,8 +127,8 @@ it can be checked, and it carries the uncertainty described above and on the met
 page. Treating it as a blocklist converts an inference into a consequence for someone who
 has no idea they are on a list and no way to appeal to whoever ingested it.
 
-If a screening product has already ingested this data, that is the case Dobby most wants
-to hear about. Open an issue.
+If a screening product has already ingested this data, that is the single most important thing
+to report. Open an issue.
 
 ## Corrections
 

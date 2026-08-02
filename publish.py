@@ -3,7 +3,7 @@
 publish.py — add verified drained addresses to coldcard-watch.vercel.app and deploy.
 
 The only path by which an address reaches the site. x-watch.py imports this; the
-cc-connect Dobby runs it on Brady's word. Every publish re-verifies on-chain first,
+the Telegram bot runs it on request. Every publish re-verifies on-chain first,
 edits every coupled surface in one pass, deploys, and then reads the deployed bytes
 back before claiming success. On any failure the edits roll back.
 

@@ -385,6 +385,28 @@ WAVE3_FEE_MULTIPLE = 20.0  # and the rate must sit far above what that block cha
 WAVE3_MIN_RATE = 100.0     # absolute floor, so a quiet block cannot make 6 sat/vB look extreme
 
 
+def _esplora_text(path, label):
+    """A plain-text Esplora read across both hosts.
+
+    Every single-host call in this file was a silent stall waiting to happen:
+    blockstream.info rate-limits some endpoints (429) long before others, and on 429
+    the fetch refuses to retry, so a hardcoded host turns a transient cap into a
+    permanent no-op. Two of these existed. Both are routed through here now.
+    """
+    last = None
+    for host, t in (("https://blockstream.info/api", 12),
+                    ("https://mempool.space/api", 45)):
+        try:
+            return publish._get(f"{host}{path}", timeout=t, tries=1).decode().strip()
+        except Exception as e:
+            last = e
+    raise RuntimeError(f"{label} failed on both hosts: {last}")
+
+
+def _chain_tip():
+    return int(_esplora_text("/blocks/tip/height", "chain tip"))
+
+
 def _block_hash(h):
     """Height to hash, across both Esplora hosts.
 
@@ -395,14 +417,7 @@ def _block_hash(h):
     success. mempool.space is slow from here (measured 20s), so it gets a wide timeout
     and is only ever reached as a fallback.
     """
-    last = None
-    for host, t in (("https://blockstream.info/api", 12),
-                    ("https://mempool.space/api", 45)):
-        try:
-            return publish._get(f"{host}/block-height/{h}", timeout=t, tries=1).decode().strip()
-        except Exception as e:
-            last = e
-    raise last
+    return _esplora_text(f"/block-height/{h}", f"height {h}")
 
 
 def _rawblock(h):
@@ -423,8 +438,7 @@ def scan_recent_for_candidates(max_blocks=20):
         except Exception:
             pass
     try:
-        tip = int(publish._get("https://blockstream.info/api/blocks/tip/height",
-                               timeout=30).decode().strip())
+        tip = _chain_tip()
     except Exception:
         return [], []                  # both detectors, or run() cannot unpack
     start = st["last"] + 1

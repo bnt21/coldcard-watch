@@ -3,7 +3,7 @@
 cluster.py — resolve an attacker collector to its victims, verify it against the
 drain fingerprint, and add the whole cluster to the site in one atomic pass.
 
-This is the generalized form of the one-off add-galaxy-cluster.py. autopilot.py
+This is the generalized form of the one-off add_galaxy_cluster.py. autopilot.py
 calls add_cluster() once a candidate has cleared a proof tier. Everything here is
 deterministic; no model judgement is involved in what gets written.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-watch-blocks.py — keep scanning new blocks for Coldcard drain clusters, forever.
+watch_blocks.py — keep scanning new blocks for Coldcard drain clusters, forever.
 
 scan.py establishes a baseline over history. This keeps that going: every run it
 reads whatever blocks have appeared since the last run, applies the same pattern
@@ -16,7 +16,7 @@ exchanges produce similar bursts and must not be reported as thieves.
 Nothing publishes. It notifies; a human decides.
 
 state: watch-state.json   (last height scanned + every candidate ever reported)
-usage: watch-blocks.py [--catch-up N] [--dry-run]
+usage: watch_blocks.py [--catch-up N] [--dry-run]
 """
 import argparse
 import json

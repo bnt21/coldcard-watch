@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-check-clean.py — refuse to commit anything that would expose a machine or a credential.
+check_clean.py — refuse to commit anything that would expose a machine or a credential.
 
 Everything in this tree is meant to be readable by strangers eventually, so the things
 that must never be in it are: the address of anybody's node, a Keychain service name, a
@@ -12,7 +12,7 @@ cannot fail the build and a newly-tracked file cannot sneak past.
 
 Exit 0 clean, 1 dirty. Wire it as a pre-commit hook, and run it before any push.
 
-usage: check-clean.py [--staged]
+usage: check_clean.py [--staged]
 """
 import re
 import subprocess
@@ -58,7 +58,7 @@ RULES = [
 # Exemptions are per (file, rule), never whole-file. A blanket file exemption is how a
 # real address ends up in the one file whose job is to show an example of one.
 ALLOW = {
-    ("check-clean.py", None),                       # this file is nothing but patterns
+    ("check_clean.py", None),                       # this file is nothing but patterns
     ("nodeconf.py", "keychain service name"),       # documents the env var names only
     ("README.md", "IP address literal"),            # the example config block
     ("publish.py", "keychain service name"),        # service comes from env, not a literal
@@ -91,7 +91,7 @@ def tracked(staged):
 def selftest():
     """The gate is only worth what it catches, so the samples live with the rules.
     Fixtures are assembled from fragments so this file never contains a credential
-    shape verbatim. Run: check-clean.py --selftest"""
+    shape verbatim. Run: check_clean.py --selftest"""
     U = "/Us" + "ers/"
     H = "/ho" + "me/"
     samples = {

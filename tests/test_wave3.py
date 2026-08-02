@@ -44,7 +44,7 @@ def load(name):
 
 
 def published_chains(report):
-    """The selection rule add-wave3.py used: a completed two-hop chain whose sweep fee
+    """The selection rule add_wave3.py used: a completed two-hop chain whose sweep fee
     sits in the band. Kept here so the rule itself is under test."""
     ok = [s for s in report["sweeps"] if (s.get("hop2") or {}).get("ok")]
     return [s for s in ok if BAND_LO <= s["rate"] <= BAND_HI]

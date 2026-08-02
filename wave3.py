@@ -3,7 +3,7 @@
 wave3.py — the no-collector detector.
 
 Every earlier detector on this project keys on a funnel. scan.py wants many sweeps
-landing in one collector; co-spend.py wants two addresses signing the same transaction.
+landing in one collector; co_spend.py wants two addresses signing the same transaction.
 Wave 3 removed the funnel: each victim wallet got its own fresh holding address and its
 own fresh P2WSH vault, ~293 one-to-one chains with nothing shared for a detector to
 cluster on. Both existing detectors are structurally blind to it, which is why the site
@@ -189,7 +189,7 @@ def scan_block(height, fee_multiple, min_rate):
         addrs = [spk(p).get("address") for p in prevs]
         if not all(addrs):
             continue
-        # NOT required: that every input sit at a distinct address. scan-batched.py demands
+        # NOT required: that every input sit at a distinct address. scan_batched.py demands
         # that, to tell a multi-victim batch from an owner consolidating their own UTXOs, and
         # inheriting it here cost 63 sweeps in the fee band on the first run — Wave 3 batches
         # one WALLET per sweep, and a wallet reuses an address routinely. Recorded, not judged.

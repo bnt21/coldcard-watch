@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-x-watch.py — watch X for people reporting their own addresses drained, verify each
+x_watch.py — watch X for people reporting their own addresses drained, verify each
 claim on-chain, and feed the publishing pipeline.
 
 Runs from cron on the Hetzner box every 30 minutes, so it keeps watching with the
-Mac off. The block scanner (watch-blocks.py) finds clusters from the chain side;
+Mac off. The block scanner (watch_blocks.py) finds clusters from the chain side;
 this finds them from the human side: a victim saying "this address was mine."
 
 Per run:
@@ -23,7 +23,7 @@ Per run:
   6. Re-check pending candidates every few hours; a later consolidation can turn
      a pattern match into proof.
 
-usage: x-watch.py [--dry-run] [--backfill] [--once-query "..."]
+usage: x_watch.py [--dry-run] [--backfill] [--once-query "..."]
 state: ~/.coldcard-x-state.json (shared with publish.py)
 env:   ~/.coldcard-x-env (X_BEARER_TOKEN, TELEGRAM_BOT_TOKEN, CC_ADMIN_ID, VERCEL_TOKEN)
 """

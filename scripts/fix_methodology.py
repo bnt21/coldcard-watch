@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-fix-methodology.py — state the two listing tests as two tests.
+fix_methodology.py — state the two listing tests as two tests.
 
 Wave 3 went up while the page read as one strong rule (convergence of destination)
 followed by a large exception. That ordering is the weak point: the site's best argument
@@ -13,10 +13,10 @@ The three additions for Wave 3, each checked rather than asserted:
                   about two weeks after the vulnerable firmware shipped at 674,951. The
                   detector does test this, and in the fee band it rejected nothing, so it
                   is an observation about the population and not an artefact of filtering.
-  still unspent   all 214 vaults, re-confirmed by wave3-refresh.py
+  still unspent   all 214 vaults, re-confirmed by wave3_refresh.py
   outside total   Galaxy reported a wave of this size in this window
 
-usage: fix-methodology.py [--dry-run] [--no-deploy]
+usage: fix_methodology.py [--dry-run] [--no-deploy]
 """
 import os
 import re

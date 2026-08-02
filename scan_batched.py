@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-scan-batched.py — the second detector: thefts that sweep many victims in ONE transaction.
+scan_batched.py — the second detector: thefts that sweep many victims in ONE transaction.
 
 scan.py hunts the shape every known cluster used: one victim per transaction, many of
 them in a block. A theft reported by a victim on 1 August used a different shape, so
@@ -19,7 +19,7 @@ Destinations are then freshness-checked like the other detector.
 
 Nothing publishes. It writes a report for a person to read.
 
-usage: scan-batched.py [--from H] [--to H] [--min-inputs 5] [--fee-multiple 5]
+usage: scan_batched.py [--from H] [--to H] [--min-inputs 5] [--fee-multiple 5]
 """
 import argparse
 import json

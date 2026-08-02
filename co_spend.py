@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-co-spend.py — deterministic linking pass over the batched-sweep candidates.
+co_spend.py — deterministic linking pass over the batched-sweep candidates.
 
 The batched detector produces shape matches. Shape cannot separate a thief from an
 owner rescuing after Coinkite's advisory. Common-input-ownership can: if a candidate

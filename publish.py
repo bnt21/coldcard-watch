@@ -2,7 +2,7 @@
 """
 publish.py — add verified drained addresses to coldcard-watch.vercel.app and deploy.
 
-The only path by which an address reaches the site. x-watch.py imports this; the
+The only path by which an address reaches the site. x_watch.py imports this; the
 the Telegram bot runs it on request. Every publish re-verifies on-chain first,
 edits every coupled surface in one pass, deploys, and then reads the deployed bytes
 back before claiming success. On any failure the edits roll back.
@@ -69,7 +69,7 @@ MONITORS = [os.path.expanduser("~/CLAUDE/tools/coldcard-watch-monitor.py")]
 
 # Attacker-side anchor set. An outflow reaching any of these, directly or through
 # one co-spend hop, is proof the funds went to the operator of the drains.
-# First eleven: the published collectors and vaults (watch-blocks.py KNOWN).
+# First eleven: the published collectors and vaults (watch_blocks.py KNOWN).
 # Last four: proven by co-spend in tx bc9255a5... (block 960458) but not yet
 # tracked on the dashboard; they are valid proof anchors regardless.
 ANCHORS = {

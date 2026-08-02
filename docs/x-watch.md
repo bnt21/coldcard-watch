@@ -6,16 +6,16 @@ always-on box so it keeps watching with the workstation off.
 
 ## Pieces
 
-- `x-watch.py` is the scanner. Cron every 30 min on the box. Searches the tracked
+- `x_watch.py` is the scanner. Cron every 30 min on the box. Searches the tracked
   threads (replies, quotes, replies-to-quotes), posts linking the site, and a broad
   Coldcard-theft keyword query. Extracts addresses, classifies each tweet with a
   local `claude -p` call, then verifies on-chain and routes by proof.
 - `publish.py` is the only writer. Verifies an address, edits every coupled site
   file in one atomic pass (with rollback), deploys via Vercel, reads the deployed
-  bytes back, records state, sends a Telegram receipt. `x-watch.py` imports it; it
+  bytes back, records state, sends a Telegram receipt. `x_watch.py` imports it; it
   also runs standalone for manual approve/reject.
-- `watch-blocks.py` is the older chain-side scanner (unchanged). Finds clusters
-  from the chain outward; `x-watch.py` finds them from the victim side.
+- `watch_blocks.py` is the older chain-side scanner (unchanged). Finds clusters
+  from the chain outward; `x_watch.py` finds them from the victim side.
 
 ## The two verification tiers
 

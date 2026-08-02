@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-wave3-diag.py — why does wave3.py land 40% short of Galaxy's Wave 3?
+wave3_diag.py — why does wave3.py land 40% short of Galaxy's Wave 3?
 
 Takes every transaction in the window that is a single-output spend paying a fee rate
 in the Wave 3 band, and tallies which of wave3.py's strict predicates rejected it. The
 answer tells us whether the shortfall is a real limit or one filter that is too tight.
 
-usage: wave3-diag.py [--from 960396] [--to 960471] [--lo 150] [--hi 260]
+usage: wave3_diag.py [--from 960396] [--to 960471] [--lo 150] [--hi 260]
 """
 import argparse
 import collections

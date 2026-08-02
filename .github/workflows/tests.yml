@@ -18,7 +18,7 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Leak gate catches what it claims to
-        run: python check-clean.py --selftest
+        run: python check_clean.py --selftest
 
       - name: No credential or machine address in the tree
-        run: python check-clean.py
+        run: python check_clean.py

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-add-wave3.py — put Wave 3 on the site.
+add_wave3.py — put Wave 3 on the site.
 
-Reads the frozen set from wave3-publish-set.py (215 sweeps in the 195-210 sat/vB band,
+Reads the frozen set from wave3_publish_set.py (215 sweeps in the 195-210 sat/vB band,
 1,626 victim addresses, 214 fresh P2WSH vaults holding 200.33487536 BTC, all unspent)
 and writes every coupled surface atomically, rolling back all of it on any failure.
 
@@ -11,7 +11,7 @@ websocket subscription, a single blockchain.info batch URL, and the follow-the-m
 trace, and it is capped at MAX_TRACKED = 40. 214 more addresses would blow the cap, build
 a 9KB request URL, and turn the money section into a 214-row wall. So Wave 3 lands in its
 own window.WAVE3 dataset: counted in the headline, listed in full on the list page, and
-refreshed by wave3-refresh.py rather than streamed to the browser. The page says so.
+refreshed by wave3_refresh.py rather than streamed to the browser. The page says so.
 
 The timer is deliberately untouched. "Since coins last moved" anchors on lastMoveTs, which
 is set only when an address in WALLETS spends. Every Wave 3 movement is older than the
@@ -25,7 +25,7 @@ SWEEP_END does move, from the wave-4 consolidation to the last Wave 3 sweep (blo
 splits its two time scales there. It is only a fallback for the timer, never the anchor
 while a real movement is known.
 
-usage: add-wave3.py [--dry-run]
+usage: add_wave3.py [--dry-run]
 """
 import hashlib
 import json

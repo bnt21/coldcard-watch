@@ -8,7 +8,7 @@ Adds every coupled surface atomically (rollback on any failure), reusing publish
 deploy + deployed-byte verification. Not part of the recurring X pipeline; this is the
 manual cluster path the site used for waves 4 and 5.
 
-usage: add-galaxy-cluster.py [--dry-run]
+usage: add_galaxy_cluster.py [--dry-run]
 """
 import hashlib
 import json

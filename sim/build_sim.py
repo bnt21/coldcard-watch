@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-build-sim.py — generate a local-only simulator of coldcard-watch.
+build_sim.py — generate a local-only simulator of coldcard-watch.
 
 Each scenario is the REAL public/index.html with a stub injected ahead of the page
 script. The stub replaces fetch() and WebSocket so the page's own logic runs against

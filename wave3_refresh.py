@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-wave3-refresh.py — keep the Wave 3 snapshot true.
+wave3_refresh.py — keep the Wave 3 snapshot true.
 
 The seven collector addresses stream to the browser over a websocket. The 214 Wave 3
 vaults cannot: that many addresses would blow past MAX_TRACKED, build a 9KB batch URL,
@@ -14,7 +14,7 @@ which is the one thing that could tie these 214 to each other or to the earlier 
 
 Deploys only when a balance actually changed, so it is safe to run on a schedule.
 
-usage: wave3-refresh.py [--dry-run] [--no-deploy]
+usage: wave3_refresh.py [--dry-run] [--no-deploy]
 """
 import json
 import os

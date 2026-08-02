@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-wave3-publish-set.py — freeze exactly what Wave 3 puts on the site.
+wave3_publish_set.py — freeze exactly what Wave 3 puts on the site.
 
 wave3.py finds candidates. This picks the subset that clears the publish bar and
 writes it once, so the site edit reads a fixed file rather than re-deciding anything.
@@ -19,7 +19,7 @@ Per-victim amounts come from the node (getrawtransaction verbosity 2), because t
 detector's report keeps only the sweep total.
 
 writes: wave3-set.json
-usage: wave3-publish-set.py [--lo 195] [--hi 210]
+usage: wave3_publish_set.py [--lo 195] [--hi 210]
 """
 import argparse
 import importlib.util

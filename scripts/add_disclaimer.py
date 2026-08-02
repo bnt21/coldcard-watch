@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-add-disclaimer.py — say out loud that this is not a blocklist.
+add_disclaimer.py — say out loud that this is not a blocklist.
 
 Every address on this site is public, in plaintext, with an explorer link. That is
 deliberate: the whole claim is that the work can be checked. It also means a screening
@@ -15,7 +15,7 @@ ingested it.
 So the site says plainly what the list is not, and how to get an address removed. Adds
 the same block to the methodology page and a short line above the address list.
 
-usage: add-disclaimer.py [--dry-run] [--no-deploy]
+usage: add_disclaimer.py [--dry-run] [--no-deploy]
 """
 import os
 import shutil

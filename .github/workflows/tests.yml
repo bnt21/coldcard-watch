@@ -17,6 +17,9 @@ jobs:
       - name: Regression tests
         run: python -m unittest discover -s tests -v
 
+      - name: Headline maths (runs in the browser, so Python cannot reach it)
+        run: node tests/test_headline.js
+
       - name: Leak gate catches what it claims to
         run: python check_clean.py --selftest
 

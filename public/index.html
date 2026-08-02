@@ -363,6 +363,13 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
   // single source of truth for "how much of this address is traced theft proceeds"
   function effective(w){
+    // A traced destination counts nothing until its balance has actually been read.
+    // follow() pushes it with only `attributed`, and the address it came from still
+    // carries its pre-spend balance until the next refresh, so counting it on push
+    // counts the same coins twice and the headline jumps until refreshBalances()
+    // lands a minute later. Seeded wallets are unaffected: their attributed figure
+    // is the verified amount, not a guess awaiting confirmation.
+    if (w.origin === "traced" && typeof w.balance !== "number") return 0;
     var bal = (typeof w.balance === "number") ? w.balance : w.attributed;
     var e = Math.min(bal, w.attributed);
     return e > 0 ? e : 0;

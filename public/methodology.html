@@ -85,6 +85,12 @@ td:first-child{white-space:nowrap;color:var(--ink)}
 <main>
   <h1>How these addresses were identified</h1>
 
+  <p>
+    A flaw in Coldcard wallet firmware made some recovery seeds predictable, and in late July 2026
+    a thief began recreating those keys and emptying the wallets they controlled. This page sets out
+    how the drained addresses on this site were identified, and where the method can be wrong.
+  </p>
+
   <div class="floor">
     <strong>Everything here is a verified minimum.</strong> The figures come from clusters that have been
     found and checked. They are not a total, and they are not an estimate of the total. More clusters
@@ -117,7 +123,8 @@ td:first-child{white-space:nowrap;color:var(--ink)}
   <p>
     Each theft is one transaction with one input and one output. The input address is the victim, because
     that is where the money leaves. The output is the attacker, because that is where it arrives. Nothing
-    is inferred from the addresses themselves. Direction does the work.
+    is inferred from the addresses themselves. Direction does the work. A transaction like this,
+    one that empties an address completely, is called a sweep below.
   </p>
   <p>
     Those output addresses collect a batch of sweeps and then forward everything to a second address that
@@ -131,15 +138,17 @@ td:first-child{white-space:nowrap;color:var(--ink)}
     things appear in every sweep and rarely together otherwise:
   </p>
   <ul>
-    <li>One input, one output, and <strong>no change output</strong>. The address is emptied exactly.</li>
-    <li>Every input is a single-signature native segwit key, the default path of the affected wallet.</li>
+    <li>One input, one output, and <strong>no change output</strong>. The address is emptied exactly;
+      a normal payment sends leftover change back to the payer.</li>
+    <li>Every input is a single-signature native segwit key (an address starting <code>bc1q</code>),
+      the default path of the affected wallet.</li>
     <li>Every transaction in a batch pays an <strong>identical hardcoded fee rate</strong>, unrelated to what
       the network was charging.</li>
     <li>The proceeds consolidate once and then never move.</li>
   </ul>
   <p>
-    No single mark settles it on its own. An owner rescuing coins one UTXO per transaction, to keep
-    their histories separate, produces the same shape the tool does. What an owner cannot produce is
+    No single mark settles it on its own. An owner rescuing coins one at a time, moving each coin in
+    its own transaction to keep their histories separate, produces the same shape the tool does. What an owner cannot produce is
     <strong>convergence</strong> with hundreds of strangers, and there are two kinds of it in this
     incident. An address is listed on this site only when its sweep shows one of them, and never on
     shape alone.
@@ -152,9 +161,11 @@ td:first-child{white-space:nowrap;color:var(--ink)}
   </p>
   <p>
     <strong>Convergence of fee.</strong> Wave 3 removed the shared destination deliberately, giving
-    each drained wallet its own fresh address and then its own fresh P2WSH vault, 214 of them sharing
-    nothing, which is why this site missed the wave for two days. What it did not remove is the fee.
-    Its 215 sweeps all paid within a hair of 201 sat/vB while the network was charging under 3, and a
+    each drained wallet its own fresh address and then its own fresh vault of a different address
+    type (P2WSH), 214 of them sharing nothing, which is why this site missed the wave for two days.
+    What it did not remove is the fee. Its 215 sweeps all paid within a hair of 201 sat/vB
+    (satoshis per unit of transaction size, which is how Bitcoin fees are priced) while the network
+    was charging under 3, and a
     rate that constant across transactions sharing no address is a number hardcoded in a script rather
     than 215 strangers independently choosing the same urgent fee. Sixteen further chains matched the
     shape but paid scattered rates, and they were left off rather than published on shape alone.
@@ -179,7 +190,8 @@ td:first-child{white-space:nowrap;color:var(--ink)}
           total matched the published figure to the satoshi.</td></tr>
       <tr><td>31 Jul<br>04:54&ndash;08:36</td><td>1,126 addresses<br>45.97 BTC</td><td>50.2 sat/vB</td>
         <td>Reported by Kevin Kelbie, past the end of Block's transaction scan. Verified here on-chain.
-          Every input signals replace-by-fee, which the earlier batch does not.</td></tr>
+          Every input signals replace-by-fee (an optional wallet flag), which the earlier batch
+          does not.</td></tr>
       <tr><td>31 Jul<br>19:53</td><td>13 addresses<br>0.19 BTC</td><td>2.0 sat/vB</td>
         <td>Reported in a reply by @jmassu. Verified here: twelve single-input sweeps in one block, then a
           consolidation into an address that has not moved.</td></tr>
@@ -261,8 +273,9 @@ td:first-child{white-space:nowrap;color:var(--ink)}
 
   <h2>What the checker actually does</h2>
   <p>
-    The list of drained addresses is hashed and shipped with the page. When an address is entered, the
-    browser hashes it and looks for a match locally. Nothing is transmitted and nothing is logged. If the
+    The list of drained addresses is turned into one-way fingerprints (hashes) and shipped with the
+    page. When an address is entered, the browser fingerprints it the same way and looks for a match
+    locally. Nothing is transmitted and nothing is logged. If the
     list fails to load, the tool disables itself rather than reporting everything as clean.
   </p>
 

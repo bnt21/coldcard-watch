@@ -68,7 +68,7 @@ DEST_CONVERGENCE_MIN = 20
 # damages this site, so it ran in notify-mode until it had shown itself correct on real
 # cases.
 #
-# Turned on 2026-08-05 by Brady. What the evidence had become by then: 27 candidates had
+# Turned on 2026-08-05 by the site owner. The evidence by then: 27 candidates had
 # reached this tier and none was ever shown to be wrong, the criterion is decided by code
 # rather than judgement, every add sends a notify_change receipt, and each one is
 # reversible per cluster by --rollback from a pre-publish snapshot of every coupled file.

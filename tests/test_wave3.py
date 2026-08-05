@@ -346,10 +346,29 @@ class AutopilotGates(unittest.TestCase):
     def test_a_wide_block_span_is_rejected(self):
         self.assertFalse(self.gate(block_span=(960000, 960400)))
 
-    def test_tier2_autopublish_stays_off(self):
-        """It gates whether a heuristic match can publish with nobody watching."""
+    def test_tier2_autopublish_keeps_its_safety_net(self):
+        """Tier 2 lets a heuristic match publish with nobody watching.
+
+        This test used to pin the switch OFF. The site owner turned it on 2026-08-05, so
+        pinning the value would only assert what was already decided. What is worth
+        holding is the net underneath it: while it is on, every add must be recorded, be
+        reversible, and refuse to ship a page whose scripts do not parse. Those are what
+        make an unattended publish recoverable rather than merely fast.
+        """
         import autopilot
-        self.assertFalse(autopilot.TIER2_AUTOPUBLISH)
+        import cluster
+        import inspect
+        if not autopilot.TIER2_AUTOPUBLISH:
+            return                                  # off is always safe
+        src = inspect.getsource(cluster.add_cluster)
+        self.assertIn("audit", inspect.getsource(autopilot._publish),
+                      "an unattended publish must leave an audit entry")
+        self.assertTrue(hasattr(autopilot, "rollback"),
+                        "an unattended publish must be reversible")
+        self.assertIn("js_parses(", src,
+                      "an unattended publish must not ship an unparseable page")
+        self.assertIn("snapshot", src.lower() + inspect.getsource(autopilot.rollback).lower(),
+                      "rollback restores from a pre-publish snapshot")
 
 
 class SiteInvariants(unittest.TestCase):

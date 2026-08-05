@@ -36,6 +36,7 @@ import time
 import urllib.parse
 import urllib.request
 
+import claims
 import publish
 
 ROOT_TWEET = "2083331338522820667"          # the launch thread
@@ -43,11 +44,33 @@ SEED_CONVERSATIONS = [ROOT_TWEET, "2083545024231567362"]   # + @americanhodl8 th
 API = "https://api.x.com/2"
 UA = {"User-Agent": "coldcard-x-watch/1.0"}
 
+# Sources that are authoritative for THIS incident, followed by identity rather than by
+# keyword. A keyword query can only match terms someone imagined in advance, and on
+# 2026-08-03 that failed exactly as you would expect: Galaxy Research — the source the
+# methodology page cites and every mainstream article is single-sourced to — reported
+# "1,596 BTC ... across 3 confirmed waves + more 14 smaller incidents" while the site
+# published 1,366.58, and no query matched it. Their whole timeline is now read, replies
+# included, and every post runs through claims.assess. Add an account here rather than
+# widening KEYWORD_QUERY when a new outlet becomes load-bearing.
+# @intangiblecoins is on this list for a specific, stated reason. Galaxy's own thread says
+# where their numbers come from: "73 individual victims have reached out to @intangiblecoins
+# for help tracing their coins. With help from victim reports, we have identified 14
+# additional footprints." Their edge is not better chain analysis — it is a human intake
+# channel we do not have. He is the intake point AND he publishes address lists (the wave-4
+# entry on this site came from a paste of his), so reading his timeline in full is the
+# closest thing to that channel available from outside it.
+WATCHED_ACCOUNTS = ["glxyresearch", "intangiblecoins"]
+
 KEYWORD_QUERY = ('(coldcard OR "cold card" OR coinkite) '
                  '(drained OR drain OR stolen OR stole OR hacked OR swept OR sweep '
                  'OR theft OR victim OR "lost my" OR "my btc" OR "my bitcoin" '
                  'OR "my funds" OR "my coins") -is:retweet')
-URL_QUERY = 'url:"coldcard-watch.vercel.app" -is:retweet'
+# BOTH hosts on purpose. Searching only the old one meant this found nothing at all once the
+# site moved — nobody links coldcard-watch.vercel.app anymore — so new mentions of the
+# real site went unseen. The old host stays in the query because 51 referring domains and 170
+# links still point at it, and a post citing either one is a post about this site.
+URL_QUERY = ('(url:"coldcardwatch.com" OR url:"coldcard-watch.vercel.app") '
+             '-is:retweet')
 
 ADDR_RE = re.compile(r'\b(bc1[a-z0-9]{25,87}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})\b',
                      re.IGNORECASE)
@@ -110,6 +133,56 @@ def search(env, query, since_id=None, start_time=None, archive=False, max_pages=
         if not nxt:
             break
         params["next_token"] = nxt
+        pages += 1
+        time.sleep(1.2)
+
+
+def watched_ids(env, st):
+    """Resolve WATCHED_ACCOUNTS to user ids, cached in state so the lookup is one call ever
+    rather than one per run. A handle that cannot be resolved is skipped and reported, never
+    silently dropped: a watchlist that quietly holds nothing is the failure this replaces."""
+    cache = st.setdefault("watched_ids", {})
+    missing = [h for h in WATCHED_ACCOUNTS if h.lower() not in cache]
+    if missing:
+        try:
+            d = xget(env, "/users/by", {"usernames": ",".join(missing),
+                                        "user.fields": "public_metrics,username"})
+            for u in d.get("data", []):
+                cache[u["username"].lower()] = u["id"]
+            for err in d.get("errors", []) or []:
+                print(f"  watched account unresolved: {err.get('value')} "
+                      f"({err.get('detail', 'no detail')})", flush=True)
+        except XError as e:
+            print(f"  watched_ids: {e}", flush=True)
+    out = {h: cache[h.lower()] for h in WATCHED_ACCOUNTS if h.lower() in cache}
+    for h in WATCHED_ACCOUNTS:
+        if h.lower() not in cache:
+            print(f"  WATCHLIST GAP: @{h} is not being read", flush=True)
+    return out
+
+
+def user_timeline(env, uid, since_id=None, start_time=None, max_pages=3):
+    """A watched account's own posts INCLUDING its replies.
+
+    Replies matter more than the headline here: Galaxy's "potential Wave 4 ... 2055 BTC" was
+    reply 2 of its own thread, and that reply never repeats the word "coldcard", so no
+    keyword search could ever have returned it. Retweets are excluded (they carry someone
+    else's text and would double-count), replies are not."""
+    params = {"max_results": 100, "exclude": "retweets",
+              "tweet.fields": TFIELDS.split("=", 1)[1]}
+    if since_id:
+        params["since_id"] = since_id
+    elif start_time:
+        params["start_time"] = start_time
+    pages = 0
+    while pages < max_pages:
+        d = xget(env, f"/users/{uid}/tweets", params)
+        for t in d.get("data", []):
+            yield t
+        nxt = (d.get("meta") or {}).get("next_token")
+        if not nxt:
+            break
+        params["pagination_token"] = nxt
         pages += 1
         time.sleep(1.2)
 
@@ -234,6 +307,23 @@ def gather(env, st, backfill=False):
                      max_pages=10 if backfill else 3))
     time.sleep(1.2)
 
+    # Watched sources first, and unconditionally: their posts must not depend on a keyword
+    # or URL query returning them. Their threads are also registered as watched_threads so
+    # follow_threads picks up later replies that never repeat the topic word.
+    for handle, uid in watched_ids(env, st).items():
+        key = f"acct:{handle}"
+        before = len(found)
+        take(key, user_timeline(env, uid,
+                                since_id=None if backfill else st["since"].get(key),
+                                start_time=start,
+                                max_pages=10 if backfill else 3))
+        print(f"  @{handle}: {len(found) - before} new", flush=True)
+        for t in list(found.values()):
+            cid = t.get("conversation_id")
+            if cid and t.get("author_id") == uid:
+                st.setdefault("watched_threads", {}).setdefault(cid, t["id"])
+        time.sleep(1.2)
+
     key = "kw"
     take(key, search(env, KEYWORD_QUERY,
                      since_id=None if backfill else st["since"].get(key),
@@ -268,19 +358,47 @@ def gather(env, st, backfill=False):
     return list(found.values())
 
 
+def candidate_tweets(st, tweets):
+    """The tweets whose addresses may become candidates, and how many were dropped.
+
+    An address only becomes a candidate if the post carrying it is about THIS incident. This
+    lives in its own function rather than inline in process() so a test can drive it with the
+    real off-topic posts: when it was inline, removing the gate broke no test at all.
+
+    Without the gate the account watchlist is a firehose — a watched research account covers
+    every incident there is, and on 2026-08-04 reading one full timeline put a dormant
+    whale's address (5,907 BTC) and a US government transfer into the queue. The keyword and
+    URL searches constrain topic by construction; a timeline read does not.
+    """
+    tset = topical_convos(st, tweets)
+    with_addrs, off_topic = [], 0
+    for t in tweets:
+        if not is_topical(t, tset):
+            off_topic += 1
+            continue
+        addrs = [a for a in extract_addrs(tweet_text(t)) if a not in publish.ANCHORS]
+        if addrs:
+            t["_addrs"] = addrs
+            with_addrs.append(t)
+    return with_addrs, off_topic
+
+
 def process(env, st, tweets, dry=False):
     """Extract, classify, verify, route. Returns (auto_entries, notes)."""
     drains, _, _ = publish.parse_site()
     known_victims = {r[0] for r in drains["rows"]}
 
-    with_addrs = []
-    for t in tweets:
-        addrs = extract_addrs(tweet_text(t))
-        addrs = [a for a in addrs if a not in publish.ANCHORS]
-        if addrs:
-            t["_addrs"] = addrs
-            with_addrs.append(t)
-    print(f"  {len(tweets)} new tweets, {len(with_addrs)} carry addresses", flush=True)
+    # An address only becomes a candidate if the post carrying it is about THIS incident.
+    #
+    # Without this the account watchlist is a firehose: a watched research account covers
+    # every incident there is, so reading its full timeline harvested a dormant whale's
+    # address (5,907 BTC) and a US government transfer into the candidate queue on the first
+    # run — 14 unrelated addresses in three minutes. The keyword and URL searches constrain
+    # topic by construction; a timeline read does not, so the gate has to live here, at the
+    # point where text becomes a candidate, rather than in any one detector.
+    with_addrs, off_topic = candidate_tweets(st, tweets)
+    print(f"  {len(tweets)} new tweets, {len(with_addrs)} carry addresses"
+          + (f", {off_topic} skipped as off-topic" if off_topic else ""), flush=True)
 
     verdicts = {}
     for i in range(0, len(with_addrs), MAX_CLASSIFY):
@@ -371,7 +489,7 @@ def notify_pending(env, addr, v, cls, dry):
               f"To publish: reply  approve {addr}",
               f"To dismiss: reply  reject {addr}",
               f"  https://mempool.space/address/{addr}"]
-    publish.send_telegram("\n".join(lines), env, dry)
+    publish.note_internal("\n".join(lines), env, dry)
 
 
 def notify_collector(env, addr, v, url, dry):
@@ -382,7 +500,250 @@ def notify_collector(env, addr, v, url, dry):
              f"  mentioned: {url}",
              f"  https://mempool.space/address/{addr}", "",
              "Nothing was published. If it proves out, its victims belong in the set."]
-    publish.send_telegram("\n".join(lines), env, dry)
+    publish.note_internal("\n".join(lines), env, dry)
+
+
+# ---------------------------------------------------------------- new-wave alerts
+# The confirmed side of the site comes from our own detectors. The Potential side is a
+# credible account breaking a wave report our scan cannot yet confirm. This flags such a
+# report and pings a person to investigate — it never adds anything to the site itself.
+WAVE_RE = re.compile(r"\b(another wave|new wave|4th wave|fourth wave|wave\s*4|wave\s*5|"
+                     r"ongoing (?:now|drain|attack)|happening now|drain(?:ing)? now|"
+                     r"siphon|attack (?:now|occurring|is live))\b", re.I)
+PASTE_RE = re.compile(r"(pastebin\.com|paste\.|gist\.github|justpaste|rentry\.co|dpaste|controlc\.com)", re.I)
+COLD_RE = re.compile(r"coldcard|coinkite|cold card", re.I)
+FOLLOWER_MIN = 1000            # a credible voice, not a fresh throwaway account
+
+
+def users_by_id(env, ids):
+    out = {}
+    ids = [i for i in ids if i]
+    for i in range(0, len(ids), 100):
+        d = xget(env, "/users", {"ids": ",".join(ids[i:i + 100]),
+                                 "user.fields": "public_metrics,username"})
+        for u in d.get("data", []):
+            out[u["id"]] = u
+    return out
+
+
+def detect_wave_reports(env, st, tweets, dry=False):
+    st.setdefault("wave_alerts", [])
+    cand = []
+    for t in tweets:
+        if t["id"] in st["wave_alerts"]:
+            continue
+        txt = tweet_text(t)
+        if not (WAVE_RE.search(txt) and COLD_RE.search(txt)):
+            continue
+        # the report has to carry an address list to be actionable, not just a claim
+        if not (PASTE_RE.search(txt) or len(ADDR_RE.findall(txt)) >= 8):
+            continue
+        cand.append(t)
+    if not cand:
+        return
+    authors = users_by_id(env, [t.get("author_id") for t in cand])
+    for t in cand:
+        u = authors.get(t.get("author_id"), {})
+        foll = (u.get("public_metrics") or {}).get("followers_count", 0)
+        if foll < FOLLOWER_MIN:
+            continue
+        st["wave_alerts"].append(t["id"])
+        url = f"https://x.com/{u.get('username', 'i')}/status/{t['id']}"
+        publish.note_internal(
+            f"POSSIBLE NEW WAVE reported by @{u.get('username', '?')} ({foll:,} followers):\n"
+            f"{url}\n\n{tweet_text(t)[:280]}\n\n"
+            "Nothing added. Investigate it on-chain, and if credible approve it into the "
+            "Potential layer with potential.py --add. It shows on the toggle as unverified "
+            "until our own convergence test proves it, then it graduates to Confirmed.",
+            env, dry)
+        print(f"  wave alert: @{u.get('username')} {foll} followers {url}", flush=True)
+        # follow this thread from now on, so a later correction or revised count in it is
+        # seen even if that follow-up never repeats a keyword the search keys on
+        cid = t.get("conversation_id") or t["id"]
+        st.setdefault("watched_threads", {}).setdefault(cid, t["id"])
+    st["wave_alerts"] = st["wave_alerts"][-2000:]
+
+
+def topical_convos(st, tweets):
+    """Conversation ids that are about THIS incident, as a set.
+
+    Topic is decided per conversation rather than per post, because substance lands in
+    replies that do not repeat the subject: Galaxy's "potential Wave 4 ... 2055 BTC" never
+    says coldcard. Any conversation holding one on-topic post is on-topic, and the verdict
+    persists in state so a reply arriving in a later run still qualifies.
+
+    This gate is what makes an account watchlist safe. A watched research account posts
+    about every incident there is, so reading its whole timeline without a topic test pulls
+    in addresses that have nothing to do with this theft — see the comment in process()."""
+    tset = set(st.setdefault("topical_convos", []))
+    for t in tweets:
+        if COLD_RE.search(tweet_text(t)):
+            tset.add(t.get("conversation_id") or t["id"])
+    st["topical_convos"] = sorted(tset)[-4000:]
+    return tset
+
+
+def is_topical(t, tset):
+    return bool(COLD_RE.search(tweet_text(t))) or (t.get("conversation_id") or t["id"]) in tset
+
+
+def detect_site_behind(env, st, tweets, dry=False):
+    """The detector that replaces guessing at wording: does a credible source state a total
+    materially larger than the one the site publishes?
+
+    This one DOES notify, because it is not an unanswerable question — it reports that the
+    site's own published figure is understating the theft, which is a fact about the live
+    site. It still publishes nothing: closing the gap needs our detectors to find the
+    clusters on-chain, and that is the pipeline's job, not a decision to forward.
+
+    Throttled on the claimed figure, so a source restating the same total on ten posts
+    alerts once, while a revised total alerts immediately.
+    """
+    st.setdefault("behind_alerts", {})
+    pub_btc, pub_addr = claims.published_totals()
+    if not pub_btc:
+        print("  site-behind: cannot read the published total, skipping", flush=True)
+        return
+    # The bar is the largest figure the site SHOWS, not the one it proved. Once Galaxy's
+    # 1,596 and 2,055 are carried on the toggle, comparing against the verified 1,366 would
+    # report the site as behind the very numbers it is already displaying, every run.
+    carried = claims.carried_total()
+
+    # This detector FETCHES ITS OWN WINDOW and does not use the new-tweet batch alone.
+    #
+    # That is not redundancy. gather() filters out anything already in seen_tweets, and this
+    # check asks a question about the present ("is the site's published number lower than
+    # what the source states?"), not about novelty. The distinction is load-bearing: when
+    # this was first written to read only the new batch, it could not fire for the very
+    # Galaxy posts that motivated it, because those posts were already seen. A detector that
+    # cannot fire for its own origin case is decoration.
+    #
+    # Repetition is prevented by keying behind_alerts on the claimed figure, not on the
+    # tweet, so re-reading the same window every run costs one API call and zero messages.
+    ids = watched_ids(env, st)
+    watched = {uid: h for h, uid in ids.items()}
+    pool = {t["id"]: t for t in tweets if t.get("author_id") in watched}
+    for handle, uid in ids.items():
+        try:
+            for t in user_timeline(env, uid, max_pages=1):
+                pool[t["id"]] = t
+        except XError as e:
+            print(f"  site-behind: @{handle} timeline unavailable: {e}", flush=True)
+    tweets = list(pool.values())
+    tset = topical_convos(st, tweets)
+    print(f"  site-behind: assessing {len(tweets)} watchlist post(s) against "
+          f"{pub_btc:,.4f} BTC verified"
+          + (f" and {carried:,.0f} BTC carried" if carried else ""), flush=True)
+
+    # A topic gate is required, and it is NOT the wording-guessing this detector replaces:
+    # the CLAIM is matched structurally, but an authoritative crypto account posts about
+    # every incident there is. Without this, a dormant-whale move (5,908 BTC) and a US
+    # government transfer (2,875 BTC) both read as "the site is 4,500 BTC behind" — both
+    # verified false positives on @glxyresearch's real timeline.
+    #
+    # Topic is decided per CONVERSATION, not per post, because the substance lands in
+    # replies that do not repeat the word: Galaxy's "potential Wave 4 ... 2055 BTC" never
+    # says coldcard. So any conversation containing an on-topic post is on-topic, and that
+    # verdict persists in state for replies that arrive in a later run.
+    hits = {}
+    for t in tweets:
+        aid = t.get("author_id")
+        handle = watched.get(aid)
+        if not handle:
+            continue                    # only sources we have decided are authoritative
+        txt = tweet_text(t)
+        cid = t.get("conversation_id") or t["id"]
+        if not is_topical(t, tset):
+            continue                    # a real claim, but about some other incident
+        v = claims.assess(txt, pub_btc, pub_addr, carried_btc=carried)
+        if v.get("revised_down"):
+            # A figure from the source BELOW the one the site carries on their authority
+            # would mean the site is overstating, and nothing on-chain would ever show it.
+            # It is still a note rather than a message: a post about one earlier wave
+            # carries a smaller total too, and telling a revision from a subtotal needs the
+            # prose read, which is the wording-guessing this detector exists to avoid.
+            # Nobody can action the ambiguity, so it goes to the log.
+            publish.note_internal(
+                f"@{handle} states {v['claim_btc']:,.0f} BTC while the site carries "
+                f"{carried:,.0f}. Either a revision or a figure for part of the incident; "
+                f"the difference is stated in prose this does not read.\n"
+                f"  https://x.com/{handle}/status/{t['id']}", env, dry)
+        if not v["behind"]:
+            continue
+        # One report is one event even when it spans a thread. Galaxy's headline carried the
+        # address count and its reply carried the larger BTC total; merging the conversation
+        # gives one message with the fullest picture instead of two partial ones.
+        g = hits.setdefault(cid, {"handle": handle, "tid": t["id"], "v": v})
+        if v["claim_btc"] > g["v"]["claim_btc"]:
+            g["tid"], g["v"] = t["id"], dict(v)
+        else:
+            g["v"]["claims_btc"] = sorted(
+                set(g["v"]["claims_btc"]) | set(v["claims_btc"]), reverse=True)
+        if (v.get("claim_addresses") or 0) > (g["v"].get("claim_addresses") or 0):
+            g["v"]["claim_addresses"] = v["claim_addresses"]
+            g["v"]["gap_addresses"] = v["gap_addresses"]
+
+    for cid, g in hits.items():
+        handle, v = g["handle"], g["v"]
+        # key on the figure, not the tweet: the same claim restated is one event, a revised
+        # total is a new one
+        key = f"{handle}:{v['claim_btc']:.0f}"
+        if key in st["behind_alerts"]:
+            print(f"  site-behind: already reported {key}", flush=True)
+            continue
+        url = f"https://x.com/{handle}/status/{g['tid']}"
+        publish.notify_change(claims.describe(v, source=handle, url=url), env, dry)
+        if not dry:
+            st["behind_alerts"][key] = int(time.time())
+        print(f"  SITE BEHIND: {handle} claims {v['claim_btc']:.0f} BTC vs "
+              f"{pub_btc:.4f} published (gap {v['gap_btc']:.2f})", flush=True)
+
+
+def follow_threads(env, st):
+    """Pull new tweets on threads already being followed (a thread that produced a wave
+    report or a Potential entry). A follow-up in an OLD thread — a correction, a revised
+    count, a victim confirmation — is caught here even when it never repeats 'coldcard'
+    and a keyword search would miss it entirely."""
+    watched = st.setdefault("watched_threads", {})
+    fresh = []
+    for cid in list(watched):
+        try:
+            got = list(search(env, f"conversation_id:{cid}",
+                              since_id=watched[cid] or None, max_pages=2))
+        except XError as e:
+            print(f"  follow_threads {cid}: {e}", flush=True)
+            continue
+        for t in got:
+            if t["id"] not in st["seen_tweets"]:
+                fresh.append(t)
+        if got:
+            watched[cid] = max([watched[cid] or "0"] + [t["id"] for t in got], key=int)
+        time.sleep(1.0)
+    return fresh
+
+
+def alert_thread_updates(env, st, tweets, dry=False):
+    """A substantive follow-up on a watched thread (a correction, a revised address/BTC
+    count, a multisig discount, a victim confirmation) is surfaced to a person. It never
+    changes the site on its own."""
+    st.setdefault("thread_alerts", [])
+    UPD = re.compile(r"\b(update|correct|erroneous|revis|impact|discount|multisig|"
+                     r"victim|confirm|[\d][\d.,]*\s*BTC|[\d,]+\s*addr)", re.I)
+    for t in tweets:
+        if t["id"] in st["thread_alerts"]:
+            continue
+        txt = tweet_text(t)
+        if not UPD.search(txt):
+            continue
+        st["thread_alerts"].append(t["id"])
+        url = f"https://x.com/i/web/status/{t['id']}"
+        publish.note_internal(
+            f"UPDATE on a watched thread:\n{url}\n\n{txt[:300]}\n\n"
+            "This continues a thread that produced a wave report or a Potential entry. "
+            "Review whether it changes what should be shown; nothing was changed automatically.",
+            env, dry)
+        print(f"  thread-update alert: {url}", flush=True)
+    st["thread_alerts"] = st["thread_alerts"][-2000:]
 
 
 def main():
@@ -401,9 +762,37 @@ def main():
           + ("backfill" if a.backfill else "run"), flush=True)
 
     tweets = gather(env, st, backfill=a.backfill)
+    # follow threads we already care about, catching follow-ups (corrections, revised
+    # counts) that a keyword or url search would miss
+    thread_new = []
+    try:
+        thread_new = follow_threads(env, st)
+        tweets += thread_new
+    except Exception as e:
+        print(f"  follow_threads failed: {e}", file=sys.stderr, flush=True)
     for t in tweets:
         st["seen_tweets"].append(t["id"])
     st["seen_tweets"] = st["seen_tweets"][-20000:]
+
+    # the site's own figure vs what an authoritative source states. This is the check that
+    # would have caught the 2026-08-03 Galaxy report; it runs before the others because it
+    # is the one that says the live site is wrong.
+    try:
+        detect_site_behind(env, st, tweets, dry=a.dry_run)
+    except Exception as e:
+        print(f"  site-behind detection failed: {e}", file=sys.stderr, flush=True)
+
+    # flag a credible new-wave report for a person to investigate (adds nothing itself)
+    try:
+        detect_wave_reports(env, st, tweets, dry=a.dry_run)
+    except Exception as e:
+        print(f"  wave-report detection failed: {e}", file=sys.stderr, flush=True)
+    # surface substantive updates on threads we already follow
+    try:
+        alert_thread_updates(env, st, thread_new, dry=a.dry_run)
+    except Exception as e:
+        print(f"  thread-update alert failed: {e}", file=sys.stderr, flush=True)
+
     if not a.dry_run:
         publish.save_state(st)          # checkpoint before the slow part
 
@@ -418,7 +807,7 @@ def main():
             print(f"  published: {res}", flush=True)
         except Exception as e:
             print(f"  PUBLISH FAILED: {e}", file=sys.stderr, flush=True)
-            publish.send_telegram(
+            publish.note_internal(
                 "Coldcard X watcher: verification passed for "
                 f"{len(entries)} address(es) but publishing failed:\n{e}\n"
                 "The candidates are kept and will retry next run.", env, a.dry_run)

@@ -8,7 +8,7 @@
 <link rel="icon" href="/bitcoin.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0d0e11; --surface:#14161a; --surface-2:#1a1d22;
@@ -29,7 +29,8 @@ a:hover{border-bottom-color:var(--accent)}
 .shell{position:sticky;top:0;z-index:50;background:rgba(13,14,17,.92);backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line-soft)}
 .shell-in{max-width:1180px;margin:0 auto;padding:var(--sp-3) var(--sp-6);display:flex;align-items:center;gap:var(--sp-4)}
-.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem;color:var(--ink)}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem;color:var(--ink);border-bottom:none;transition:opacity 150ms cubic-bezier(0.32,0.72,0,1)}
+.brand:hover{opacity:.72;border-bottom:none}
 .brand img{width:22px;height:22px;display:block}
 .shell-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-4)}
 .nav{display:flex;gap:var(--sp-4);align-items:center}
@@ -46,7 +47,17 @@ a:hover{border-bottom-color:var(--accent)}
 .tick.offline{background:rgba(229,72,77,.14);border:1px solid rgba(229,72,77,.5);color:#ff9ea1;
   font-weight:500;padding:var(--sp-1) var(--sp-3);border-radius:999px}
 .tick.offline .dot{background:#e5484d;animation:none}
-@media (max-width:620px){.nav{gap:var(--sp-3)}.nav a{font-size:.8rem}}
+.page-head{display:flex;align-items:center;justify-content:flex-start;gap:var(--sp-4);
+  flex-wrap:wrap;margin:var(--sp-12) 0 var(--sp-6)}
+.page-head h1{margin:0}
+.src{display:inline-flex;align-items:center;gap:var(--sp-2);font-size:.82rem;font-weight:600;
+  color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;
+  padding:6px var(--sp-3);white-space:nowrap;
+  transition:border-color 150ms cubic-bezier(0.32,0.72,0,1),background 150ms cubic-bezier(0.32,0.72,0,1)}
+.src:hover{background:#1f232a;border-color:#39404a}
+.src svg{width:16px;height:16px;flex:none;fill:currentColor}
+@media (max-width:620px){.nav{gap:var(--sp-3)}.nav a{font-size:.8rem}
+  .page-head{gap:var(--sp-4)}}
   white-space:nowrap;transition:color 150ms cubic-bezier(0.32,0.72,0,1)}
 .nav a:hover{color:var(--ink)}
 .nav a[aria-current]{color:var(--ink);border-bottom-color:var(--accent)}
@@ -68,13 +79,18 @@ td{padding:var(--sp-3);border-top:1px solid var(--line-soft);color:var(--ink-2);
   word-break:normal;overflow-wrap:normal}
 td:first-child{white-space:nowrap;color:var(--ink)}
 .warn{color:var(--ink-3);font-size:.9rem}
+.topofig{margin:var(--sp-6) 0 0}
+.topofig img{width:100%;height:auto;display:block;background:#14161a;border:1px solid var(--line-soft);border-radius:10px}
+.topofig figcaption{color:#7f8794;font-size:.82rem;line-height:1.5;margin-top:var(--sp-3);text-align:center;max-width:74ch;margin-inline:auto}
+footer{padding:var(--sp-8) 0 var(--sp-16);color:var(--ink-3);font-size:.85rem}
+footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
 </style>
 </head>
 <body>
 
 <div class="shell">
   <div class="shell-in">
-    <div class="brand"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></div>
+    <a class="brand" href="/"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></a>
     <div class="shell-right">
       <nav class="nav"><a href="/">Dashboard</a><a href="/list.html">Address list</a><a href="/methodology.html" aria-current="page">Methodology</a></nav>
       <div class="tick live" id="tickWrap"><span class="dot"></span><span id="tickText">live</span></div>
@@ -83,7 +99,13 @@ td:first-child{white-space:nowrap;color:var(--ink)}
 </div>
 
 <main>
-  <h1>How these addresses were identified</h1>
+  <div class="page-head">
+    <h1>How these addresses were identified</h1>
+    <a class="src" href="https://github.com/bnt21/coldcard-watch" target="_blank" rel="noopener" title="View source code on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      <span>View source code</span>
+    </a>
+  </div>
 
   <p>
     A flaw in Coldcard wallet firmware made some recovery seeds predictable, and in late July 2026
@@ -92,9 +114,11 @@ td:first-child{white-space:nowrap;color:var(--ink)}
   </p>
 
   <div class="floor">
-    <strong>Everything here is a verified minimum.</strong> The figures come from clusters that have been
-    found and checked. They are not a total, and they are not an estimate of the total. More clusters
-    almost certainly exist.
+    <strong>The address list is a verified minimum.</strong> Every address on it was found and checked
+    here, and more clusters almost certainly exist. The dashboard's other two views carry larger totals
+    published by Galaxy Research, who confirm thefts by writing to the victims. Those are shown as a
+    single figure with their name on it and no address list, because the addresses behind them are not
+    public. Which standard a number is being read at is set out below.
   </div>
 
   <h2>This is not a blocklist</h2>
@@ -115,8 +139,113 @@ td:first-child{white-space:nowrap;color:var(--ink)}
     If an address here is yours, it comes off. No proof of identity is needed and nothing secret
     should ever be sent: the address and the transaction are enough to check it against the
     chain, and if the listing does not hold up the totals move with it. Report it
-    <a href="https://github.com/bnt21/coldcard-watch/issues" rel="noopener">here</a>. That request is handled before anything else on this
+    <a href="https://github.com/bnt21/coldcard-watch/issues" target="_blank" rel="noopener">here</a>. That request is handled before anything else on this
     project.
+  </p>
+
+  <h2>How sure each figure is</h2>
+  <p>
+    The site publishes one number at three standards, and the toggle on the dashboard moves between
+    them. Each standard names what the figure rests on and who can check it.
+  </p>
+  <table>
+    <thead><tr><th>Standard</th><th>What it rests on</th><th>Published as</th></tr></thead>
+    <tbody>
+      <tr><td>Proven</td>
+        <td>Two addresses were spent together in one transaction, which only somebody holding both
+          keys can do. Arithmetic on the chain, and anyone can repeat it.</td>
+        <td>Individual addresses</td></tr>
+      <tr><td>Converged</td>
+        <td>The sweep matches the drain fingerprint and converges with hundreds of others, on a shared
+          destination or on a fee constant no independent owner would land on. Shape alone never
+          qualifies, because the vendor advisory told owners to produce the same shape.</td>
+        <td>Individual addresses</td></tr>
+      <tr><td>Corroborated</td>
+        <td>A cluster assembled here from block data lands within 3% of a per-incident figure published
+          by someone working from victim reports. Two methods that share no data agree on one event.
+          Weaker than proven, and anything published on it says so.</td>
+        <td>Individual addresses</td></tr>
+      <tr><td>Attested</td>
+        <td>A source that confirms thefts by writing to the victims publishes a total. Nothing here can
+          check it, because those addresses stay private and always will.</td>
+        <td>One figure, no addresses</td></tr>
+      <tr><td>Suspected</td>
+        <td>The same source's own lower-confidence figure, which they say no victim has confirmed.</td>
+        <td>One figure, no addresses</td></tr>
+    </tbody>
+  </table>
+  <p>
+    The first three standards produce the address list. The last two produce a number and nothing else,
+    and the site keeps them apart from its own work, in the colour they are drawn in and in the totals
+    they are counted against.
+  </p>
+
+  <h2>Why Galaxy Research's total is carried here</h2>
+  <p>
+    For six days this site published 1,366 BTC while the figure everywhere else was 1,596.
+    <a href="https://x.com/glxyresearch" target="_blank" rel="noopener">Galaxy Research</a> confirm a
+    theft by corresponding with the victim, so their set includes losses whose addresses were never made
+    public. A method that reads only the chain cannot reach those, so leaving the number off left this
+    site 14% low.
+  </p>
+  <p>
+    Their figure is repeated across most of the coverage of this incident. Those outlets are reporting
+    Galaxy's number rather than checking it, and
+    <a href="https://nader.io/posts/how-the-coldcard-bitcoin-is-moving/" target="_blank" rel="noopener">at
+    least one says so outright</a>, so the repetition adds no weight of its own. What warrants carrying
+    it is that their figures agree with this site's independent reconstruction everywhere the two can be
+    compared.
+  </p>
+  <table>
+    <thead><tr><th>Comparison</th><th>Galaxy</th><th>Measured here</th></tr></thead>
+    <tbody>
+      <tr><td>Wave 3 total</td><td>207.73 BTC, from victim reports, with no addresses or code
+        published</td><td>207.72947587 BTC across 293 vaults, reconstructed from block data alone.
+        The two agree to about two thousand satoshis.</td></tr>
+      <tr><td>Start of wave 1</td><td>01:08 UTC on 30 July, read off their chart</td>
+        <td>The first sweep on chain is at 01:10:20.</td></tr>
+      <tr><td>How long the coins sat</td><td>An average of 3.18 years untouched before being
+        swept</td><td>A median of 3.5 years across 150 victims from this site's own set. The oldest was
+        funded five days after the vulnerable firmware shipped.</td></tr>
+      <tr><td>Whether anything has moved</td><td>No coin from waves 1, 2 or 3 has moved</td>
+        <td>Every vault tracked here is still unspent, which is the one part of their work this site
+        watches continuously.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    A fifth comparison belongs outside that table, because it checks their arithmetic rather than
+    agreeing with it independently: reading the thirteen owner-confirmed markers off their own chart
+    gives 223.18 BTC, against the roughly 229 BTC their headline total implies is missing from this
+    site. Their per-incident figures add up to their own total.
+  </p>
+  <p>
+    Four independent agreements and no disagreement is the warrant. It is also the limit. If Galaxy
+    revise their total, the attested figure here is wrong until it follows, and no amount of reading the
+    chain would reveal that, so a watcher reads their posts instead.
+  </p>
+
+  <h2>What the attested figure is and is not</h2>
+  <p>
+    The site stores their total and subtracts what it has verified itself, so the attested view shows
+    this site's own addresses plus one aggregate figure standing for the rest. Publishing a new cluster
+    shrinks that aggregate rather than adding to it. A remainder frozen at the moment it was written
+    would double-count every address published afterwards, and an earlier version of this page did
+    exactly that.
+  </p>
+  <p>
+    Anything already inside one of those totals is listed under it rather than added to it. An
+    independent report of the same fourth wave Galaxy already count is a second reading of one event,
+    and adding both produced a total no source claims.
+  </p>
+  <p>
+    This assumes their total covers everything verified here. Every comparison above supports that and
+    none contradicts it, but if this site ever holds a theft their set misses, the aggregate shown is too
+    small by that amount.
+  </p>
+  <p>
+    The aggregate is not watched for movement. The clock on the dashboard and the banner that fires when
+    coins move both track the addresses this site verified, because those are the only ones it knows.
+    Galaxy report that about nine coins in ten across the whole incident have not moved.
   </p>
 
   <h2>Telling a victim apart from a thief</h2>
@@ -127,15 +256,21 @@ td:first-child{white-space:nowrap;color:var(--ink)}
     one that empties an address completely, is called a sweep below.
   </p>
   <p>
-    Those output addresses collect a batch of sweeps and then forward everything to a second address that
-    holds the funds. So each cluster has a collector, which fills and empties, and a vault, which fills
-    once and then goes quiet. The dashboard watches the vaults, because that is where the money sits.
+    The drains take one of two shapes, and which one decides what there is to watch. In the first,
+    every sweep is pooled into one shared address, a collector, that then holds the coins. In the
+    second there is no collector at all: each wallet is swept to its own address, so the money sits in
+    as many places as there were victims. Either way the dashboard watches wherever the coins came to rest.
   </p>
+  <figure class="topofig">
+    <img src="/topology.svg" alt="Two shapes: waves 1 and 2 pool every sweep into one shared address; waves 3 and 4 sweep each wallet to its own address.">
+    <figcaption>Waves 1 and 2 pooled every sweep into one address; waves 3 and 4 gave each wallet its own.
+      The second shape has no shared address to watch, which is why the first detector missed it.</figcaption>
+  </figure>
 
   <h2>Telling a theft apart from someone moving to safety</h2>
   <p>
-    This is the part that cannot be proven from the chain alone, so here is the actual reasoning. Four
-    things appear in every sweep and rarely together otherwise:
+    This is the part that cannot be proven from the chain alone. Four things appear in every sweep and
+    rarely together otherwise:
   </p>
   <ul>
     <li>One input, one output, and <strong>no change output</strong>. The address is emptied exactly;
@@ -195,7 +330,7 @@ td:first-child{white-space:nowrap;color:var(--ink)}
       <tr><td>31 Jul<br>19:53</td><td>13 addresses<br>0.19 BTC</td><td>2.0 sat/vB</td>
         <td>Reported in a reply by @jmassu. Verified here: twelve single-input sweeps in one block, then a
           consolidation into an address that has not moved.</td></tr>
-      <!-- xrow --><tr><td>31 Jul<br>12:23&ndash;22:25</td><td>1,894 addresses<br>207.73 BTC</td><td>10.05 sat/vB<br>on the consolidation</td><td>Reported by Galaxy Research on 1 Aug as a third wave and reconstructed here from the chain. No shared collector: each drained wallet was swept into its own fresh address, and every one of those then moved its whole balance onward in block 960520, one input and one output into a fresh P2WSH, at a hardcoded 10.03 to 10.08 sat/vB. Two hundred and ninety three separate transactions in one block at that constant is a single script. The sweeps into those addresses varied from 2 to 201 sat/vB, which is why an earlier pass keyed on the sweep fee found only 214 of them.</td></tr><!-- /xrow --><!-- xrow --><tr><td>31 Jul<br>12:23&ndash;22:25</td><td>1,894 addresses<br>207.73 BTC</td><td>10.05 sat/vB<br>on the consolidation</td><td>Reported by Galaxy Research on 1 Aug as a third wave and reconstructed here from the chain. No shared collector: each drained wallet was swept into its own fresh address, and every one of those then moved its whole balance onward in block 960520, one input and one output into a fresh P2WSH, at a hardcoded 10.03 to 10.08 sat/vB. Two hundred and ninety three separate transactions in one block at that constant is a single script. The sweeps into those addresses varied from 2 to 201 sat/vB, which is why an earlier pass keyed on the sweep fee found only 214 of them.</td></tr><!-- /xrow -->
+      <!-- xrow --><tr><td>Since 1 Aug</td><td>4 addresses<br>0.01 BTC</td><td>varies</td><td>Reported publicly on X by the holders, picked up by the watcher below, and verified on-chain before being added.</td></tr><!-- /xrow -->
     </tbody>
   </table>
   <p class="warn">
@@ -270,6 +405,11 @@ td:first-child{white-space:nowrap;color:var(--ink)}
     the pattern failed to catch the theft. Because the checker cannot tell those apart, a result of
     <strong>not in the verified set</strong> leaves the question open rather than settling it.
   </p>
+  <p>
+    The attested figure is the measure of how much this misses. Galaxy count roughly 7,300 drained
+    addresses and this site has verified 4,584 of them, so about a third of the thefts in this incident
+    are ones no method that reads only the chain has reached.
+  </p>
 
   <h2>What the checker actually does</h2>
   <p>
@@ -282,23 +422,26 @@ td:first-child{white-space:nowrap;color:var(--ink)}
   <h2>Sources and how to check the work</h2>
   <p>
     Block data for the scanning comes from a Bitcoin Core node. Address balances and histories come from
-    <a href="https://blockstream.info/" rel="noopener">Blockstream's Esplora</a>, with
-    <a href="https://blockchain.info/" rel="noopener">blockchain.info</a> used to read many addresses in one
-    request and <a href="https://mempool.space/" rel="noopener">mempool.space</a> as the fallback and the
+    <a href="https://blockstream.info/" target="_blank" rel="noopener">Blockstream's Esplora</a>, with
+    <a href="https://blockchain.info/" target="_blank" rel="noopener">blockchain.info</a> used to read many addresses in one
+    request and <a href="https://mempool.space/" target="_blank" rel="noopener">mempool.space</a> as the fallback and the
     source of the exchange rate. Figures that appeared in more than one source were compared before being
     published, and the totals here match the independently published ones to the satoshi.
   </p>
   <p>
     Every address on this site links to a block explorer, so any claim can be checked without trusting the
     page. Vendor detail comes from the
-    <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">Coinkite advisory</a>
-    and <a href="https://engineering.block.xyz/blog/predictable-rng-fallback-and-32-bit-reseed-in-coldcard-firmware" rel="noopener">Block's
+    <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" target="_blank" rel="noopener">Coinkite advisory</a>
+    and <a href="https://engineering.block.xyz/blog/predictable-rng-fallback-and-32-bit-reseed-in-coldcard-firmware" target="_blank" rel="noopener">Block's
     engineering analysis</a>.
   </p>
   <p class="warn">
     If you know of a drained address or a collection address that is missing here, it belongs in the set.
     A report from someone who was there still beats a pattern match.
   </p>
+<footer>
+  <p>Independent security research. Not affiliated with Coinkite or Coldcard. Every figure here is derived from public on-chain data and the reasoning is set out above so it can be checked.</p>
+</footer>
 </main>
 <script>
 (function(){
@@ -336,5 +479,8 @@ td:first-child{white-space:nowrap;color:var(--ink)}
   setInterval(paint,15000);
 })();
 </script>
+<!-- Vercel Web Analytics -->
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

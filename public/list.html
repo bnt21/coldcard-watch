@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Verified drained addresses, Coldcard thefts</title>
-<meta name="description" content="The 4,580 bitcoin addresses confirmed drained on 30 and 31 July 2026, with the amount taken from each and the block it happened in. Sortable and filterable.">
+<meta name="description" content="The 4,584 bitcoin addresses confirmed drained on 30 and 31 July 2026, with the amount taken from each and the block it happened in. Sortable and filterable.">
 <link rel="icon" href="/bitcoin.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +32,8 @@ a{color:var(--accent);text-decoration:none}
 
 .shell{position:sticky;top:0;z-index:50;background:rgba(13,14,17,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
 .shell-in{max-width:1180px;margin:0 auto;padding:var(--sp-3) var(--sp-6);display:flex;align-items:center;gap:var(--sp-4)}
-.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem;color:var(--ink)}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem;color:var(--ink);border-bottom:none;transition:opacity 150ms cubic-bezier(0.32,0.72,0,1)}
+.brand:hover{opacity:.72;border-bottom:none}
 .brand img{width:22px;height:22px;display:block}
 .shell-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-4)}
 .nav{display:flex;gap:var(--sp-4);align-items:center}
@@ -99,13 +100,15 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;l
   .c-rank{width:40px}
 }
 @media (prefers-reduced-motion:reduce){*{transition-duration:.001ms!important}}
+footer{padding:var(--sp-8) 0 var(--sp-16);color:var(--ink-3);font-size:.85rem}
+footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
 </style>
 </head>
 <body>
 
 <div class="shell">
   <div class="shell-in">
-    <div class="brand"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></div>
+    <a class="brand" href="/"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></a>
     <div class="shell-right">
       <nav class="nav"><a href="/">Dashboard</a><a href="/list.html" aria-current="page">Address list</a><a href="/methodology.html">Methodology</a></nav>
       <div class="tick live" id="tickWrap"><span class="dot"></span><span id="tickText">live</span></div>
@@ -118,7 +121,7 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;l
   <p class="tool-lede" style="max-width:70ch">
     This is a research reconstruction, not a screening feed, and it has no measured
     false-positive rate. Please do not load it into a compliance or risk-scoring system. If an
-    address here is yours, <a href="https://github.com/bnt21/coldcard-watch/issues" rel="noopener">say so</a> and it comes off.
+    address here is yours, <a href="https://github.com/bnt21/coldcard-watch/issues" target="_blank" rel="noopener">say so</a> and it comes off.
   </p>
   <div class="controls">
     <input id="q" type="text" spellcheck="false" autocomplete="off" placeholder="Filter by address" aria-label="Filter by address">
@@ -144,15 +147,21 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;l
 
   <p class="note">
     This is the set that has been verified so far, not a complete record. Clusters are still being
-    discovered, so an address missing from this table has not been cleared. See the
-    <a href="/methodology.html">methodology</a>.
+    discovered, so an address missing from this table has not been cleared. Galaxy Research, who
+    confirm thefts by writing to the victims, count roughly 7,300 drained addresses in this incident,
+    so about a third of them are ones no method that reads only the chain has reached. Their totals
+    are on the dashboard's other two views; the addresses behind them are not public and cannot be
+    listed here. See the <a href="/methodology.html">methodology</a>.
   </p>
   <p class="note">
     These addresses belong to the people who were robbed. They are listed because the transactions are
     public on the Bitcoin blockchain and the same set has already been published elsewhere, not because
     anyone here is accused of anything. One person can hold many addresses, so the number of victims is
-    smaller than 4,580 and is not knowable from the chain.
+    smaller than 4,584 and is not knowable from the chain.
   </p>
+<footer>
+  <p>Independent security research. Not affiliated with Coinkite or Coldcard. This is a public list of on-chain addresses; every one links to a block explorer so it can be checked.</p>
+</footer>
 </main>
 <section id="wave3" style="max-width:1080px;margin:0 auto;padding:48px 24px">
   <h2 style="font-size:1rem;font-weight:500;color:#c9cfd6;margin:0 0 8px">Wave 3 vaults</h2>
@@ -237,9 +246,9 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;l
     rows.sort(compare);
 
     var total = rows.reduce(function(s,r){ return s + r[1]; }, 0);
-    // reserved widths, so shrinking 4,580 to 391 cannot drag the rest of the line left
+    // reserved widths, so shrinking 4,584 to 391 cannot drag the rest of the line left
     countEl.innerHTML = 'Showing <b class="n">' + rows.length.toLocaleString("en-US") +
-                        '</b> of <b class="n">4,580</b> addresses · <b class="btc">' +
+                        '</b> of <b class="n">4,584</b> addresses · <b class="btc">' +
                         fmt(total/1e8, 8) + '</b> BTC';
 
     if (!rows.length){
@@ -339,5 +348,8 @@ h1{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:500;letter-spacing:-.025em;l
   setInterval(paint,15000);
 })();
 </script>
+<!-- Vercel Web Analytics -->
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

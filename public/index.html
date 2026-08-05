@@ -45,7 +45,8 @@ a:hover{border-bottom-color:var(--accent)}
 /* header */
 .shell{position:sticky;top:0;z-index:50;background:rgba(13,14,17,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
 .shell-in{max-width:1180px;margin:0 auto;padding:var(--sp-3) var(--sp-6);display:flex;align-items:center;gap:var(--sp-4)}
-.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-weight:500;font-size:.95rem;color:var(--ink);border-bottom:none;transition:opacity 150ms cubic-bezier(0.32,0.72,0,1)}
+.brand:hover{opacity:.72;border-bottom:none}
 .brand img{width:22px;height:22px;display:block}
 .shell-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-4)}
 .nav{display:flex;gap:var(--sp-4);align-items:center}
@@ -71,6 +72,37 @@ a:hover{border-bottom-color:var(--accent)}
 
 /* the chart */
 .chart{position:relative;margin:var(--sp-8) 0 0;background:var(--surface);border:1px solid var(--line-soft);border-radius:12px;padding:var(--sp-6) var(--sp-6) var(--sp-4);overflow:hidden}
+/* view toggle, bottom right of the chart card (same control as a measure switch) */
+.measure{position:absolute;right:var(--sp-6);bottom:var(--sp-6);z-index:4;
+  display:flex;align-items:center;gap:var(--sp-3);font-size:.76rem;color:var(--ink-3)}
+.measure[hidden]{display:none}
+.measure .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg)}
+.measure button{appearance:none;background:transparent;border:0;cursor:pointer;
+  font:inherit;font-size:.76rem;line-height:1;color:var(--ink-3);
+  padding:var(--sp-2) var(--sp-3);transition:color var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
+.measure button:hover{color:var(--ink-2)}
+.measure button[aria-pressed="true"]{background:var(--accent);color:#14161a}
+.measure button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:560px){.measure{position:static;justify-content:flex-end;margin-top:var(--sp-3)}}
+/* the headline changes colour with the standard it is being read at, so a figure that is
+   not this site's own verification never looks like one */
+body.potential .total{color:#f4a94a}
+body.suspected .total{color:#d98b8b}
+body.suspected .potnote-in{background:rgba(217,139,139,.07);border-color:rgba(217,139,139,.4)}
+body.suspected .potnote h3,body.suspected .potnote a{color:#d98b8b}
+body.suspected .potnote a{border-bottom-color:rgba(217,139,139,.4)}
+.potnote .conf{color:var(--ink-3)}
+.potnote .tierhead{color:var(--ink);font-weight:500}
+/* collapse via grid-template-rows, not max-height: the note grows with every
+   potential.py --add, so any pixel cap clips it (worst on narrow screens) */
+.potnote{display:grid;grid-template-rows:0fr;overflow:hidden;opacity:0;margin:0;
+  transition:grid-template-rows .45s var(--ease),opacity .35s var(--ease),margin .45s var(--ease)}
+body.potential .potnote{grid-template-rows:1fr;opacity:1;margin:var(--sp-6) 0 0}
+.potnote-in{min-height:0;background:rgba(244,169,74,.07);border:1px solid rgba(244,169,74,.4);border-radius:8px;padding:var(--sp-6);max-width:80ch}
+.potnote h3{margin:0 0 var(--sp-2);font-size:.95rem;font-weight:500;color:#f4a94a}
+.potnote p{margin:var(--sp-2) 0 0;font-size:.9rem;color:var(--ink-2);line-height:1.6}
+.potnote .src{color:var(--ink);font-weight:500}
+.potnote a{color:#f4a94a;border-bottom:1px solid rgba(244,169,74,.4)}
 #big{width:100%;height:clamp(300px,44vh,460px);display:block}
 .seam-tip{position:absolute;z-index:5;max-width:min(260px,70vw);background:var(--surface-2,#1a1d22);
   border:1px solid var(--line);border-radius:8px;padding:var(--sp-3) var(--sp-4);
@@ -204,7 +236,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
 <div class="shell">
   <div class="shell-in">
-    <div class="brand"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></div>
+    <a class="brand" href="/"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></a>
     <div class="shell-right">
       <nav class="nav"><a href="/" aria-current="page">Dashboard</a><a href="/list.html">Address list</a><a href="/methodology.html">Methodology</a></nav>
       <div class="tick live" id="tickWrap"><span class="dot"></span><span id="tickText">live</span></div>
@@ -216,7 +248,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
 <section class="top">
   <h1>Bitcoin Drained from Coldcards</h1>
-  <div class="total"><span id="totalBtc">1,366.5774</span><span class="unit">BTC</span></div>
+  <div class="total"><span id="totalBtc">1,366.5874</span><span class="unit">BTC</span></div>
   <div class="sub"><span id="totalUsd">$71,048,000</span><span class="q" id="priceSrc">at $62,949 per bitcoin</span></div>
 </section>
 
@@ -229,7 +261,17 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     <div class="ro"><span class="v" id="blocksSince">275</span><span class="k" id="blocksLabel">blocks mined since</span></div>
     <div class="ro"><span class="v" id="tipHeight">960,466</span><span class="k">chain tip</span></div>
   </div>
+  <div class="measure" id="measure" hidden>
+    <span id="measureLabel">View:</span>
+    <span class="seg" role="group" aria-labelledby="measureLabel">
+      <button type="button" data-tier="0" aria-pressed="true">Verified here</button>
+      <button type="button" data-tier="1" aria-pressed="false">Attested</button>
+      <button type="button" data-tier="2" aria-pressed="false">Suspected</button>
+    </span>
+  </div>
 </section>
+
+<div class="potnote" id="potnote"><div class="potnote-in" id="potnoteBody"></div></div>
 
   <div class="floor">
     <strong>These are verified minimums, not totals.</strong> Every figure here comes from clusters that
@@ -239,16 +281,9 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   </div>
 
 <section class="tool">
-  <h2>Was your address drained?</h2>
-  <p class="tool-lede">Paste a public bitcoin address to check it against the 4,580 addresses confirmed drained so far. The check runs entirely inside your browser against a hashed list. Nothing is sent anywhere and nothing is logged.</p>
-  <div class="check">
-    <input id="addrIn" type="text" spellcheck="false" autocomplete="off"
-           placeholder="bc1... or 1... or 3..." aria-label="Public bitcoin address to check">
-    <button class="cta" id="addrBtn">Check</button>
-  </div>
-  <div class="result" id="addrOut" role="status" aria-live="polite"></div>
-  <p class="warn">The set covers three clusters: 1,195 addresses on 30 July (blocks 960183 to 960191), 1,126 on 31 July (blocks 960345 to 960369), and 13 more later that day (block 960455). The first window fell on the evening of Wednesday 29 July in US time zones, which is why some accounts date the theft to the 29th.</p>
-  <p class="warn">Never type a seed phrase, private key, or passphrase into this page or any other. No legitimate tool asks for one.</p>
+  <h2>Is an address in the set?</h2>
+  <p class="tool-lede">Every address confirmed drained is published in full on the <a href="/list.html">address list</a>. Open it and filter that public list to see whether an address appears. These are on-chain addresses anyone can verify on a block explorer; this page has no form and collects nothing.</p>
+  <p class="warn">Never type a seed phrase, private key, or passphrase into any website. No legitimate tool asks for one.</p>
 </section>
 
 <section class="tool">
@@ -261,7 +296,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     <div class="ld-when"><span id="ldWhen">31 July 2026, 08:36:17 UTC</span><span id="ldMeta">block 960,369</span><a id="ldTx" target="_blank" rel="noopener" href="https://mempool.space/tx/b1000cdee4011ae085649f24ab09cea7a8fa4a97c8e365b07cc41cfb6ee06f00">view transaction</a></div>
   </div>
   <div class="lastdrain totaldrain">
-    <div class="ld-amt"><span id="tdCount">4,580</span></div>
+    <div class="ld-amt"><span id="tdCount">4,584</span></div>
     <div class="ld-addr">addresses drained, verified</div>
     <div class="ld-when"><a href="/list.html">view the full list</a></div>
   </div>
@@ -284,12 +319,12 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   <p class="warn">Two details here go further than Coinkite’s advisory, both checked against their own signed release manifest. Their advisory bounds the Mk3 at 4.1.9, but signed Mk3 builds 5.0.1 and 5.0.3 shipped in 2022, after the change that caused this, and Coinkite has not said whether those are affected; they are listed as at risk because that is the safer reading. Block traces the fault to a 4.0.0 tag, but no 4.0.0 firmware was ever distributed, so 4.0.1 is the first version anyone could have generated a seed on.</p>
   <p class="warn">Coinkite emailed affected customers directly, and said so publicly on 2 August so people could tell a real message from a fake one. Treat any email, DM or call about this that asks for a seed phrase as an attack. Nobody legitimate needs it, and an incident like this draws people who will ask.</p>
   <p class="warn">Updating the firmware does not repair a seed that already exists. If your seed was generated on an affected version, the fix is to move your funds to a newly generated wallet.</p>
-  <p class="tool-lede">Two things reduce the risk. Coinkite say 50 to 98 of your own private dice rolls contributed at least 128 bits on their own, and 99 or more about 256 bits; below 50, or if you cannot remember, they say migrate. A strong BIP-39 passphrase reduces the immediate exposure but does not repair the seed, so passphrase users are told to migrate as well. On fixed firmware dice rolls are optional and the device seed is enough. Their <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">advisory</a> is the authority on what to do, not this page.</p>
+  <p class="tool-lede">Two things reduce the risk. Coinkite say 50 to 98 of your own private dice rolls contributed at least 128 bits on their own, and 99 or more about 256 bits; below 50, or if you cannot remember, they say migrate. A strong BIP-39 passphrase reduces the immediate exposure but does not repair the seed, so passphrase users are told to migrate as well. On fixed firmware dice rolls are optional and the device seed is enough. Their <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" target="_blank" rel="noopener">advisory</a> is the authority on what to do, not this page.</p>
 </section>
 
 <footer>
-  <p>Balances stream from <a href="https://mempool.space/" rel="noopener">mempool.space</a> and <a href="https://blockstream.info/" rel="noopener">Blockstream Esplora</a>. Incident detail from the <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" rel="noopener">Coinkite advisory</a> and <a href="https://engineering.block.xyz/blog/predictable-rng-fallback-and-32-bit-reseed-in-coldcard-firmware" rel="noopener">Block's engineering analysis</a>.</p>
-  <p>Not affiliated with Coinkite. If you hold a Coldcard, follow the vendor advisory and move to a new seed rather than relying on anything here.</p>
+  <p>Balances stream from <a href="https://mempool.space/" target="_blank" rel="noopener">mempool.space</a> and <a href="https://blockstream.info/" target="_blank" rel="noopener">Blockstream Esplora</a>. Incident detail from the <a href="https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/" target="_blank" rel="noopener">Coinkite advisory</a> and <a href="https://engineering.block.xyz/blog/predictable-rng-fallback-and-32-bit-reseed-in-coldcard-firmware" target="_blank" rel="noopener">Block's engineering analysis</a>.</p>
+  <p>Independent security research. Not affiliated with Coinkite or Coldcard. If you hold a Coldcard, follow the vendor advisory and move to a new seed rather than relying on anything here.</p>
 </footer>
 
 </main>
@@ -297,6 +332,8 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 <script src="/data.js"></script>
 <script src="/drained.js"></script>
 <script src="/wave3.js"></script>
+<script src="/potential.js"></script>
+<script src="/confirmed-extra.js"></script>
 <script>
 (function(){
   "use strict";
@@ -304,8 +341,8 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   // attributed = sats traced to this address from the theft, capped so that an exchange
   // or third-party wallet cannot inflate the total with coins that were never stolen.
   var WALLETS = [
-    {addr:"bc1qq85v2c926eg6pgxhwp6q7lf6cnsz80qs3fcu9r", attributed:56201962301, baselineSpent:0, origin:"seed"},
-    {addr:"bc1qx76cae2706qd5q576feh7xq8rfcsjpf2htfhe3", attributed:39847573857, baselineSpent:0, origin:"seed"},
+    {addr:"bc1qq85v2c926eg6pgxhwp6q7lf6cnsz80qs3fcu9r", attributed:56202932050, baselineSpent:0, origin:"seed"},
+    {addr:"bc1qx76cae2706qd5q576feh7xq8rfcsjpf2htfhe3", attributed:39847590375, baselineSpent:0, origin:"seed"},
     {addr:"bc1q8jy96fe5lf8vfugydnte3cguk92gpev7kwtp3q", attributed:8962327890,  baselineSpent:0, origin:"seed"},
     {addr:"bc1qnk4zh9qcnap2mycp56qjrgza3cc8ylrh8fecp0", attributed:3245056320,  baselineSpent:341, origin:"seed"},
     {addr:"bc1qtfrwa4j6rmj9rsgspv6a0yjumkg39js2numu75", attributed:4590251994,  baselineSpent:0,   origin:"seed"},
@@ -330,6 +367,12 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   var NEW_DRAIN_MIN = 1000000;   // 0.01 BTC
   var SWEEP_END   = 1785536717;   // 2026-07-31 22:25:17 UTC, the last wave-3 sweep
   var SWEEP_END_HEIGHT = 960471;
+  // The most recent spend by any tracked address, measured from the chain at publish
+  // time and written here by publish.py. Without it the page boots knowing nothing
+  // about movement and briefly renders "untouched for" against SWEEP_END, which is a
+  // false claim on a page that exists to be exact. Runtime follow() can only raise it.
+  var LAST_MOVE = 1785643173;        // 2026-08-02 03:59:33 UTC, block 960667
+  var LAST_MOVE_HEIGHT = 960667;
   var API = "https://blockstream.info/api";
   var API2 = "https://mempool.space/api";
   var NS = "http://www.w3.org/2000/svg";
@@ -351,8 +394,10 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     backoffUntil = nowSec() + wait;
     freshness();
   }
-  var lastMoveTs = 0;      // block time of the most recent spend by a tracked address
-  var lastMoveHeight = 0;
+  // Seeded from the baked value so the clock is correct on the very first frame.
+  // follow() still runs and can only push these forward if a newer spend appears.
+  var lastMoveTs = LAST_MOVE || 0;   // block time of the most recent spend by a tracked address
+  var lastMoveHeight = LAST_MOVE_HEIGHT || 0;
   var everOk = false;
   function el(id){ return document.getElementById(id); }
   function fmt(n,d){ return n.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d}); }
@@ -376,10 +421,14 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     var e = Math.min(bal, w.attributed);
     return e > 0 ? e : 0;
   }
+  // graduated potential reports that our own analysis has since proven land here, so
+  // the confirmed total and count include them without re-plumbing per wave
+  var CX = (window.CONFIRMED_EXTRA && typeof window.CONFIRMED_EXTRA.held === "number")
+    ? window.CONFIRMED_EXTRA : {held:0, count:0, entries:[]};
   function heldTotal(){
     var t = 0;
     WALLETS.forEach(function(w){ t += effective(w); });
-    return t + (WAVE3.held || 0);
+    return t + (WAVE3.held || 0) + (CX.held || 0);
   }
 
   function renderRows(){
@@ -416,9 +465,36 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
         + '<span class="s"><span class="dot"></span><span class="st">holding</span></span>';
       rowsHost.appendChild(r);
     }
-    var n = WALLETS.length + (WAVE3.count || 0);
+    var n = WALLETS.length + (WAVE3.count || 0) + (CX.count || 0);
     el("addrCount").textContent = n + " addresses hold the proceeds. The seven below stream live; "
       + "the Wave 3 vaults are checked by the scanner and listed on the address list.";
+  }
+
+  // A refresh reconciles each changed address against Esplora in its own request, and
+  // each one used to repaint the headline as it landed, so a cold load rendered one
+  // partial sum per address before settling — the number visibly stepping up and down
+  // for a second or two. Rows still update the moment their own address is known; the
+  // aggregate waits until nothing is in flight, so it commits once from a coherent set.
+  // The same applies to the "since coins last moved" clock. lastMoveTs climbs toward
+  // the true maximum as each follow() lands, and every value on the way up is an OLDER
+  // move than the real one, so an ungated timer counts down through two or three wrong
+  // durations before arriving. Only the settled maximum is ever shown.
+  var settling = 0, settleTimer = 0, committedMoveTs = LAST_MOVE || 0;
+  function beginSettle(){
+    settling++;
+    // A wedged request must not freeze the readouts forever: commit anyway after a
+    // few seconds, whatever is still outstanding.
+    if (!settleTimer) settleTimer = setTimeout(function(){ settling = 0; commitSettled(); }, 6000);
+  }
+  function endSettle(){
+    if (settling > 0) settling--;
+    if (settling === 0) commitSettled();
+  }
+  function commitSettled(){
+    if (settleTimer){ clearTimeout(settleTimer); settleTimer = 0; }
+    committedMoveTs = lastMoveTs;
+    paint();
+    tickElapsed();
   }
 
   function paint(){
@@ -449,8 +525,13 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
         st.textContent = w.origin === "traced" ? "received" : "holding";
       }
     });
-    el("totalBtc").textContent = fmt(btc(total),4);
-    el("totalUsd").textContent = "$" + fmt(btc(total)*price,0);
+    // Hold the headline steady while addresses are still reconciling. The value
+    // already on the page came from the publish pipeline, so showing it a moment
+    // longer is right; showing three partial sums on the way to it is not.
+    if (settling === 0){
+      el("totalBtc").textContent = fmt(btc(total + (ov || 0)),4);
+      el("totalUsd").textContent = "$" + fmt(btc(total)*price,0);
+    }
     // the global "coins have moved" banner tracks a meaningful movement, matching the
     // headline timer; a tiny vault emptying still shows spent on its own row above.
     if (lastMoveTs) el("moveBanner").hidden = false;
@@ -502,6 +583,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
   // Authoritative read for one address: spent_txo_count is what actually proves a spend.
   function confirmOne(w){
+    beginSettle();
     getJSON(API+"/address/"+w.addr)
       .catch(function(){ return getJSON(API2+"/address/"+w.addr); })
       .then(function(d){
@@ -512,13 +594,16 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
           follow(w);
         }
         renderRows(); paint(); draw();
-      }).catch(function(){});
+      })
+      .catch(function(){})
+      .then(endSettle, endSettle);   // settle on both paths; .finally is not universal here
   }
 
   // If the batch endpoint is unavailable, fall back to the original per-address path.
   function perAddressFallback(){
     if (document.hidden) return;
     WALLETS.forEach(function(w){
+      beginSettle();
       getJSON(API+"/address/"+w.addr)
         .catch(function(){ return getJSON(API2+"/address/"+w.addr); })
         .then(function(d){
@@ -530,7 +615,9 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
           }
           noteOk(); lastOk = nowSec(); everOk = true;
           renderRows(); paint(); draw(); freshness();
-        }).catch(function(){ freshness(); });
+        })
+        .catch(function(){ freshness(); })
+        .then(endSettle, endSettle);
     });
   }
 
@@ -541,6 +628,10 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   function follow(w){
     if (w.following || WALLETS.length >= MAX_TRACKED) return;
     w.following = true;
+    // follow() is what raises lastMoveTs and adds traced wallets, so it is the work the
+    // readouts must wait on. Without this the clock and the total commit early and then
+    // shift again as each hop lands.
+    beginSettle();
     getJSON(API+"/address/"+w.addr+"/txs")
       .catch(function(){ return getJSON(API2+"/address/"+w.addr+"/txs"); })
       .then(function(txs){
@@ -578,7 +669,8 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
         w.following = false;
         if (added){ renderRows(); paint(); subscribe(); refreshBalances(); }
       })
-      .catch(function(){ w.following = false; });
+      .catch(function(){ w.following = false; })
+      .then(endSettle, endSettle);
   }
 
   function refreshPrice(){
@@ -631,8 +723,10 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   function tickElapsed(){
     // once coins move, this counter must stop describing the sweep and start
     // describing the last movement, or it silently reports a falsehood
-    var anchor = lastMoveTs || SWEEP_END;
-    el("sinceLabel").textContent = lastMoveTs ? "since coins last moved" : "untouched for";
+    // committedMoveTs, not lastMoveTs: the latter is still being maxed across in-flight
+    // follow() calls, and rendering it mid-climb shows a move older than the real one.
+    var anchor = committedMoveTs || SWEEP_END;
+    el("sinceLabel").textContent = committedMoveTs ? "since coins last moved" : "untouched for";
     var s = Math.floor(Date.now()/1000) - anchor;
     if (s < 0) s = 0;
     function p2(n){ return n < 10 ? "0"+n : ""+n; }
@@ -715,6 +809,72 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     evs.forEach(function(e){ run += e[1]; cum.push([e[0], run]); });
   })();
 
+  // ---------- the standards morph ----------
+  // The chart can be read at three standards, and the toggle moves between them:
+  //
+  //   Verified here  every address was found and checked by this site's own detectors.
+  //   Attested       a source with evidence this site cannot get — Galaxy Research
+  //                  confirms a theft by corresponding with the victim — publishes a
+  //                  larger total. Their addresses stay private, so the difference is
+  //                  carried as one figure with their name on it and no address list.
+  //   Suspected      the same source's own lower-confidence figure.
+  //
+  // A tier stores the source's TOTAL, and the overlay is that total minus what this site
+  // has verified, computed here rather than frozen at write time. That way publishing a
+  // new cluster shrinks the unverified remainder automatically instead of adding to a
+  // total that was already counting it.
+  //
+  // Anything already inside a tier carries subsumed_by and is listed as evidence for it,
+  // never added to it: an independent report of the same fourth wave Galaxy already counts
+  // is a second reading, not a second theft.
+  var POT = (window.POTENTIAL && Array.isArray(window.POTENTIAL.entries))
+    ? window.POTENTIAL : {entries:[], tiers:[], total_sats:0};
+  var POT_TIERS = Array.isArray(POT.tiers) ? POT.tiers.slice() : [];
+  POT_TIERS.sort(function(a,b){ return (a.total_sats||0) - (b.total_sats||0); });
+  // a report that stands on its own (nothing subsumes it) still adds, exactly as before
+  var LOOSE_SATS = POT.total_sats || 0;
+  // what this site has verified itself, on the same basis the tier totals are stated on:
+  // amounts drained, not balances still held, so the remainder does not grow when the
+  // attacker finally spends
+  function verifiedDrained(){
+    var t = 0;
+    WALLETS.forEach(function(w){ if (w.origin !== "traced") t += (w.attributed || 0); });
+    return t + (WAVE3.held || 0) + (CX.held || 0);
+  }
+  // sats the overlay adds at each stop of the toggle
+  function stopSats(i){
+    if (i <= 0) return 0;
+    var t = POT_TIERS[i - 1];
+    if (!t) return LOOSE_SATS;
+    return Math.max(0, (t.total_sats || 0) - verifiedDrained()) + LOOSE_SATS;
+  }
+  var STOPS = POT_TIERS.length ? POT_TIERS.length + 1 : (LOOSE_SATS > 0 ? 2 : 1);
+  var MAX_ADD = stopSats(STOPS - 1);
+  var hasPot = MAX_ADD > 0;
+  var potTs = POT_TIERS.length
+    ? Math.min.apply(null, POT_TIERS.map(function(t){ return t.reported_ts || nowSec()-7200; }))
+    : (POT.entries.length
+        ? Math.min.apply(null, POT.entries.map(function(e){ return e.reported_ts || nowSec()-7200; }))
+        : nowSec()-7200);
+  // `ov` is the sats currently added by the overlay; the morph animates it between stops,
+  // so a three-way control is the same interpolation a two-way one was. `mp` stays the
+  // 0..1 fraction the drawing code uses for opacity.
+  var mode = 0, ov = 0, morphRAF = 0;
+  function mpNow(){ return MAX_ADD > 0 ? Math.min(1, ov / MAX_ADD) : 0; }
+  function stopTier(i){ return i > 0 ? POT_TIERS[i - 1] : null; }
+  // suspected is drawn in its own colour: two standards that differ only in a caption
+  // read as one number with a footnote, which is how an unconfirmed figure gets quoted
+  // as a confirmed one
+  function stopInk(i){
+    var t = stopTier(i);
+    return (t && t.key === "suspected") ? "#d98b8b" : "#f4a94a";
+  }
+  function stopCaption(i){
+    var t = stopTier(i);
+    if (!t) return "reported, unverified";
+    return t.key === "suspected" ? "suspected, unconfirmed" : "attested, not verified here";
+  }
+
   // Most of the drain window is idle. Real time between events is kept up to a cap,
   // and anything longer collapses to that cap, so the episodes keep their true internal
   // shape while the dead hours between them stop eating the width.
@@ -762,8 +922,13 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     if (!measure()) return;
     var held = heldTotal();
     var peak = cum.length ? cum[cum.length-1][1] : held;
-    var top = Math.max(peak, held) * 1.14;
+    // the axis reserves room for the largest standard, so the verified curve keeps one
+    // height and the morph only fills the headroom above it
+    var potAdd = ov;
+    var top = Math.max(peak, held + MAX_ADD) * 1.14;
     function y(sats){ return (H - PB) - (sats / top) * innerH; }
+    var elTot = el("totalBtc");
+    if (elTot) elTot.textContent = fmt(btc(held + potAdd), 4);
 
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     var frag = document.createDocumentFragment();
@@ -805,6 +970,31 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     frag.appendChild(mk("path",{d:dArea, fill:"url(#g1)"}));
     frag.appendChild(mk("path",{d:dLine, fill:"none", stroke:"#f7931a","stroke-width":3,
                                 "stroke-linejoin":"round","stroke-linecap":"round"}));
+
+    // ---- the overlay: what a weaker standard adds on top of the verified series ----
+    // Hatched and dashed so it can never be read as the solid, verified series, and
+    // coloured by the standard so suspected never looks like attested.
+    var mfrac = mpNow();
+    if (hasPot && potAdd > 1){
+      var ink = stopInk(mode);
+      var xW = xHold(potTs), xN = xHold(nowTs);
+      var yBase = y(held), yTopP = y(held + potAdd);
+      var hp = mk("pattern",{id:"hatchP",width:7,height:7,patternTransform:"rotate(45)",patternUnits:"userSpaceOnUse"});
+      hp.appendChild(mk("rect",{width:7,height:7,fill:ink,"fill-opacity":0.05}));
+      hp.appendChild(mk("line",{x1:0,y1:0,x2:0,y2:7,stroke:ink,"stroke-opacity":0.4,"stroke-width":1.4}));
+      var pdefs = mk("defs",{}); pdefs.appendChild(hp); frag.appendChild(pdefs);
+      frag.appendChild(mk("path",{d:"M"+xW.toFixed(1)+" "+yBase.toFixed(1)+" L"+xW.toFixed(1)+" "+yTopP.toFixed(1)+
+        " L"+xN.toFixed(1)+" "+yTopP.toFixed(1)+" L"+xN.toFixed(1)+" "+yBase.toFixed(1)+" Z", fill:"url(#hatchP)"}));
+      frag.appendChild(mk("path",{d:"M"+xW.toFixed(1)+" "+yBase.toFixed(1)+" L"+xW.toFixed(1)+" "+yTopP.toFixed(1)+
+        " L"+xN.toFixed(1)+" "+yTopP.toFixed(1), fill:"none",stroke:ink,"stroke-width":2,"stroke-dasharray":"5 4"}));
+      frag.appendChild(mk("circle",{cx:xN.toFixed(1),cy:yTopP.toFixed(1),r:4,fill:ink,opacity:mfrac.toFixed(2)}));
+      if (mfrac > 0.6 && (xN - xW) > 90){
+        var pl = mk("text",{x:(xW+6).toFixed(1),y:(yTopP-8).toFixed(1),fill:ink,"font-size":11,
+          "font-family":"DM Sans, system-ui, sans-serif",opacity:((mfrac-0.6)/0.4).toFixed(2)});
+        pl.textContent = stopCaption(mode);
+        frag.appendChild(pl);
+      }
+    }
 
     // seam marker between the two time scales, labelled so the axis cannot be read as
     // linear: left of it is the drain window, right of it is real time since
@@ -891,6 +1081,130 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   paint();
   draw();
 
+  // ---------- the standards toggle (the same morph as a measure switch) ----------
+  (function viewToggle(){
+    var host = el("measure");
+    var btns = host ? [].slice.call(host.querySelectorAll("button[data-tier]")) : [];
+    if (!host || !btns.length) return;
+    // nothing beyond our own verification to show: no control at all, rather than a
+    // toggle to an empty state
+    if (!hasPot){ return; }
+    // a button for a standard nothing is carried at would read as an empty claim
+    btns = btns.filter(function(b){ return +b.getAttribute("data-tier") < STOPS; });
+    btns.forEach(function(b){ if (+b.getAttribute("data-tier") >= STOPS) b.remove(); });
+    host.hidden = false;
+
+    // populate the note from potential.js so it always matches what is being shown
+    function fillNote(i){
+      var body = el("potnoteBody");
+      if (!body) return;
+      var t = stopTier(i);
+      var add = stopSats(i);
+      var html;
+      if (!t){
+        html = "<h3>Every figure on this view was verified here</h3>"
+          + "<p>Each address was found by this site's own detectors and checked against the "
+          + "chain, and every one is published so the work can be argued with. The other two "
+          + "views carry larger totals that this site has not verified itself.</p>";
+      } else {
+        var link = t.source_url
+          ? '<a href="' + t.source_url + '" target="_blank" rel="noopener">' + t.source + '</a>'
+          : '<span class="src">' + t.source + '</span>';
+        var head = (t.key === "suspected" ? "Suspected" : "Attested") + ": "
+          + fmt(btc(t.total_sats),0) + " BTC"
+          + (t.addresses ? " across about " + t.addresses.toLocaleString() + " addresses" : "")
+          + ", of which " + fmt(btc(add),4) + " BTC is not verified here";
+        // A figure the chain cannot check can only go stale silently, so the date it was
+        // published is part of the figure. Past a few days the page says so itself rather
+        // than waiting for somebody to notice.
+        var days = Math.floor((nowSec() - (t.reported_ts || nowSec())) / 86400);
+        var when = new Date((t.reported_ts || nowSec()) * 1000)
+          .toLocaleDateString("en-GB", {day:"numeric", month:"long", year:"numeric", timeZone:"UTC"});
+        // "Recorded", not "published": the timestamp is when this site took the figure
+        // down, which is within hours of the post and is the part it can vouch for.
+        var age = "Recorded " + when
+          + (days >= 3 ? ", and not restated since. A revision would not show on the chain." : ".");
+        html = "<h3>" + head + "</h3>"
+          + "<p>" + link + ", <span class=\"conf\">" + t.confidence + "</span>. " + t.note
+          + " <span class=\"conf\">" + age + "</span></p>"
+          + "<p>The difference is shown as one figure with their name on it and no address "
+          + "list, because the addresses behind it are not public. It shrinks on its own as "
+          + "this site verifies more of the same theft, and it is not tracked for movement "
+          + "the way the verified addresses are.</p>";
+        // anything the tier already contains is listed here as evidence, never added
+        var inside = POT.entries.filter(function(e){ return e.subsumed_by === t.key; });
+        if (inside.length){
+          html += "<p class=\"tierhead\">Inside this total, listed rather than added:</p>"
+            + inside.map(function(e){
+                var el2 = e.source_url
+                  ? '<a href="' + e.source_url + '" target="_blank" rel="noopener">' + e.source + '</a>'
+                  : '<span class="src">' + e.source + '</span>';
+                return "<p>" + el2 + " reported "
+                  + (e.blocks ? "in blocks " + e.blocks[0].toLocaleString() + "–" + e.blocks[1].toLocaleString() + ": " : "")
+                  + e.note + "</p>";
+              }).join("");
+        }
+      }
+      // reports that stand outside every tier still add, and still say so
+      var loose = POT.entries.filter(function(e){ return !e.subsumed_by; });
+      if (i > 0 && loose.length){
+        html += loose.map(function(e){
+          var el3 = e.source_url
+            ? '<a href="' + e.source_url + '" target="_blank" rel="noopener">' + e.source + '</a>'
+            : '<span class="src">' + e.source + '</span>';
+          return "<p>" + el3 + " reported " + e.note + "</p>";
+        }).join("");
+      }
+      body.innerHTML = html;
+    }
+
+    // the page's own easing curve, solved for the morph so the chart moves the way every
+    // other transition on the page does
+    function ease(t){
+      var x1 = 0.32, x2 = 0, y1 = 0.72, y2 = 1, u = t;
+      for (var i = 0; i < 6; i++){
+        var s = 1 - u;
+        var x = 3*s*s*u*x1 + 3*s*u*u*x2 + u*u*u;
+        var d = 3*s*s*x1 + 6*s*u*(x2-x1) + 3*u*u*(1-x2);
+        if (d < 1e-6) break;
+        u -= (x - t) / d;
+        if (u < 0) u = 0; else if (u > 1) u = 1;
+      }
+      var sc = 1 - u;
+      return 3*sc*sc*u*y1 + 3*sc*u*u*y2 + u*u*u;
+    }
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function setMode(next){
+      if (next === mode) return;
+      mode = next;
+      btns.forEach(function(b){
+        b.setAttribute("aria-pressed", +b.getAttribute("data-tier") === mode ? "true" : "false");
+      });
+      var t = stopTier(mode);
+      document.body.classList.toggle("potential", mode > 0);
+      document.body.classList.toggle("suspected", !!(t && t.key === "suspected"));
+      fillNote(mode);
+      // the morph interpolates SATS between stops, not a 0..1 flag, so moving from
+      // attested straight to verified travels the same curve as any other pair
+      var to = stopSats(mode);
+      if (reduced){ ov = to; draw(); return; }
+      if (morphRAF) cancelAnimationFrame(morphRAF);
+      var from = ov, t0 = null, DUR = 500;
+      morphRAF = requestAnimationFrame(function step(ts){
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / DUR);
+        ov = from + (to - from) * ease(p);
+        draw();
+        if (p < 1) morphRAF = requestAnimationFrame(step);
+        else { ov = to; morphRAF = 0; draw(); }
+      });
+    }
+    btns.forEach(function(b){
+      b.addEventListener("click", function(){ setMode(+b.getAttribute("data-tier")); });
+    });
+    fillNote(0);
+  })();
+
   // Pin the headline to the width it renders at now. The total can only fall (coins
   // move out, attribution caps the rest), so today's width is the widest it will ever
   // be: reserving it stops "BTC" shifting without inventing a ch value.
@@ -948,13 +1262,14 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   })();
 
   /* ---------- local address check ---------- */
-  var DRAINED_COUNT = 4580;   // must match drained.js exactly
+  var DRAINED_COUNT = 4584;   // must match drained.js exactly
   function datasetReady(){
     return Array.isArray(window.DRAINED) && window.DRAINED.length === DRAINED_COUNT;
   }
 
   (function(){
     var input = el("addrIn"), btn = el("addrBtn"), out = el("addrOut");
+    if (!input || !btn || !out) return;   // the address-entry checker was removed; no-op
     var SET = null;
 
     // verdict drives three things at once: the field outline, a labelled chip, and the detail line.
@@ -1053,5 +1368,8 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
 })();
 </script>
+<!-- Vercel Web Analytics -->
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

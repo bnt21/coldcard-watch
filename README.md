@@ -2,7 +2,7 @@
 
 Tracks the bitcoin drained from Coldcard wallets whose seeds were generated with too
 little randomness, and watches whether the attackers ever move it. Live at
-[coldcard-watch.vercel.app](https://coldcard-watch.vercel.app).
+[coldcardwatch.com](https://coldcardwatch.com).
 
 The site's only value is that every address on it is true, so everything here is built
 around one rule: an address is listed when its sweep converges with hundreds of others,
@@ -100,10 +100,37 @@ the original pattern. Galaxy Research reported the wave and its totals; they pub
 addresses, no dataset, and no code, so the addresses on the site come from this
 reconstruction rather than from them.
 
-Against Galaxy's figures for the same block range, this finds 214 of 293 vaults holding
-200.33 BTC against their 207.73, so 97.8% of the value. It also finds the single wave-3
-chain a third party published in full, which is the test that the detector works at all.
-Sixteen further chains matched the shape but paid scattered fee rates and were left off.
+Against Galaxy's figures for the same block range, this finds 293 vaults holding
+207.72947587 BTC against their 207.73, agreeing to about two thousand satoshis. It also
+finds the single wave-3 chain a third party published in full, which is the test that the
+detector works at all. Sixteen further chains matched the shape but paid scattered fee
+rates and were left off.
+
+## The three standards
+
+The address list is everything this project verified itself, and for six days it was the
+only figure the site published: 1,366 BTC, while the settled figure everywhere else was
+1,596. Galaxy Research confirm a theft by writing to the victim, so their set includes
+losses whose addresses were never made public and never will be. Reading the chain cannot
+reach those, so leaving the number off left the site 14% low rather than more accurate.
+
+The dashboard now reads at three standards: **verified here**, which is the address list;
+**attested**, which is Galaxy's victim-corroborated total; and **suspected**, their own
+medium-confidence figure, which adds a fourth wave no victim has confirmed. The last
+two are one number with their name on it and no addresses, drawn in their own colour, and
+`public/methodology.html` sets out what warrants carrying them: their figures agree with
+this project's independent reconstruction on all four things both can measure, and disagree
+on none.
+
+Two rules keep the arithmetic honest, and both are pinned by tests:
+
+A tier stores the source's **total**, and the site derives the remainder against its own
+verified figure at render time. A frozen remainder starts double-counting the moment
+anything new is published, and the first version of this did exactly that.
+
+Anything already inside a tier is **listed under it, never added to it**. An independent
+report of the same fourth wave Galaxy already count is a second reading of one event, and
+summing both put 1,984.94 BTC on the site, a total no source claims.
 
 ## What this cannot do
 

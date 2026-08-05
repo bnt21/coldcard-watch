@@ -37,7 +37,7 @@ const CX = window.CONFIRMED_EXTRA;
 const nowSec = () => Math.floor(Date.now() / 1000);
 
 // the block under test, extracted verbatim
-const BLOCK = src.match(/ {2}var POT = \(window\.POTENTIAL[\s\S]*?\n {2}function stopCaption\(i\)\{[\s\S]*?\n {2}\}/);
+const BLOCK = src.match(/ {2}var POT = \(window\.POTENTIAL[\s\S]*?\n {2}function captionBox\([\s\S]*?\n {2}\}/);
 if (!BLOCK) { console.error("FAIL: could not find the tier block in index.html"); process.exit(1); }
 eval(BLOCK[0]);
 
@@ -48,12 +48,21 @@ function is(label, got, want) {
   console.log(`  ${ok ? "ok  " : "FAIL"}  ${label}${ok ? "" : `  got ${got}, want ${want}`}`);
 }
 
-const VERIFIED = 136658736354;          // 1,366.58736354 BTC
+// The source totals are PINNED: they are Galaxy's published figures and must never drift
+// without someone deciding they should. Our own verified figure is DERIVED, because it
+// moves every time a cluster is published, and a test that pins it turns every legitimate
+// add into a red suite. What is asserted about it is the invariants, not its value.
 const ATTESTED = 159600000000;          // Galaxy, 1,596 BTC, victim-corroborated
 const SUSPECTED = 205500000000;         // Galaxy, 2,055 BTC, medium-high
+const VERIFIED = verifiedDrained();
 
 is("the verified basis is drained value, not the balance still held",
-   verifiedDrained(), VERIFIED);
+   VERIFIED, WALLETS.reduce((t, w) => t + w.attributed, 0) + WAVE3.held + CX.held);
+// and it must equal what the page actually prints, or the tier maths is computed off a
+// different number than the headline shows
+is("the verified basis matches the published headline",
+   Number(src.match(/id="totalBtc">([\d,.]+)</)[1].replace(/,/g, "")),
+   Math.round(VERIFIED / 1e4) / 1e4);
 
 is("the verified view adds nothing", stopSats(0), 0);
 
@@ -101,8 +110,38 @@ is("suspected is drawn in its own colour", stopInk(2) === stopInk(1), false);
 is("attested says it was not verified here", stopCaption(1), "attested, not verified here");
 is("suspected says it is unconfirmed", stopCaption(2), "suspected, unconfirmed");
 
+// The overlay caption shipped clipped: anchored at the band's LEFT edge while the band's
+// right edge IS the plot's right edge, so "suspected, unconfirmed" rendered as
+// "suspected, unconfir". These check the placement across every real caption and every
+// plausible chart width, because the defect only shows at some of them.
+(function captionStaysInsideThePlot(){
+  const CAPS = [stopCaption(0), stopCaption(1), stopCaption(2)];
+  let worst = null;
+  // W from a narrow phone to a wide desktop; PR is 16 and the band ends at W - PR
+  for (let W = 320; W <= 1600; W += 8){
+    const PR = 16, PL = W < 480 ? 42 : 56, xN = W - PR;
+    for (const xW of [PL, PL + 40, xN - 300, xN - 140, xN - 60, xN - 10]){
+      if (xW >= xN) continue;
+      for (const cap of CAPS){
+        const b = captionBox(xW, xN, cap, 11);
+        if (!b.fits) continue;                    // not drawn at all, cannot clip
+        const right = b.x, left = b.x - b.width;  // anchor "end"
+        if (right > W - PR || left < xW || left < PL) worst = {W, xW, cap, left, right};
+      }
+    }
+  }
+  is("a drawn caption never crosses the plot edge or its own band", worst, null);
+})();
+
+is("the caption is anchored at the band's right edge, not its left",
+   captionBox(100, 900, "suspected, unconfirmed", 11).anchor, "end");
+is("a band too narrow for the words drops the caption rather than clipping it",
+   captionBox(860, 900, "suspected, unconfirmed", 11).fits, false);
+is("a band with room still shows it",
+   captionBox(400, 900, "suspected, unconfirmed", 11).fits, true);
+
 is("there is one stop per tier, plus our own", STOPS, window.POTENTIAL.tiers.length + 1);
-is("the axis reserves room for the largest standard", MAX_ADD, SUSPECTED - VERIFIED);
+is("the axis reserves room for the largest standard", MAX_ADD, stopSats(STOPS - 1));
 
 console.log(failed ? `\n${failed} failure(s)` : "\ntier maths holds");
 process.exit(failed ? 1 : 0);

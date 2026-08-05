@@ -165,16 +165,52 @@ def _wave_for(sweep, blocktime):
     return (max(bands) + 1) if bands else 0
 
 
-def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
+def holds_downstream_of(hold_addr, coll):
+    """Is `hold_addr` funded by a transaction that spends from `coll`?
+
+    The guard on hold_addr below. Without it, a typo or a bad call would attach an
+    unrelated address's balance to this cluster's victims and put someone else's coins in
+    the headline. One hop only, because that is the shape this exists for: a collector that
+    pooled the sweeps and then forwarded the lot onward."""
+    try:
+        txs = publish.esplora(f"/address/{hold_addr}/txs")
+    except Exception:
+        return False
+    for t in txs:
+        if not any(o.get("scriptpubkey_address") == hold_addr for o in t.get("vout", [])):
+            continue
+        srcs = {(i.get("prevout") or {}).get("scriptpubkey_address") for i in t.get("vin", [])}
+        if coll in srcs:
+            return True
+    return False
+
+
+def add_cluster(coll, source, note, dry=False, st=None, min_victims=3, hold_addr=None):
     """Atomically add collector `coll` and its victims to every coupled surface,
     deploy, verify the live bytes, log, and Telegram-notify. `source`/`note` become
-    the methodology-row attribution. Rolls back every file on any failure."""
+    the methodology-row attribution. Rolls back every file on any failure.
+
+    `hold_addr` is for the two-hop shape wave 3 already established and the balance check
+    below would otherwise reject: the sweeps pool into `coll`, and `coll` immediately
+    forwards everything into a fresh address that then sits. The victims belong to `coll`,
+    the money is at `hold_addr`, and tracking either one alone is wrong. When it is given,
+    victims still come from `coll` and only the tracked balance moves. It must be one hop
+    downstream of `coll` or this refuses.
+    """
     if publish.conflict_guard():
         raise RuntimeError("syncthing conflict copies present; refusing to edit")
     if publish.self_check(verbose=False):
         raise RuntimeError("site invariants broken before edit")
 
     victims, total, balance, cstats = collector_victims(coll)
+    track = coll
+    if hold_addr and hold_addr != coll:
+        if not holds_downstream_of(hold_addr, coll):
+            return {"added": 0, "reason": f"{hold_addr} is not funded by a spend from "
+                    f"{coll}; refusing to attach its balance to this cluster"}
+        hi = publish.esplora(f"/address/{hold_addr}")["chain_stats"]
+        balance = hi["funded_txo_sum"] - hi["spent_txo_sum"]
+        track = hold_addr
     if balance < 2_000_000:      # < 0.02 BTC held: an emptied/peeled address, never track it
         return {"added": 0, "reason": f"collector holds only {balance/1e8:.8f} BTC; "
                 "funds moved on, tracking address would be wrong"}
@@ -239,7 +275,7 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
     # 7th+ wallet appended after the last WALLETS entry
     last_wallet = re.findall(r'\{addr:"bc1[^"]+", attributed:\d+[^\}]*\}', idx)[-1]
     new_wallet = (last_wallet + ',\n    {addr:"%s", attributed:%d,  baselineSpent:0,   '
-                  'origin:"seed"}' % (coll, balance))
+                  'origin:"seed"}' % (track, balance))
     idx = idx.replace(last_wallet, new_wallet, 1)
     idx = idx.replace(f"var DRAINED_COUNT = {old_n};", f"var DRAINED_COUNT = {new_n};")
     idx = idx.replace(f'id="totalBtc">{old_total_disp}</span>',
@@ -268,8 +304,8 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
             continue
         s = _read(m)
         anchor = '    "bc1qhh4jkkj07vxpdt0zlvxctjlfhqmurhxa24x3h2": 19153809,'
-        if anchor in s and f'"{coll}"' not in s:
-            s = s.replace(anchor, anchor + f'\n    "{coll}": {balance},')
+        if anchor in s and f'"{track}"' not in s:
+            s = s.replace(anchor, anchor + f'\n    "{track}": {balance},')
         s = re.sub(r'DRAINED_COUNT = \d+', f"DRAINED_COUNT = {new_n}", s)
         edits[m] = s
 
@@ -290,7 +326,7 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
         if probs:
             raise RuntimeError(f"invariants broken after edit: {probs}")
         idx2 = _read(os.path.join(publish.PUBLIC, "index.html"))
-        assert new_total_disp in idx2 and coll in idx2
+        assert new_total_disp in idx2 and track in idx2
         # Deploy inside the protected region. If deploy() raises (invalid token,
         # network error), nothing reached production and the except clause restores
         # every local file from its backup, so local can never sit diverged ahead of
@@ -323,7 +359,7 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3):
     if own:
         publish.save_state(st)
 
-    publish.send_telegram(
+    publish.notify_change(
         f"SITE SELF-UPDATED ({source}).\n\n{coll}\n  {len(new_v)} victims, "
         f"{balance/1e8:.8f} BTC, verified on-chain\n\n{note}\n\ntotal now "
         f"{new_total_disp} BTC, {nf} drained addresses.\n" + publish.SITE)

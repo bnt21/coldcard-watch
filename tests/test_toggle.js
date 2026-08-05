@@ -53,8 +53,11 @@ check("attested note names the source and its own confidence",
   noteBody.innerHTML.includes("glxyresearch")&&noteBody.innerHTML.includes("victim-corroborated"));
 check("attested note dates the figure",
   /Recorded 3 August 2026\./.test(noteBody.innerHTML));
-check("attested note states 1,596 and the unverified part",
-  noteBody.innerHTML.includes("1,596 BTC")&&noteBody.innerHTML.includes("229.4126"));
+// the source total is pinned; the unverified part is derived, because it shrinks every
+// time a cluster is published — that shrinking is the whole point of the tier model
+check("attested note states 1,596 and the derived unverified part",
+  noteBody.innerHTML.includes("1,596 BTC")
+  &&noteBody.innerHTML.includes(fmt(btc(stopSats(1)),4)));
 check("the attested press reproduces their published total exactly",
   verifiedDrained()+ov===159600000000);
 check("attested lists the fourth wave as inside, not added",

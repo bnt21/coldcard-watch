@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Coldcard Sweep Watch: is the stolen bitcoin still sitting there?</title>
-<meta name="description" content="A live chart of the 1,366.58 BTC drained from Coldcard wallets on 30 and 31 July 2026. The line extends in real time for as long as the coins are left untouched.">
+<meta name="description" content="A live chart of the 1,402.60 BTC drained from Coldcard wallets on 30 and 31 July 2026. The line extends in real time for as long as the coins are left untouched.">
 <link rel="icon" href="/bitcoin.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -248,7 +248,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
 <section class="top">
   <h1>Bitcoin Drained from Coldcards</h1>
-  <div class="total"><span id="totalBtc">1,366.5874</span><span class="unit">BTC</span></div>
+  <div class="total"><span id="totalBtc">1,402.6032</span><span class="unit">BTC</span></div>
   <div class="sub"><span id="totalUsd">$71,048,000</span><span class="q" id="priceSrc">at $62,949 per bitcoin</span></div>
 </section>
 
@@ -264,7 +264,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   <div class="measure" id="measure" hidden>
     <span id="measureLabel">View:</span>
     <span class="seg" role="group" aria-labelledby="measureLabel">
-      <button type="button" data-tier="0" aria-pressed="true">Verified here</button>
+      <button type="button" data-tier="0" aria-pressed="true">Verified</button>
       <button type="button" data-tier="1" aria-pressed="false">Attested</button>
       <button type="button" data-tier="2" aria-pressed="false">Suspected</button>
     </span>
@@ -296,7 +296,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     <div class="ld-when"><span id="ldWhen">31 July 2026, 08:36:17 UTC</span><span id="ldMeta">block 960,369</span><a id="ldTx" target="_blank" rel="noopener" href="https://mempool.space/tx/b1000cdee4011ae085649f24ab09cea7a8fa4a97c8e365b07cc41cfb6ee06f00">view transaction</a></div>
   </div>
   <div class="lastdrain totaldrain">
-    <div class="ld-amt"><span id="tdCount">4,584</span></div>
+    <div class="ld-amt"><span id="tdCount">4,696</span></div>
     <div class="ld-addr">addresses drained, verified</div>
     <div class="ld-when"><a href="/list.html">view the full list</a></div>
   </div>
@@ -347,7 +347,8 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     {addr:"bc1qnk4zh9qcnap2mycp56qjrgza3cc8ylrh8fecp0", attributed:3245056320,  baselineSpent:341, origin:"seed"},
     {addr:"bc1qtfrwa4j6rmj9rsgspv6a0yjumkg39js2numu75", attributed:4590251994,  baselineSpent:0,   origin:"seed"},
     {addr:"bc1qhh4jkkj07vxpdt0zlvxctjlfhqmurhxa24x3h2", attributed:19153809,    baselineSpent:0,   origin:"seed"},
-    {addr:"bc1qmd5m5ktv7m5ffujxv4248fxv36myvdx79n8jp6", attributed:3018476329,  baselineSpent:0,   origin:"seed"}
+    {addr:"bc1qmd5m5ktv7m5ffujxv4248fxv36myvdx79n8jp6", attributed:3018476329,  baselineSpent:0,   origin:"seed"},
+    {addr:"bc1pdl33jtqnausmx2d4r4c6wpnk5are8jz046y3yjkw8fryjel02p7sluu9ce", attributed:3601585057,  baselineSpent:0,   origin:"seed"}
   ];
   // Wave 3 gave every victim wallet its own vault, so there are 214 of them and they
   // cannot be live-polled from a browser the way the seven collectors are. They are
@@ -874,6 +875,18 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     if (!t) return "reported, unverified";
     return t.key === "suspected" ? "suspected, unconfirmed" : "attested, not verified here";
   }
+  // Where the overlay's caption goes. The band's right edge sits at the plot's right edge,
+  // so a caption anchored at its LEFT edge runs off the chart the moment the band is
+  // narrower than the words: "suspected, unconfirmed" shipped clipped to "suspected, unconfir".
+  // Anchoring at the right edge and refusing to draw when the band cannot hold the text
+  // makes the overflow impossible rather than unlikely.
+  function captionBox(xW, xN, cap, size){
+    // DM Sans at these sizes averages a little over half the em per character; the margin
+    // is deliberate, because a caption that does not fit is dropped, not squeezed
+    var w = cap.length * size * 0.54;
+    var pad = 12;                       // clears the marker dot sitting on the band corner
+    return {x: xN - pad, anchor: "end", width: w, fits: (xN - xW) >= w + pad * 2};
+  }
 
   // Most of the drain window is idle. Real time between events is kept up to a cap,
   // and anything longer collapses to that cap, so the episodes keep their true internal
@@ -988,10 +1001,12 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
       frag.appendChild(mk("path",{d:"M"+xW.toFixed(1)+" "+yBase.toFixed(1)+" L"+xW.toFixed(1)+" "+yTopP.toFixed(1)+
         " L"+xN.toFixed(1)+" "+yTopP.toFixed(1), fill:"none",stroke:ink,"stroke-width":2,"stroke-dasharray":"5 4"}));
       frag.appendChild(mk("circle",{cx:xN.toFixed(1),cy:yTopP.toFixed(1),r:4,fill:ink,opacity:mfrac.toFixed(2)}));
-      if (mfrac > 0.6 && (xN - xW) > 90){
-        var pl = mk("text",{x:(xW+6).toFixed(1),y:(yTopP-8).toFixed(1),fill:ink,"font-size":11,
-          "font-family":"DM Sans, system-ui, sans-serif",opacity:((mfrac-0.6)/0.4).toFixed(2)});
-        pl.textContent = stopCaption(mode);
+      var cap = stopCaption(mode), box = captionBox(xW, xN, cap, 11);
+      if (mfrac > 0.6 && box.fits){
+        var pl = mk("text",{x:box.x.toFixed(1),y:(yTopP-8).toFixed(1),fill:ink,"font-size":11,
+          "text-anchor":box.anchor,"font-family":"DM Sans, system-ui, sans-serif",
+          opacity:((mfrac-0.6)/0.4).toFixed(2)});
+        pl.textContent = cap;
         frag.appendChild(pl);
       }
     }
@@ -1262,7 +1277,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   })();
 
   /* ---------- local address check ---------- */
-  var DRAINED_COUNT = 4584;   // must match drained.js exactly
+  var DRAINED_COUNT = 4696;   // must match drained.js exactly
   function datasetReady(){
     return Array.isArray(window.DRAINED) && window.DRAINED.length === DRAINED_COUNT;
   }

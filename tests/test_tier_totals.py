@@ -23,9 +23,12 @@ sys.path.insert(0, ROOT)
 
 import potential
 
+# The source totals are PINNED: they are Galaxy's published figures and must not drift
+# without a decision. Our own verified figure is DERIVED, because publishing a cluster
+# moves it, and pinning it would turn every legitimate add into a red suite.
 ATTESTED = 159_600_000_000          # Galaxy, 1,596 BTC, victim-corroborated
 SUSPECTED = 205_500_000_000         # Galaxy, 2,055 BTC, medium-high
-VERIFIED = 136_658_736_354          # this site's own, 1,366.58736354 BTC
+VERIFIED = potential.verified_sats()
 
 
 def write(tmp, data):
@@ -87,8 +90,17 @@ class DerivedRemainderTest(unittest.TestCase):
 
     def test_the_verified_basis_matches_what_the_site_publishes(self):
         # drained value, not the balance still held, so the remainder does not grow when
-        # the attacker finally spends
-        self.assertEqual(potential.verified_sats(), VERIFIED)
+        # the attacker finally spends. Checked against the headline the page prints rather
+        # than against a constant, so the two can never drift apart unnoticed.
+        import claims
+        published, _ = claims.published_totals()
+        self.assertAlmostEqual(potential.verified_sats() / 1e8, published, places=4)
+
+    def test_the_verified_figure_stays_below_the_attested_one(self):
+        # if our own verification ever passes Galaxy's total, the tier is overtaken and the
+        # site should be saying so rather than showing a remainder of zero forever
+        self.assertLess(potential.verified_sats(), ATTESTED,
+                        "verified has passed the attested total; revisit the tiers")
 
 
 class OrderingTest(unittest.TestCase):

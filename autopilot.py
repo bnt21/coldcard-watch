@@ -54,6 +54,13 @@ MAX_KNOWN = 250          # runaway guard on co-spend expansion
 COSPEND_PER_RUN = 40     # addresses expanded per cycle; checkpointed, resumes next run
 MIN_CLUSTER_BTC = 0.02   # ignore dust collectors
 TIGHT_WINDOW = 30        # a real cluster's sweeps land within this many blocks
+# Victims needed for DESTINATION convergence to stand on its own, without the fee test.
+# The site already publishes clusters on this basis (waves 1, 2 and 5 are listed on it),
+# and the argument is that a hundred strangers cannot share one fresh destination. 20 is
+# four times MIN_SWEEPS and well past any plausible single owner consolidating their own
+# wallets: the largest legitimate case is somebody sweeping their own UTXOs, which is one
+# address, not twenty. Every published cluster clears it by a wide margin.
+DEST_CONVERGENCE_MIN = 20
 
 # Tier 1 (co-spend, deterministic) always auto-publishes. Tier 2 (fingerprint +
 # credible-source corroboration) is strong but rests on a heuristic + an LLM read, and
@@ -305,14 +312,18 @@ def _snapshot(tag):
 
 
 def _publish(coll, source, note, tier, fp, st, dry):
+    # A two-hop cluster's money sits one forward down, and the add rejects a collector
+    # holding nothing. The fingerprint already located it; pass it through rather than
+    # letting the add rediscover a zero balance and refuse.
+    hold = (fp or {}).get("hold_addr")
     if dry:
-        r = cluster.add_cluster(coll, source, note, dry=True, st=st)
+        r = cluster.add_cluster(coll, source, note, dry=True, st=st, hold_addr=hold)
         print(f"  [{tier}] WOULD add {coll}: {r}")
         return r
     tag = f"{coll[:12]}-{int(time.time())}"
     snap = _snapshot(tag)                 # pre-publish state, for --rollback
     try:
-        r = cluster.add_cluster(coll, source, note, dry=False, st=st)
+        r = cluster.add_cluster(coll, source, note, dry=False, st=st, hold_addr=hold)
         if r.get("added"):
             audit({"action": "add", "tier": tier, "collector": coll, "source": source,
                    "victims": r["added"], "sats": r["balance"],
@@ -573,18 +584,56 @@ def _fingerprint_candidates():
             fp = cluster.cluster_fingerprint(coll)
         except Exception:
             continue
-        span = fp["block_span"]
-        tight = span and (span[1] - span[0]) <= TIGHT_WINDOW
-        # MIN_CLUSTER_BTC was declared and never applied, so a 0.00056 BTC address
-        # reached the proposed tier. With TIER2_AUTOPUBLISH on, that would have put
-        # dust on a public page that calls addresses attacker-controlled. A real
-        # cluster of this theft holds real money; the floor is what says so.
-        enough = fp["balance"] >= MIN_CLUSTER_BTC * 1e8
-        if (fp["fee_uniform"] and fp["no_change_ratio"] >= 0.9 and fp["fresh"]
-                and fp["unspent"] and fp["victims"] >= 3 and tight and enough):
+        ok, route = accepts(fp)
+        if ok:
+            fp["converged_by"] = route
             out.append((coll, fp))
         time.sleep(0.2)
     return out, w3
+
+
+def accepts(fp):
+    """Does this fingerprint clear the automatic bar? Returns (bool, route).
+
+    A pure function of the fingerprint so it can be driven directly by tests, which the
+    inline version could not be: deleting a clause broke no test.
+    """
+    span = fp["block_span"]
+    tight = bool(span) and (span[1] - span[0]) <= TIGHT_WINDOW
+    # MIN_CLUSTER_BTC was declared and never applied, so a 0.00056 BTC address
+    # reached the proposed tier. With TIER2_AUTOPUBLISH on, that would have put
+    # dust on a public page that calls addresses attacker-controlled. A real
+    # cluster of this theft holds real money; the floor is what says so.
+    # fp["balance"] and fp["unspent"] now read through a single no-change forward, so
+    # a collector that parked its take one hop down is judged where the money is.
+    enough = fp["balance"] >= MIN_CLUSTER_BTC * 1e8
+
+    # The methodology page publishes TWO independent convergence tests and says an
+    # address is listed when its sweep shows one of them. This gate only ever
+    # implemented the fee one, so a cluster that converges on a DESTINATION but pays
+    # two hardcoded rates was discarded — which is what happened to the 112-victim
+    # cluster a victim's colleague had to report by hand on 2026-08-05: 81% of its
+    # sweeps at one below-market constant, under the 90% bar, and spread over 109
+    # blocks, over the 30-block window.
+    #
+    #   fee         one hardcoded rate dominates, inside a tight window
+    #   destination many independent addresses swept into ONE fresh address
+    #
+    # Destination convergence needs a far higher victim count than the fee route,
+    # because that count IS the evidence: an owner moving their own coins to safety
+    # cannot produce dozens of unrelated addresses converging on one fresh destination.
+    by_fee = fp["fee_uniform"] and tight
+    by_destination = fp["victims"] >= DEST_CONVERGENCE_MIN
+    converges = by_fee or by_destination
+
+    # These hold for both routes and are what keep a service or a peel chain out:
+    # every funding transaction a no-change sweep, no unrelated history, and the money
+    # still sitting where it landed.
+    shape = (fp["no_change_ratio"] >= 0.9 and fp["fresh"] and fp["unspent"]
+             and fp["victims"] >= 3 and enough)
+    if not (shape and converges):
+        return False, None
+    return True, ("fee" if by_fee else "destination")
 
 
 def rollback(entry_id):

@@ -70,6 +70,32 @@ def collector_victims(coll):
     return victims, total, balance, c
 
 
+def forwarded_to(coll, txs=None):
+    """The single fresh address a collector emptied itself into, or None.
+
+    The two-hop shape: sweeps pool into `coll`, then `coll` sends the whole balance onward
+    in one transaction with no change. Wave 3 was built this way and so was the cluster
+    reported on 2026-08-05, and the detector treats a collector that did this as worthless
+    twice over — it reads as spent, and its balance reads as zero, so the dust floor drops
+    it. The money is one hop down, still sitting there.
+
+    Deliberately narrow. Exactly one spending transaction, exactly one output, and no
+    change back to the collector. Anything else (several spends, a peel with change, a
+    split) is not this shape and returns None rather than a guess."""
+    if txs is None:
+        txs = publish.esplora(f"/address/{coll}/txs")
+    spends = [t for t in txs
+              if any((i.get("prevout") or {}).get("scriptpubkey_address") == coll
+                     for i in t.get("vin", []))]
+    if len(spends) != 1:
+        return None
+    outs = spends[0].get("vout", [])
+    if len(outs) != 1:
+        return None
+    dst = outs[0].get("scriptpubkey_address")
+    return dst if dst and dst != coll else None
+
+
 def cluster_fingerprint(coll):
     """Deterministic read of whether `coll` looks like an attacker collector:
     many no-change single-output sweeps at one hardcoded fee, in a tight window,
@@ -77,7 +103,7 @@ def cluster_fingerprint(coll):
     v = {"collector": coll, "victims": 0, "total_sats": 0, "balance": 0,
          "unspent": None, "fee_rates": {}, "fee_uniform": False,
          "no_change_ratio": 0.0, "block_span": None, "fresh": None,
-         "forwards_to_anchor": None, "evidence": []}
+         "forwards_to_anchor": None, "hold_addr": None, "evidence": []}
     txs = []
     last = None
     pages = 0
@@ -122,6 +148,20 @@ def cluster_fingerprint(coll):
     v["balance"] = c["funded_txo_sum"] - c["spent_txo_sum"]
     v["unspent"] = c["spent_txo_sum"] == 0
     v["victims"] = len(victims)
+    # A collector that emptied itself in one no-change forward has not spent the money, it
+    # has parked it one hop down. Judge "still holding" where the coins actually are, and
+    # report the address so the caller can track that one instead.
+    if not v["unspent"] and v["balance"] == 0:
+        fwd = forwarded_to(coll, txs)
+        if fwd:
+            fi = publish.esplora(f"/address/{fwd}")["chain_stats"]
+            v["hold_addr"] = fwd
+            v["balance"] = fi["funded_txo_sum"] - fi["spent_txo_sum"]
+            v["unspent"] = fi["spent_txo_sum"] == 0
+            v["evidence"].append(
+                f"forwarded its whole balance once into {fwd[:16]}…, which holds "
+                f"{v['balance']/1e8:.8f} BTC and is "
+                + ("unspent" if v["unspent"] else "already spent"))
     v["total_sats"] = sum((i.get("prevout") or {}).get("value", 0)
                           for t in funding for i in t.get("vin", []))
     v["fee_rates"] = dict(sorted(rates.items()))

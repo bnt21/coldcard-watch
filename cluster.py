@@ -312,7 +312,9 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3, hold_addr
         anchor = '    "bc1qhh4jkkj07vxpdt0zlvxctjlfhqmurhxa24x3h2": 19153809,'
         if anchor in s and f'"{track}"' not in s:
             s = s.replace(anchor, anchor + f'\n    "{track}": {balance},')
-        s = re.sub(r'DRAINED_COUNT = \d+', f"DRAINED_COUNT = {new_n}", s)
+        # No expected-count is written here any more. The monitor derives it from the
+        # served page, because this file reaches the box that runs it by syncthing and a
+        # publish always beat the sync, reporting a healthy site as broken.
         edits[m] = s
 
     if dry:

@@ -514,11 +514,17 @@ def self_check(verbose=True):
     for name in ("index.html", "list.html"):
         if fmt not in read(os.path.join(PUBLIC, name)):
             problems.append(f"{name} does not contain the formatted count {fmt}")
+    # The monitor deliberately carries no expected count. It reads DRAINED_COUNT out of the
+    # served page and compares that to the served drained.js, which is the condition that
+    # actually disables the address checker and needs nothing kept in step. A constant here
+    # was worse than useless: this repo reaches the box that runs the monitor by syncthing,
+    # so every publish beat the sync and reported a healthy site as broken. What is asserted
+    # now is that the monitor has not quietly regrown one.
     for m in MONITORS:
-        if os.path.exists(m):
-            mv = int(re.search(r'DRAINED_COUNT = (\d+)', read(m)).group(1))
-            if mv != n:
-                problems.append(f"{m} DRAINED_COUNT {mv} != rows {n}")
+        if os.path.exists(m) and re.search(r'^DRAINED_COUNT = \d+', read(m), re.M):
+            problems.append(f"{m} has a hardcoded DRAINED_COUNT again; it must derive the "
+                            f"expected count from the served page or it will false-alarm "
+                            f"on every publish")
     if verbose:
         print(f"rows {n} | blocks {len(blocks)} | "
               + ("OK" if not problems else " ; ".join(problems)))

@@ -284,6 +284,12 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3, hold_addr
     idx = re.sub(r'(A live chart of the )[\d,]+\.\d+( BTC)',
                  lambda m: m.group(1) + f"{new_total/1e8:,.2f}" + m.group(2), idx)
     idx = publish.swap_count(idx, old_n, new_n)
+    # A cluster whose collector already forwarded its coins moved money, and that movement
+    # can be more recent than the clock the page displays. It is invisible to the routine
+    # refresh, which walks downstream from the tracked addresses only, so the collector is
+    # seeded explicitly here. Without this the page claimed the coins had sat untouched
+    # since a timestamp ten hours before the cluster it had just published last moved.
+    idx, moved_ts = publish.apply_last_move(idx, extra_seeds=[coll, track])
     edits[os.path.join(publish.PUBLIC, "index.html")] = idx
 
     edits[os.path.join(publish.PUBLIC, "list.html")] = \

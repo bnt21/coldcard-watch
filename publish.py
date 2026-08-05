@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-publish.py — add verified drained addresses to coldcard-watch.vercel.app and deploy.
+publish.py — add verified drained addresses to coldcardwatch.com and deploy.
 
 The only path by which an address reaches the site. x_watch.py imports this; the
 the Telegram bot runs it on request. Every publish re-verifies on-chain first,
@@ -59,7 +59,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PUBLIC = os.path.join(HERE, "public")
 STATE_PATH = os.path.expanduser("~/.coldcard-x-state.json")
 ENV_PATH = os.path.expanduser("~/.coldcard-x-env")
-SITE = "https://coldcard-watch.vercel.app"
+# The canonical host. It was coldcard-watch.vercel.app until the domain move; that
+# host only 308-redirects here now AND is still flagged as phishing by Safe Browsing
+# (clearing the apex did not clear it, because vercel.app is on the Public Suffix List so
+# every subdomain is its own registrable site). This constant is appended to every change
+# notification, so leaving it pointed at the old host meant handing out a link that shows a
+# red interstitial instead of the site.
+SITE = "https://coldcardwatch.com"
 UA = {"User-Agent": "coldcard-watch-publish/1.0"}
 
 # The live monitor (Hetzner cron runs the synced ~/CLAUDE/tools copy). The old
@@ -120,7 +126,14 @@ def record_anchors(addrs):
     ANCHORS.update(addrs)
 
 
-KNOWN_RATES = {30.0, 50.2, 2.0, 3.0, 10.0, 10.1}   # hardcoded rates seen across clusters so far
+# Rates MEASURED off 30 confirmed sweeps (fingerprint.py --compare, 2026-08-04), at the one
+# decimal place the rate is rounded to below. The previous set held 30.0, which the chain never
+# produces — the real values are 30.1 and 30.2 — and omitted 201.1, the urgent first-batch rate
+# entirely, so the "matches a known cluster rate" evidence line fired for 1 of 6 observed rates.
+# It gates no tier (that is decided by reachability to a known attacker address), but it is the
+# strongest line a human reads when judging a pattern-only case, so a false negative there is a
+# review shown weaker evidence than exists.
+KNOWN_RATES = {30.1, 30.2, 50.2, 201.1, 2.0, 3.0, 10.0, 10.1}
 SWEEP_START = 1785373820               # first drain block, 2026-07-30 01:10:20 UTC
 
 
@@ -183,6 +196,53 @@ def send_telegram(text, env=None, dry=False):
     except Exception as e:
         print(f"telegram send failed: {e}", file=sys.stderr)
         return False
+
+
+# ------------------------------------------------------- what is worth a notification
+# Feedback that produced this split, 2026-08-03: the channel "reports a bunch of potential
+# stuff to me, but i have no way to actually action on any of it. It's framing things as if
+# i have a final say to give but i dont, i dont know how to verify things that it cant. i
+# would like it to just update me when things actually change with the live website."
+#
+# That is correct, and the old alert set was the error. Deciding whether a batched sweep is
+# a thief or an owner moving to safety is THIS CODEBASE's job — it is what the fingerprint,
+# the co-spend test and the convergence test exist to do. Forwarding that decision to a
+# reader who cannot run those tests is not oversight, it is an unanswerable question, and
+# enough of them turn the channel into noise. So notifications are typed at the call site,
+# and the type decides whether a phone buzzes:
+#
+#   notify_change  -> the LIVE SITE just changed. Always sends. This is the whole channel.
+#   notify_owner   -> a third party is addressing the site's owner (a GitHub issue, a
+#                     takedown claim, "that address is mine"). Only the owner can answer
+#                     these and they need no chain analysis, so they send.
+#   note_internal  -> everything else: held candidates, unproven reports, retryable
+#                     failures, "investigate this". Cron log only, never a message.
+#
+# The rule for adding a call: if the message would end in a question, a "review this", or a
+# command for the reader to paste, it is note_internal. If it reports something a visitor to
+# the site would now see differently, it is notify_change.
+
+
+def notify_change(text, env=None, dry=False):
+    """The live site changed. This is the one thing the channel is for."""
+    return send_telegram(text, env, dry)
+
+
+def notify_owner(text, env=None, dry=False):
+    """A human is addressing the site's owner and only its owner can answer."""
+    return send_telegram(text, env, dry)
+
+
+def note_internal(text, env=None, dry=False):
+    """Recorded where the pipeline records everything else, and nowhere else. Not a
+    message. Anything that needs a decision this codebase should be making itself, or a
+    failure that retries on its own, belongs here.
+
+    Deliberately takes the same (text, env, dry) signature as the senders so retyping a
+    call site is a one-word edit that cannot break it; env and dry are unused because
+    nothing is sent either way."""
+    print("[internal] " + text.replace("\n", "\n[internal] "), flush=True)
+    return False
 
 
 # ---------------------------------------------------------------- state
@@ -348,6 +408,77 @@ def read(p):
         return f.read()
 
 
+def last_move_from_chain(seed_addrs, max_hops=4):
+    """Most recent confirmed spend by any tracked address, following hops.
+
+    The page seeds its "since coins last moved" clock from this. Following matters:
+    the seed wallets alone gave a timestamp nine hours stale, because the newest spend
+    was four hops down the peel chain the page itself walks at runtime. Returns
+    (block_time, height), or (0, 0) if nothing has spent.
+    """
+    seen = set(seed_addrs)
+    queue = list(seed_addrs)
+    best_t, best_h = 0, 0
+    hops = 0
+    while queue and hops < max_hops:
+        nxt = []
+        for a in queue:
+            try:
+                txs = esplora(f"/address/{a}/txs")
+            except Exception:
+                continue                      # a single unreachable address must not
+                                              # abort the scan; the seed set is small
+            for t in txs or []:
+                spends = any((v.get("prevout") or {}).get("scriptpubkey_address") == a
+                             for v in t.get("vin", []))
+                if not spends:
+                    continue
+                st = t.get("status") or {}
+                bt = st.get("block_time")
+                if bt and bt > best_t:
+                    best_t, best_h = bt, st.get("block_height") or 0
+                for o in t.get("vout", []):
+                    d = o.get("scriptpubkey_address")
+                    if d and d not in seen:
+                        seen.add(d)
+                        nxt.append(d)
+        queue = nxt
+        hops += 1
+    return best_t, best_h
+
+
+def apply_last_move(idx_src, extra_seeds=()):
+    """Rewrite LAST_MOVE / LAST_MOVE_HEIGHT in index.html from the chain.
+
+    Only ever moves the value forward. If the scan comes back empty or older than what
+    is already baked (a partial outage, a host returning a short tx page), the existing
+    value stands rather than the page regressing to a staler claim.
+
+    `extra_seeds` exists because the walk goes DOWNSTREAM from the addresses the page
+    tracks, and a two-hop cluster hides its own movement upstream of them. When sweeps pool
+    into a collector that immediately forwards everything into a fresh vault, the page
+    tracks the vault, the vault has never spent, and the forward itself is invisible to a
+    downstream walk. Adding such a cluster on 2026-08-05 left the headline claiming the
+    coins had been untouched since 03:59:33 while the cluster it had just published moved
+    at 13:59:04, ten hours later. Pass the collector here so the movement is seen.
+    """
+    cur = re.search(r'var LAST_MOVE = (\d+);', idx_src)
+    if not cur:
+        return idx_src, None
+    seeds = re.findall(r'\{addr:"([^"]+)"', idx_src) + list(extra_seeds)
+    try:
+        t, h = last_move_from_chain(seeds)
+    except Exception:
+        return idx_src, None
+    if not t or t <= int(cur.group(1)):
+        return idx_src, None
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(t))
+    idx_src = re.sub(r'var LAST_MOVE = \d+;\s*//[^\n]*',
+                     f'var LAST_MOVE = {t};        // {stamp}, block {h}', idx_src)
+    idx_src = re.sub(r'var LAST_MOVE_HEIGHT = \d+;', f'var LAST_MOVE_HEIGHT = {h};', idx_src)
+    return idx_src, t
+
+
 def parse_site():
     drains_src = read(os.path.join(PUBLIC, "drains.js"))
     drains = json.loads(re.search(r'window\.DRAINS\s*=\s*(.*)', drains_src,
@@ -467,6 +598,9 @@ def apply_edits(entries, dry=False, st=None):
         if not m:
             raise RuntimeError(f"could not find WALLETS entry for {a}")
         s = s[:m.start(2)] + str(int(m.group(2)) + add) + s[m.end(2):]
+    s, moved_at = apply_last_move(s)
+    if moved_at:
+        print(f"  LAST_MOVE advanced to {moved_at}")
     edits[p] = s
 
     p = os.path.join(PUBLIC, "list.html")
@@ -598,7 +732,7 @@ def publish(entries, env=None, dry=False, source="x-watch", st=None):
         lines.append(f"{e['addr']}")
         lines.append(f"  {e['sats']/1e8:.8f} BTC, block {e['height']}, verified on-chain")
     lines += ["", f"count is now {fmtc(res['new_count'])}", SITE]
-    send_telegram("\n".join(lines), env)
+    notify_change("\n".join(lines), env)
     return res
 
 

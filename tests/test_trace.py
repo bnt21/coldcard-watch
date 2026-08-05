@@ -178,3 +178,63 @@ class PredicateTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LastMoveSeedTest(unittest.TestCase):
+    """The clock walks DOWNSTREAM from the addresses the page tracks, so a two-hop cluster
+    hides its own movement upstream of them.
+
+    2026-08-05: a cluster was published whose sweeps pooled into a collector that
+    immediately forwarded everything into a fresh vault. The page tracks the vault, the
+    vault has never spent, and the forward at block 960736 was invisible to the walk. The
+    headline went on claiming the coins had been untouched since block 960667, ten hours
+    earlier, while displaying a cluster that moved after that.
+    """
+
+    def setUp(self):
+        self.real = publish.esplora
+        # tracked vault: funded by the collector, never spends. Collector: spends later
+        # than the baked-in clock.
+        self.chain = {
+            "/address/vault/txs": [{"txid": "fwd", "status": {"block_time": 200, "block_height": 20},
+                                    "vin": [{"prevout": {"scriptpubkey_address": "coll"}}],
+                                    "vout": [{"scriptpubkey_address": "vault"}]}],
+            "/address/coll/txs": [{"txid": "fwd", "status": {"block_time": 200, "block_height": 20},
+                                   "vin": [{"prevout": {"scriptpubkey_address": "coll"}}],
+                                   "vout": [{"scriptpubkey_address": "vault"}]}],
+        }
+        publish.esplora = lambda p: self.chain.get(p, [])
+
+    def tearDown(self):
+        publish.esplora = self.real
+
+    IDX = ('var WALLETS = [{addr:"vault", attributed:100}];\n'
+           'var LAST_MOVE = 100;        // stale\n'
+           'var LAST_MOVE_HEIGHT = 10;\n')
+
+    def test_the_forward_hop_is_invisible_without_the_collector_seeded(self):
+        out, t = publish.apply_last_move(self.IDX)
+        self.assertIsNone(t, "the vault never spends, so a downstream walk sees nothing")
+        self.assertIn("var LAST_MOVE = 100;", out)
+
+    def test_seeding_the_collector_advances_the_clock(self):
+        out, t = publish.apply_last_move(self.IDX, extra_seeds=["coll"])
+        self.assertEqual(t, 200)
+        self.assertIn("var LAST_MOVE = 200;", out)
+        self.assertIn("var LAST_MOVE_HEIGHT = 20;", out)
+
+    def test_the_clock_still_never_regresses(self):
+        idx = self.IDX.replace("var LAST_MOVE = 100;", "var LAST_MOVE = 999;")
+        out, t = publish.apply_last_move(idx, extra_seeds=["coll"])
+        self.assertIsNone(t, "a later baked value must stand")
+        self.assertIn("var LAST_MOVE = 999;", out)
+
+    def test_add_cluster_seeds_the_collector(self):
+        # the wiring, not just the helper: a future two-hop add must not repeat this
+        import inspect
+        import cluster
+        src = inspect.getsource(cluster.add_cluster)
+        self.assertIn("apply_last_move", src,
+                      "add_cluster must re-derive the clock, or a two-hop add ships a "
+                      "headline that contradicts the cluster it just published")
+        self.assertIn("extra_seeds=[coll", src)

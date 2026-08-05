@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-autopilot.py — keep coldcard-watch.vercel.app accurate on its own.
+autopilot.py — keep coldcardwatch.com accurate on its own.
 
 Finds new attacker clusters and adds them to the site with no human in the loop,
 but only where the proof is strong enough that a human would add nothing. The whole
@@ -321,7 +321,7 @@ def _publish(coll, source, note, tier, fp, st, dry):
         return r
     except Exception as e:
         print(f"  [{tier}] add FAILED for {coll}: {e}", file=sys.stderr)
-        publish.send_telegram(f"Autopilot tried to add {coll} ({tier}) but failed:\n{e}\n"
+        publish.note_internal(f"Autopilot tried to add {coll} ({tier}) but failed:\n{e}\n"
                               "Nothing was published; it will retry.", publish.load_env())
         return {"added": 0, "error": str(e)}
 
@@ -332,7 +332,7 @@ def _hold(coll, fp, st, dry):
         return
     if not dry:
         st[key] = int(time.time())
-    publish.send_telegram(
+    publish.note_internal(
         "HELD — a possible cluster matches the fingerprint but is neither co-spend "
         f"proven nor reported by a research account.\n\n{coll}\n  "
         f"{fp['victims']} victims, {fp['balance']/1e8:.8f} BTC, fees {fp['fee_rates']}\n\n"
@@ -354,7 +354,7 @@ def _hold_wave3(w3, st, dry):
     if not dry:
         st[key] = int(time.time())
     dests = w3["dests"]
-    publish.send_telegram(
+    publish.note_internal(
         "HELD — possible NO-COLLECTOR wave (the wave-3 shape).\n\n"
         f"{len(dests)} separate fresh destinations, all fed at {w3['rate']} sat/vB\n"
         f"blocks {w3['blocks'][0]}-{w3['blocks'][-1]}, {w3['sats']/1e8:.8f} BTC\n\n"
@@ -375,7 +375,7 @@ def _propose(coll, fp, src, st, dry):
         return
     if not dry:
         st[key] = int(time.time())
-    publish.send_telegram(
+    publish.note_internal(
         f"READY TO ADD (tier 2, awaiting your go) — matches the drain fingerprint and "
         f"{src} reports the incident.\n\n{coll}\n  {fp['victims']} victims, "
         f"{fp['balance']/1e8:.8f} BTC held unspent, fees {fp['fee_rates']}, blocks "
@@ -391,7 +391,7 @@ def _flag_cospend_collector(coll, cstats, dry):
     have already moved (co-spend only finds spent addresses), so tracking a vault is a
     judgement call — flag it, don't auto-publish. Its victims are provably drained."""
     bal = cstats["funded_txo_sum"] - cstats["spent_txo_sum"]
-    publish.send_telegram(
+    publish.note_internal(
         "CO-SPEND found an attacker collector (provably co-owned with a known attacker "
         f"address).\n\n{coll}\n  {cstats['funded_txo_count']} deposits, "
         f"{cstats['funded_txo_sum']/1e8:.8f} BTC in, now holds {bal/1e8:.8f} BTC.\n\n"
@@ -618,7 +618,7 @@ def rollback(entry_id):
         print(f"redeployed ({url}) but live count != {n}")
         return 1
     audit({"action": "rollback", "collector": e["collector"], "restored_to_count": n})
-    publish.send_telegram(
+    publish.notify_change(
         f"ROLLED BACK the auto-publish of {e['collector']} ({e.get('victims')} victims). "
         f"Site restored to {n:,} addresses.\n" + publish.SITE, publish.load_env())
     print(f"rolled back {e['collector']}: site restored to {n:,} addresses")

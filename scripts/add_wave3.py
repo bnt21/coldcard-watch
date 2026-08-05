@@ -356,7 +356,7 @@ def main():
         {"wave": 3, "vaults": len(vlist), "victims": len(new_v), "sats": held,
          "source": "Galaxy Research + reconstructed here", "added_count": new_n})
     publish.save_state(st)
-    publish.send_telegram(
+    publish.notify_change(
         "ADDED Wave 3, reconstructed here from the chain.\n\n"
         f"{len(vlist)} P2WSH vaults, {held/1e8:.8f} BTC, all unspent\n"
         f"{len(new_v)} newly listed drained addresses\n\n"

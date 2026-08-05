@@ -1,7 +1,7 @@
 # Coldcard Watch: X victim-report pipeline
 
 Watches X for people reporting their own drained addresses, verifies each claim on
-the chain, and adds the proven ones to coldcard-watch.vercel.app. Runs on the
+the chain, and adds the proven ones to coldcardwatch.com. Runs on the
 always-on box so it keeps watching with the workstation off.
 
 ## Pieces

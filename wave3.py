@@ -106,11 +106,17 @@ def pw():
 
 
 def rpc(method, params=None):
+    n = nodeconf.node()
+    if not n or not n.get("addr"):
+        raise RuntimeError(
+            "no Bitcoin node configured (nodeconf is empty on this host). The node-based "
+            "fingerprint scanner runs where the node is reachable — the Mac on the home LAN. "
+            "The always-on box detects via public APIs (autopilot), which needs no node.")
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
     body = json.dumps({"jsonrpc": "1.0", "id": "w3", "method": method, "params": params or []})
-    s = socket.create_connection((nodeconf.node()["addr"], 443), timeout=180)
+    s = socket.create_connection((n["addr"], 443), timeout=180)
     ss = ctx.wrap_socket(s, server_hostname=nodeconf.node().get("host") or nodeconf.node()["addr"])
     auth = base64.b64encode(f"bitcoin:{pw()}".encode()).decode()
     host = nodeconf.node().get("host") or nodeconf.node()["addr"]

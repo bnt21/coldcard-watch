@@ -67,6 +67,16 @@ ALLOW = {
 
 SKIP_SUFFIX = (".svg",)          # vector path data is coordinates, not configuration
 
+# Inline SVG inside an HTML page carries the same coordinate runs a .svg file does, and a
+# long path like the GitHub mark reads as an IP address literal. Blank the geometry
+# attributes (keeping the byte count so line numbers stay honest) before scanning, rather
+# than exempting the whole file, which would blind the gate to real content in that page.
+SVG_GEOM = re.compile(r'\b(?:d|viewBox|points|transform)="[^"]*"')
+
+
+def descan(text):
+    return SVG_GEOM.sub(lambda m: " " * len(m.group(0)), text)
+
 
 def exempt(path, label):
     if path.endswith(SKIP_SUFFIX) and label == "IP address literal":
@@ -125,6 +135,13 @@ def selftest():
         "loopback": 'bind = "127.0.0.1"',
         "doc range ip": 'example = "192.0.2.10"',
     }
+    # the real GitHub mark: coordinate runs that read as an IP until the geometry is blanked
+    gh = ('<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 '
+          '7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94Z"/></svg>')
+    benign["inline svg mark in html"] = descan(gh)
+    # blanking geometry must not blind the gate to a real leak elsewhere in the same page
+    samples["ip beside inline svg"] = descan(gh + '\n<p>node at 192.168.1.144</p>')
+
     missed = [n for n, t in samples.items() if not any(p.search(t) for _, p in RULES)]
     noisy = [n for n, t in benign.items() if any(p.search(t) for _, p in RULES)]
     print(f"catches {len(samples)-len(missed)}/{len(samples)} leak shapes")
@@ -151,6 +168,8 @@ def main():
             s = open(f, encoding="utf-8", errors="replace").read()
         except (IsADirectoryError, FileNotFoundError):
             continue
+        if f.endswith((".html", ".htm")):
+            s = descan(s)
         for label, pat in RULES:
             if exempt(f, label):
                 continue

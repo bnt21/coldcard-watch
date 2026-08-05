@@ -1,6 +1,6 @@
 # Coldcard Watch: autopilot
 
-Keeps coldcard-watch.vercel.app accurate on its own. Finds new attacker clusters from
+Keeps coldcardwatch.com accurate on its own. Finds new attacker clusters from
 the chain and adds them to the site with no human in the loop, but only where the
 proof is strong enough that a human would add nothing. The site's whole worth is that
 every address on it is true, so the autonomy is tiered by how a cluster is proven, and

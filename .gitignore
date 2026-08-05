@@ -22,3 +22,6 @@ public/.vercel/
 .env.*
 
 .DS_Store
+
+# Potential-layer address lists: victim addresses, never published to the public repo
+sidecar/

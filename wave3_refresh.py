@@ -113,7 +113,7 @@ def main():
                  "vaults would link them.\n" + publish.SITE)
         print("\n" + msg)
         if not dry:
-            publish.send_telegram(msg)
+            publish.notify_change(msg)
 
     if changed == 0:
         print("nothing changed; not deploying")

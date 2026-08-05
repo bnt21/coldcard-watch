@@ -177,7 +177,7 @@ def main():
         {"collector": COLL, "victims": len(new_v), "sats": COLL_BALANCE,
          "source": "Galaxy Research", "added_count": new_n})
     publish.save_state(st)
-    publish.send_telegram(
+    publish.notify_change(
         "ADDED a wave-2 cluster reported by Galaxy Research and verified on-chain.\n\n"
         f"{COLL}\n  {len(new_v)} victims, {COLL_BALANCE/1e8:.8f} BTC, held unspent\n\n"
         f"site total now {new_total_disp} BTC across 7 tracked addresses, {nf} drained "

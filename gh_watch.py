@@ -226,7 +226,7 @@ def main():
         msg = "coldcard-watch repo\n\n" + describe(item)
         print("\n" + msg)
         if not dry:
-            publish.send_telegram(msg, publish.load_env())
+            publish.notify_owner(msg, publish.load_env())
         seen.add(item["number"])
 
     if not dry:

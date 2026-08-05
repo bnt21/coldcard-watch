@@ -94,9 +94,18 @@ class PublishedSet(unittest.TestCase):
             src = f.read()
         site = json.loads(re.search(r"window\.WAVE3=(.*);", src, re.S).group(1))
         self.assertEqual(site["count"], PUBLISHED_VAULTS)
-        self.assertEqual(site["held"], PUBLISHED_HELD_SATS)
         self.assertEqual(site["victims"], PUBLISHED_VICTIMS)
-        self.assertEqual(sum(b for _, b in site["vaults"]), PUBLISHED_HELD_SATS)
+        # wave3.js tracks LIVE balances (wave3_refresh.py rewrites it hourly), so the held
+        # total is not frozen and must not be asserted as equal. It drifts UP whenever a vault
+        # receives dust — one did on 2026-08-04, +8047 sats, which failed this test while
+        # nothing was wrong. What matters is the direction: inbound dust is noise, but a
+        # DECREASE means coins left a vault, which is the headline claim breaking.
+        self.assertGreaterEqual(
+            site["held"], PUBLISHED_HELD_SATS,
+            "held total fell below the published figure — a vault has spent, so the "
+            "'none of it has moved' claim no longer holds")
+        # internal consistency is still exact: the per-vault rows must sum to the header
+        self.assertEqual(sum(b for _, b in site["vaults"]), site["held"])
 
     def test_the_published_set_contains_the_first_pass(self):
         """The whole wave must be a superset of what the first pass proved."""

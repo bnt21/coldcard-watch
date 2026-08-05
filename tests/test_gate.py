@@ -150,5 +150,60 @@ class ForwardedToTest(unittest.TestCase):
         self.assertEqual(v["balance"], 5)
 
 
+class DeployGuardTest(unittest.TestCase):
+    """A publish ships the whole public/ directory, not the files it touched.
+
+    This tree is carried between machines by syncthing, so a cron can be about to deploy
+    a directory holding another session's half-written script. One script that does not
+    parse takes the entire page down, because the first error stops every line after it.
+    """
+
+    def test_the_live_page_parses(self):
+        ok, why = cluster.js_parses(
+            open(os.path.join(ROOT, "public", "index.html"), encoding="utf-8").read())
+        self.assertTrue(ok, why)
+
+    def test_an_unparseable_script_is_refused(self):
+        ok, why = cluster.js_parses("<script>function broken( {</script>", "fixture")
+        self.assertFalse(ok)
+        self.assertIn("does not parse", why)
+
+    def test_a_good_script_beside_a_broken_one_does_not_excuse_it(self):
+        ok, _ = cluster.js_parses("<script>var a=1;</script><script>if(</script>")
+        self.assertFalse(ok)
+
+    def test_external_scripts_are_not_checked_as_inline_source(self):
+        ok, why = cluster.js_parses('<script src="/data.js"></script>')
+        self.assertTrue(ok, why)
+
+    def test_an_empty_script_tag_is_fine(self):
+        self.assertTrue(cluster.js_parses("<script></script>")[0])
+
+    def test_add_cluster_actually_calls_the_guard(self):
+        # the helper being correct is not the same as it being wired in. Mutating the
+        # refusal out of add_cluster left every js_parses test green.
+        import inspect
+        src = inspect.getsource(cluster.add_cluster)
+        self.assertIn("js_parses(", src)
+        self.assertIn("refusing to publish", src)
+
+    def test_add_cluster_refuses_when_the_page_does_not_parse(self):
+        real_parses, real_conflict, real_check = (
+            cluster.js_parses, publish.conflict_guard, publish.self_check)
+        real_victims = cluster.collector_victims
+        try:
+            publish.conflict_guard = lambda: []
+            publish.self_check = lambda verbose=True: []
+            cluster.collector_victims = lambda c: ({}, 0, 10**9, {})
+            cluster.js_parses = lambda html, label="index.html": (False, "boom")
+            r = cluster.add_cluster("coll", "src", "note", dry=True)
+            # it stops before any edit; whichever refusal it reaches, it must not publish
+            self.assertEqual(r["added"], 0)
+        finally:
+            (cluster.js_parses, publish.conflict_guard, publish.self_check,
+             cluster.collector_victims) = (real_parses, real_conflict, real_check,
+                                           real_victims)
+
+
 if __name__ == "__main__":
     unittest.main()

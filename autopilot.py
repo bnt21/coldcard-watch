@@ -63,11 +63,21 @@ TIGHT_WINDOW = 30        # a real cluster's sweeps land within this many blocks
 DEST_CONVERGENCE_MIN = 20
 
 # Tier 1 (co-spend, deterministic) always auto-publishes. Tier 2 (fingerprint +
-# credible-source corroboration) is strong but rests on a heuristic + an LLM read, and
-# a false positive there is the one thing that damages this site, so it starts in
-# notify-mode: it Telegrams the candidate with a one-command add. Flip to True once it
-# has shown itself correct on real cases; it is a one-line change.
-TIER2_AUTOPUBLISH = False
+# credible-source corroboration) rests on a heuristic plus an LLM read of whether a
+# watchlist account named the address, and a false positive there is the one thing that
+# damages this site, so it ran in notify-mode until it had shown itself correct on real
+# cases.
+#
+# Turned on 2026-08-05 by Brady. What the evidence had become by then: 27 candidates had
+# reached this tier and none was ever shown to be wrong, the criterion is decided by code
+# rather than judgement, every add sends a notify_change receipt, and each one is
+# reversible per cluster by --rollback from a pre-publish snapshot of every coupled file.
+#
+# The standing risk this accepts, stated so it is not rediscovered: an add ends in
+# publish.deploy(), which ships the WHOLE public/ directory, not just the files the add
+# touched. Anything sitting unfinished in public/ on the machine that runs the cron goes
+# live with it.
+TIER2_AUTOPUBLISH = True
 
 # Every network call here already had a timeout, and the run still wedged for four
 # hours. Per-call timeouts bound a call; they do not bound a program that makes an

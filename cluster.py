@@ -17,6 +17,8 @@ import json
 import os
 import re
 import shutil
+import subprocess
+import tempfile
 import time
 
 import publish
@@ -68,6 +70,42 @@ def collector_victims(coll):
     balance = c["funded_txo_sum"] - c["spent_txo_sum"]
     total = sum(v["sats"] for v in victims.values())
     return victims, total, balance, c
+
+
+def js_parses(html, label="index.html"):
+    """Does every inline script in this page parse? Returns (ok, message).
+
+    A publish ends in deploy(), which ships the WHOLE public/ directory rather than the
+    files the add touched. Whatever is sitting in there goes live, and this repo's working
+    tree is carried between machines by syncthing, so another session's half-written script
+    can be in the directory a cron is about to deploy. One unparseable script takes the
+    whole page down: the first error stops every line after it, so the headline, the chart
+    and the address checker all die at once.
+
+    Cheap insurance against that, and it never blocks on its own tooling — if node is not
+    installed the check reports ok and says why, rather than stopping a publish over a
+    missing dev dependency."""
+    try:
+        subprocess.run(["node", "--version"], capture_output=True, timeout=10, check=True)
+    except Exception:
+        return True, "node unavailable; inline scripts not checked"
+    blocks = re.findall(r"<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>", html, re.S | re.I)
+    for i, src in enumerate(blocks):
+        if not src.strip():
+            continue
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False) as fh:
+            fh.write(src)
+            tmp = fh.name
+        try:
+            r = subprocess.run(["node", "--check", tmp], capture_output=True,
+                               text=True, timeout=30)
+        finally:
+            os.unlink(tmp)
+        if r.returncode != 0:
+            first = (r.stderr or "").strip().splitlines()
+            return False, (f"{label} inline script #{i + 1} does not parse: "
+                           + (first[1] if len(first) > 1 else (first[0] if first else "?")))
+    return True, f"{len(blocks)} inline script(s) parse"
 
 
 def forwarded_to(coll, txs=None):
@@ -357,8 +395,14 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3, hold_addr
         # publish always beat the sync, reporting a healthy site as broken.
         edits[m] = s
 
+    # Refuse to ship a page whose scripts do not parse. deploy() sends the whole public/
+    # directory, so this catches a half-written edit sitting in the tree beside the add.
+    ok, why = js_parses(edits[os.path.join(publish.PUBLIC, "index.html")])
+    if not ok:
+        return {"added": 0, "reason": f"refusing to publish: {why}"}
+
     if dry:
-        return {"added": 0, "dry": len(new_v), "collector": coll,
+        return {"added": 0, "dry": len(new_v), "collector": coll, "js": why,
                 "new_count": new_n, "new_total": new_total_disp, "balance": balance}
 
     baks = {}

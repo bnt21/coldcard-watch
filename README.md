@@ -19,6 +19,7 @@ following the vendor advisory, because the advisory told owners to do the same t
 | `scan_batched.py` | Block scan for batched sweeps, many victims in one transaction. |
 | `co_spend.py` | Common-input-ownership. The only test here treated as proof. |
 | `cluster.py` | Resolves a collector to its victims and checks it against the drain fingerprint. |
+| `trace.py` | Follows the attacker's money forward and stops at the first transaction that pools or splits across a service, because past that the next hop belongs to that service's customers. |
 | `autopilot.py` | Orchestrator. Tiers candidates by proof strength and decides what may publish. Runs on a schedule and includes a no-collector tier so the wave-3 shape cannot hide again. |
 | `wave3_refresh.py` | Re-reads the 214 vault balances hourly, and shouts the first time one of them spends. |
 | `tests/` | Pins the published numbers and every fingerprint predicate. Needs no node and no network. |
@@ -131,6 +132,29 @@ anything new is published, and the first version of this did exactly that.
 Anything already inside a tier is **listed under it, never added to it**. An independent
 report of the same fourth wave Galaxy already count is a second reading of one event, and
 summing both put 1,984.94 BTC on the site, a total no source claims.
+
+## Where the trail ends
+
+`trace.py` follows the attacker's money forward and stops at the first transaction that
+pools or splits across a service, recording that a service was reached rather than
+expanding through it. An earlier walk without that rule grew from 456 pending addresses at
+hop 5 to 1,034 at hop 6, because it had started enumerating an exchange's customers.
+
+The predicate counts **distinct input addresses, not inputs**, and that is the whole of its
+correctness. On real data the attacker's own consolidations run 491, 204 and 1,212 inputs
+across one or two addresses, while a service's deposit sweep ran 902 inputs across 795. An
+input threshold would have called the thief's own wallet a service and halted the walk on
+the hop that mattered. Where every input address is already attributed to the attacker, the
+merge test does not apply at all.
+
+Thresholds come from a control arm rather than from taste: 495 non-coinbase transactions
+sampled across five blocks spanning ~9,000 blocks give a median of 1 input and 2 outputs,
+with a p99 of 10 and 18. The bar sits at 50, five times the input p99, and matches 0.2% of
+ordinary traffic.
+
+The site does not name the service. That needs off-chain address labelling this project
+does not have, and a guess would carry the same authority as a verified address while
+resting on nothing.
 
 ## What this cannot do
 

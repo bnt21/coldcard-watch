@@ -411,6 +411,46 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
     are ones no method that reads only the chain has reached.
   </p>
 
+  <h2>Where the trail ends</h2>
+  <p>
+    This site reads the Bitcoin blockchain and nothing else. That is the whole of what it can see, and
+    it is worth saying plainly what falls outside it.
+  </p>
+  <p>
+    Coins that leave Bitcoin are gone from this page. A cross-chain bridge, a swap service, a
+    stablecoin, an exchange that credits an account balance rather than an address: in every case the
+    money continues somewhere this site has no view of, and the last thing recorded here is a deposit.
+  </p>
+  <p>
+    Coins that reach a service stop being followable even while they sit on Bitcoin. A business holding
+    funds for thousands of customers pools deposits and pays withdrawals in batches, so one transaction
+    can merge hundreds of unrelated people's coins or pay out to hundreds at once. After that, no output
+    can be tied to any particular input by anyone reading the chain from outside. The tracing here stops
+    at that point and records that a service was reached, rather than following every output, because
+    following them means enumerating that business's customers and calling the result a trail.
+  </p>
+  <p>
+    This site does not name the service. Knowing which business a batch belongs to requires address
+    labelling gathered off the chain, from companies that collect it commercially or from the businesses
+    themselves. This project has none of it, and a guess would carry the same authority as a verified
+    address while resting on nothing.
+  </p>
+  <p>
+    Nothing here reads the mempool, so a transaction is only seen once it is in a block.
+  </p>
+  <p>
+    Four methods that professional chain analysis uses are deliberately absent, all for one reason.
+    Change-output heuristics, taint or dust analysis, timing correlation across services, and value-flow
+    attribution all extend a trail by assigning probabilities. Each would let this site say more, and
+    each would put a probable claim on the same page as a proven one, in the same typeface, about
+    somebody's address. The list is published so it can be argued with, which means everything on it has
+    to be checkable.
+  </p>
+  <p>
+    What a missing address means is unchanged: not on this list means this site did not find it, and
+    every limit above is a reason it might not have.
+  </p>
+
   <h2>What the checker actually does</h2>
   <p>
     The list of drained addresses is turned into one-way fingerprints (hashes) and shipped with the

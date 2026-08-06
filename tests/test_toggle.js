@@ -40,6 +40,18 @@ const noteBody={innerHTML:""};
 const host={hidden:true,querySelectorAll:()=>buttons};
 const el=id=>id==="measure"?host:(id==="potnoteBody"?noteBody:null);
 const document={body};
+// The readouts describe whichever movement the current standard is anchored to, so setMode
+// re-renders them. They live outside the toggle block; stub them and count the calls, which
+// is also the assertion that a toggle press actually refreshes the clock.
+// resolveTierAnchorTs is inside the tier block above and runs for real; give it the chain
+// helpers it reaches for. Rejecting is the honest stub: the harness has no network, and the
+// point being tested is that a press does not throw, not that a block time comes back.
+let readoutCalls={blocks:0,elapsed:0};
+const renderBlocksSince=()=>{readoutCalls.blocks++;};
+const tickElapsed=()=>{readoutCalls.elapsed++;};
+const API="",API2="";
+const getText=()=>Promise.reject(0);
+const getJSON=()=>Promise.reject(0);
 const M=src.match(/ {2}\(function viewToggle\(\)\{[\s\S]*?\n {2}\}\)\(\);/);
 if(!M){console.error("FAIL: viewToggle not found");process.exit(1);}
 eval(M[0]);
@@ -78,6 +90,14 @@ POT_TIERS[0].reported_ts=Math.floor(Date.now()/1000)-9*86400;
 buttons[0].fire();buttons[1].fire();
 check("a tier nobody has restated for days says so",
   /and not restated since\. A revision would not show on the chain\./.test(noteBody.innerHTML));
+
+// A press that repaints the chart but leaves "since coins last moved" describing the
+// previous standard is the exact defect this guards: the readout would silently attribute
+// one standard's movement time to another.
+check("each mode change refreshes the block readout", readoutCalls.blocks===4);
+check("each mode change refreshes the elapsed clock", readoutCalls.elapsed===4);
+check("the suspected tier anchors to a real block", TIER_ANCHOR.suspected&&TIER_ANCHOR.suspected.h===960792);
+check("the attested tier claims no block, so its clock reports none", !TIER_ANCHOR.attested);
 
 console.log(bad?`\n${bad} failure(s)`:"\ntoggle runs clean");
 process.exit(bad?1:0);

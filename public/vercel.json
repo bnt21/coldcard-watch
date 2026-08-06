@@ -1,0 +1,30 @@
+{
+  "$comment": [
+    "The coldcard-watch.vercel.app host serves NOTHING except the Google Search Console",
+    "verification file. Everything else 308s to coldcardwatch.com.",
+    "",
+    "Why this lives here instead of the Vercel dashboard's domain-level 'Redirect to'",
+    "setting: that setting fires at the edge before routing, so it is all-or-nothing and",
+    "swallows the verification file too, which makes the vercel.app host impossible to",
+    "verify as a Search Console property. Search Console re-checks the file periodically",
+    "and un-verifies the property if it stops being served, so the file has to keep",
+    "serving indefinitely, not just during a one-time verification window.",
+    "",
+    "The `has` host condition scopes every rule to the vercel.app host only. These rules",
+    "are inert on coldcardwatch.com and www.coldcardwatch.com."
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "coldcard-watch.vercel.app" }],
+      "destination": "https://coldcardwatch.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!google4a91cf74790888dd\\.html$).*)",
+      "has": [{ "type": "host", "value": "coldcard-watch.vercel.app" }],
+      "destination": "https://coldcardwatch.com/:path",
+      "permanent": true
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Coldcard Sweep Watch: is the stolen bitcoin still sitting there?</title>
-<meta name="description" content="A live chart of the 1,402.60 BTC drained from Coldcard wallets on 30 and 31 July 2026. The line extends in real time for as long as the coins are left untouched.">
+<meta name="description" content="A live chart of the 1,405.04 BTC drained from Coldcard wallets on 30 and 31 July 2026. The line extends in real time for as long as the coins are left untouched.">
 <link rel="icon" href="/bitcoin.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -104,6 +104,24 @@ body.potential .potnote{grid-template-rows:1fr;opacity:1;margin:var(--sp-6) 0 0}
 .potnote .src{color:var(--ink);font-weight:500}
 .potnote a{color:#f4a94a;border-bottom:1px solid rgba(244,169,74,.4)}
 #big{width:100%;height:clamp(300px,44vh,460px);display:block}
+/* the hover readout: which on-chain block produced the uptick under the cursor.
+   Positioned by JS in the chart's own coordinate space, so it tracks the marker. */
+.chart{position:relative}
+.blk-tip{position:absolute;z-index:4;pointer-events:none;transform:translate(-50%,-100%);
+  background:#14171c;border:1px solid #2a2f37;border-radius:8px;padding:var(--sp-3) var(--sp-4);
+  min-width:190px;box-shadow:0 8px 24px rgba(0,0,0,.45);
+  font-family:DM Sans,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.blk-tip[hidden]{display:none}
+.blk-h{color:#f7931a;font-size:1.05rem;font-weight:500;margin-bottom:var(--sp-2)}
+.blk-u{color:#a4acb6;font-size:.7rem;font-weight:400;margin-left:.35em}
+.blk-r{display:flex;justify-content:space-between;gap:var(--sp-4);font-size:.78rem;line-height:1.7}
+.blk-k{color:#a4acb6}
+.blk-v{color:#e6e9ed}
+.blk-link{display:inline-block;margin-top:var(--sp-2);font-size:.72rem;color:#f7931a;
+  border-bottom:1px solid rgba(247,147,26,.4);pointer-events:auto}
+.blk-dot{pointer-events:none}
+@media (max-width:560px){.blk-tip{min-width:0;padding:var(--sp-2) var(--sp-3)}
+  .blk-r{font-size:.72rem;gap:var(--sp-3)}}
 .seam-tip{position:absolute;z-index:5;max-width:min(260px,70vw);background:var(--surface-2,#1a1d22);
   border:1px solid var(--line);border-radius:8px;padding:var(--sp-3) var(--sp-4);
   font-size:.82rem;line-height:1.45;color:var(--ink-2);pointer-events:none;
@@ -248,7 +266,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
 <section class="top">
   <h1>Bitcoin Drained from Coldcards</h1>
-  <div class="total"><span id="totalBtc">1,402.6032</span><span class="unit">BTC</span></div>
+  <div class="total"><span id="totalBtc">1,405.0414</span><span class="unit">BTC</span></div>
   <div class="sub"><span id="totalUsd">$71,048,000</span><span class="q" id="priceSrc">at $62,949 per bitcoin</span></div>
 </section>
 
@@ -256,6 +274,13 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   <svg id="big" viewBox="0 0 1000 440" role="img"
        aria-label="Bitcoin under the attacker's control over time: steep climbs during the drains on 30 and 31 July, then a flat line that keeps extending because nothing has moved."></svg>
   <div class="seam-tip" id="seamTip" hidden>Left of this line is the drain window on 30 and 31 July. Right of it is real time since. The two halves are drawn at different scales, so the drains stay visible against days of holding.</div>
+  <div class="blk-tip" id="blkTip" hidden aria-hidden="true">
+    <div class="blk-h"><span id="blkAmt"></span><span class="blk-u">BTC</span></div>
+    <div class="blk-r"><span class="blk-k">block</span><span class="blk-v" id="blkHeight"></span></div>
+    <div class="blk-r"><span class="blk-k">mined</span><span class="blk-v" id="blkWhen"></span></div>
+    <div class="blk-r"><span class="blk-k">addresses drained</span><span class="blk-v" id="blkAddrs"></span></div>
+    <a class="blk-link" id="blkLink" href="https://mempool.space/blocks" target="_blank" rel="noopener">view block</a>
+  </div>
   <div class="readouts">
     <div class="ro"><span class="v" id="sinceMove">0d 00h 00m 00s</span><span class="k" id="sinceLabel">untouched for</span></div>
     <div class="ro"><span class="v" id="blocksSince">275</span><span class="k" id="blocksLabel">blocks mined since</span></div>
@@ -296,7 +321,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     <div class="ld-when"><span id="ldWhen">31 July 2026, 08:36:17 UTC</span><span id="ldMeta">block 960,369</span><a id="ldTx" target="_blank" rel="noopener" href="https://mempool.space/tx/b1000cdee4011ae085649f24ab09cea7a8fa4a97c8e365b07cc41cfb6ee06f00">view transaction</a></div>
   </div>
   <div class="lastdrain totaldrain">
-    <div class="ld-amt"><span id="tdCount">4,696</span></div>
+    <div class="ld-amt"><span id="tdCount">4,909</span></div>
     <div class="ld-addr">addresses drained, verified</div>
     <div class="ld-when"><a href="/list.html">view the full list</a></div>
   </div>
@@ -329,6 +354,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
 
 </main>
 
+<script src="/blocks.js"></script>
 <script src="/data.js"></script>
 <script src="/drained.js"></script>
 <script src="/wave3.js"></script>
@@ -348,7 +374,13 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     {addr:"bc1qtfrwa4j6rmj9rsgspv6a0yjumkg39js2numu75", attributed:4590251994,  baselineSpent:0,   origin:"seed"},
     {addr:"bc1qhh4jkkj07vxpdt0zlvxctjlfhqmurhxa24x3h2", attributed:19153809,    baselineSpent:0,   origin:"seed"},
     {addr:"bc1qmd5m5ktv7m5ffujxv4248fxv36myvdx79n8jp6", attributed:3018476329,  baselineSpent:0,   origin:"seed"},
-    {addr:"bc1pdl33jtqnausmx2d4r4c6wpnk5are8jz046y3yjkw8fryjel02p7sluu9ce", attributed:3601585057,  baselineSpent:0,   origin:"seed"}
+    {addr:"bc1pdl33jtqnausmx2d4r4c6wpnk5are8jz046y3yjkw8fryjel02p7sluu9ce", attributed:3601585057,  baselineSpent:0,   origin:"seed"},
+    {addr:"bc1q32uqqj3psd8wq8qxzyx6g0vu0dsnnfz4uttge3", attributed:28722752,  baselineSpent:0,   origin:"seed"},
+    {addr:"bc1q3kavk5rjglkydy7rv66974h0rg4rp592p99yvn", attributed:23598103,  baselineSpent:0,   origin:"seed"},
+    {addr:"bc1qpqyc4sckr8fyunfu9aq0dhrg93y0zu0y8w39d0", attributed:158057704,  baselineSpent:0,   origin:"seed"},
+    {addr:"bc1qevglmwlsqfqrvdt78cczuq7r8cljhzu7kjkhjgxd70ynkak06upqwqyju3", attributed:7554104,  baselineSpent:0,   origin:"seed"},
+    {addr:"bc1qv7ymfj6tzrf8vlfwrkffkncspudsqncyrw2ra8", attributed:17870626,  baselineSpent:0,   origin:"seed"},
+    {addr:"bc1qdsa9h5xrfhee5gy9guwrmuhsl5tl92jhyy09jz", attributed:8016407,  baselineSpent:0,   origin:"seed"}
   ];
   // Wave 3 gave every victim wallet its own vault, so there are 214 of them and they
   // cannot be live-polled from a browser the way the seven collectors are. They are
@@ -372,8 +404,8 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   // time and written here by publish.py. Without it the page boots knowing nothing
   // about movement and briefly renders "untouched for" against SWEEP_END, which is a
   // false claim on a page that exists to be exact. Runtime follow() can only raise it.
-  var LAST_MOVE = 1785679144;        // 2026-08-02 13:59:04 UTC, block 960736
-  var LAST_MOVE_HEIGHT = 960736;
+  var LAST_MOVE = 1786021718;        // 2026-08-06 13:08:38 UTC, block 961295
+  var LAST_MOVE_HEIGHT = 961295;
   var API = "https://blockstream.info/api";
   var API2 = "https://mempool.space/api";
   var NS = "http://www.w3.org/2000/svg";
@@ -426,9 +458,52 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   // the confirmed total and count include them without re-plumbing per wave
   var CX = (window.CONFIRMED_EXTRA && typeof window.CONFIRMED_EXTRA.held === "number")
     ? window.CONFIRMED_EXTRA : {held:0, count:0, entries:[]};
+  // A traced hop REDISTRIBUTES what a seed lost down the peel chain. It can never add to
+  // it, and until now nothing said so.
+  //
+  // 2026-08-06: the page rendered 1,438.97 BTC against a published 1,405.04, and a
+  // different figure on every refresh. follow() had walked out of the theft cluster
+  // entirely — a newly published collector holding 0.0755 BTC forwarded into a 0.0052 BTC
+  // dust hop, and from there the follower fanned into addresses holding 1,392 and 530 BTC,
+  // plainly exchange wallets, and counted their outputs as stolen coins. It stops only at
+  // MAX_TRACKED, so which 40 addresses it reaches depends on which fetches resolve first;
+  // that is why the number moved every time the page loaded.
+  //
+  // The cap is the invariant the accounting always relied on and never enforced: sum a
+  // seed's whole chain, then clamp it to what that seed is on record as losing. A chain
+  // may hold LESS (coins spent onward past the follower's reach) but never more.
+  function rootOf(w){
+    var seen = {}, order = [], cur = w, hop;
+    while (cur && cur.origin === "traced" && cur.from && !seen[cur.addr]){
+      seen[cur.addr] = true; order.push(cur.addr);
+      hop = null;
+      for (var i = 0; i < WALLETS.length; i++){
+        if (WALLETS[i].addr === cur.from){ hop = WALLETS[i]; break; }
+      }
+      if (!hop) break;                 // parent not tracked: treat this as its own root
+      cur = hop;
+    }
+    // A cycle has no seed to charge the chain against, and letting each member root to
+    // itself would cap the same coins twice — the exact double count this function exists
+    // to stop. Collapse it to one canonical member so the cap applies once.
+    if (cur && cur.origin === "traced" && seen[cur.addr]){
+      order.sort();
+      for (var j = 0; j < WALLETS.length; j++){
+        if (WALLETS[j].addr === order[0]) return WALLETS[j];
+      }
+    }
+    return cur || w;
+  }
   function heldTotal(){
-    var t = 0;
-    WALLETS.forEach(function(w){ t += effective(w); });
+    var byRoot = {}, roots = {}, t = 0;
+    WALLETS.forEach(function(w){
+      var r = rootOf(w);
+      roots[r.addr] = r;
+      byRoot[r.addr] = (byRoot[r.addr] || 0) + effective(w);
+    });
+    Object.keys(byRoot).forEach(function(k){
+      t += Math.min(byRoot[k], roots[k].attributed);
+    });
     return t + (WAVE3.held || 0) + (CX.held || 0);
   }
 
@@ -694,9 +769,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
         if (n){
           tip = n;
           el("tipHeight").textContent = tip.toLocaleString("en-US");
-          var anchorH = lastMoveHeight || SWEEP_END_HEIGHT;
-          el("blocksSince").textContent = Math.max(0, tip - anchorH).toLocaleString("en-US");
-          el("blocksLabel").textContent = lastMoveHeight ? "blocks since that move" : "blocks mined since";
+          renderBlocksSince();
         }
       }).catch(function(){});
   }
@@ -715,6 +788,23 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     tx.textContent = "view on mempool";
   }
 
+  // "blocks since that move" counted against whichever standard is showing. Height needs no
+  // network call — the tier's own entry names the block — so this readout is live the moment
+  // the toggle moves, even while the elapsed clock is still resolving that block's timestamp.
+  function renderBlocksSince(){
+    if (!tip) return;
+    var a = activeAnchor();
+    if (!a.known){
+      el("blocksSince").textContent = "—";
+      el("blocksLabel").textContent = "no block published";
+      return;
+    }
+    var anchorH = a.h || SWEEP_END_HEIGHT;
+    el("blocksSince").textContent = Math.max(0, tip - anchorH).toLocaleString("en-US");
+    el("blocksLabel").textContent = a.tier ? "blocks since the reported move"
+                                  : (lastMoveHeight ? "blocks since that move" : "blocks mined since");
+  }
+
   function span(s){
     function p2(n){ return n < 10 ? "0"+n : ""+n; }
     return Math.floor(s/86400)+"d "+p2(Math.floor(s%86400/3600))+"h "+
@@ -726,11 +816,27 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     // describing the last movement, or it silently reports a falsehood
     // committedMoveTs, not lastMoveTs: the latter is still being maxed across in-flight
     // follow() calls, and rendering it mid-climb shows a move older than the real one.
-    var anchor = committedMoveTs || SWEEP_END;
-    el("sinceLabel").textContent = committedMoveTs ? "since coins last moved" : "untouched for";
+    function p2(n){ return n < 10 ? "0"+n : ""+n; }
+    var a = activeAnchor();
+
+    // a standard that publishes no addresses has no movement time to report
+    if (!a.known){
+      el("sinceLabel").textContent = "movement time not published";
+      el("sinceMove").textContent = "—";
+      return;
+    }
+    // anchored to a real block, but its timestamp has not come back from the chain yet
+    if (!a.ts && a.tier){
+      el("sinceLabel").textContent = "since the reported move";
+      el("sinceMove").textContent = "—";
+      return;
+    }
+
+    var anchor = a.ts || SWEEP_END;
+    el("sinceLabel").textContent = a.tier ? "since the reported move"
+                                 : (committedMoveTs ? "since coins last moved" : "untouched for");
     var s = Math.floor(Date.now()/1000) - anchor;
     if (s < 0) s = 0;
-    function p2(n){ return n < 10 ? "0"+n : ""+n; }
     el("sinceMove").textContent = Math.floor(s/86400)+"d "+p2(Math.floor(s%86400/3600))+"h "+
                                   p2(Math.floor(s%3600/60))+"m "+p2(s%60)+"s";
   }
@@ -782,9 +888,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
       if (d.block && d.block.height){
         tip = d.block.height;
         el("tipHeight").textContent = tip.toLocaleString("en-US");
-        var anchorH = lastMoveHeight || SWEEP_END_HEIGHT;
-        el("blocksSince").textContent = Math.max(0, tip - anchorH).toLocaleString("en-US");
-        el("blocksLabel").textContent = lastMoveHeight ? "blocks since that move" : "blocks mined since";
+        renderBlocksSince();
       }
       if (d["multi-address-transactions"]) refreshBalances();
     };
@@ -832,6 +936,54 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     ? window.POTENTIAL : {entries:[], tiers:[], total_sats:0};
   var POT_TIERS = Array.isArray(POT.tiers) ? POT.tiers.slice() : [];
   POT_TIERS.sort(function(a,b){ return (a.total_sats||0) - (b.total_sats||0); });
+
+  // ---------- what each standard's clock is allowed to be anchored to ----------
+  // The verified clock is anchored to a block this site found and checked itself. A weaker
+  // standard may move that clock only if it arrives with on-chain evidence: an entry it
+  // subsumes that names real block heights. Galaxy's attested total is corroborated by
+  // private victim correspondence and publishes no addresses, so no block exists to anchor
+  // to. In that case the readout says the movement is not published rather than reusing the
+  // verified timestamp under a different label, which would present a number this site
+  // cannot support as though the source had supplied it.
+  var TIER_ANCHOR = {};
+  (function buildTierAnchors(){
+    ((POT && POT.entries) || []).forEach(function(e){
+      var k = e.subsumed_by;
+      if (!k || !Array.isArray(e.blocks) || !e.blocks.length) return;
+      var h = Math.max.apply(null, e.blocks);
+      if (!TIER_ANCHOR[k] || h > TIER_ANCHOR[k].h){
+        TIER_ANCHOR[k] = {h: h, ts: null, src: e.source || ""};
+      }
+    });
+  })();
+
+  // The anchor the readouts should currently describe. `known:false` means this standard
+  // reports no movement time at all, which is a fact worth showing, not a gap to paper over.
+  function activeAnchor(){
+    var t = (typeof stopTier === "function") ? stopTier(mode) : null;
+    if (!t) return {h: lastMoveHeight, ts: committedMoveTs, known: true, tier: null};
+    var a = TIER_ANCHOR[t.key];
+    if (!a) return {h: 0, ts: 0, known: false, tier: t};
+    return {h: a.h, ts: a.ts, known: true, tier: t};
+  }
+
+  // A tier anchor carries a height but no timestamp — the entry records which blocks the
+  // sweeps landed in, not when those blocks were mined. Resolve it from the chain once,
+  // then reuse it; until it resolves the elapsed clock shows the height only.
+  function resolveTierAnchorTs(){
+    var t = (typeof stopTier === "function") ? stopTier(mode) : null;
+    if (!t) return;
+    var a = TIER_ANCHOR[t.key];
+    if (!a || a.ts !== null || a.fetching) return;
+    a.fetching = true;
+    getText(API + "/block-height/" + a.h)
+      .catch(function(){ return getText(API2 + "/block-height/" + a.h); })
+      .then(function(hash){ return getJSON(API + "/block/" + hash.trim()); })
+      .then(function(b){
+        if (b && b.timestamp){ a.ts = b.timestamp; tickElapsed(); }
+      })
+      .catch(function(){ a.fetching = false; });
+  }
   // a report that stands on its own (nothing subsumes it) still adds, exactly as before
   var LOOSE_SATS = POT.total_sats || 0;
   // what this site has verified itself, on the same basis the tier totals are stated on:
@@ -922,6 +1074,44 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     return true;
   }
 
+  // ---------- what produced each uptick ----------
+  // An uptick on this chart is one block: every event in SWEEP carries the time offset of
+  // the block that drained it, so grouping events by offset gives the per-block step, and
+  // BLOCKS.map turns that offset into a height. The amounts are summed from SWEEP itself
+  // rather than from drains.js, deliberately — that way the figure in the hover box IS the
+  // rise the cursor is pointing at, and cannot disagree with the line it annotates.
+  // offset -> {h: height, n: addresses drained in that block}. The address count comes from
+  // the published rows, the same list the addresses page shows, and NOT from SWEEP's third
+  // field, which is a wave index rather than a count.
+  var BLK_AT = (function(){
+    var m = {}, src = (window.BLOCKS && window.BLOCKS.map) || [];
+    src.forEach(function(p){ m[p[0]] = {h: p[1], n: p[2] || 0}; });
+    return m;
+  })();
+  var upticks = [];            // [{off, height, sats, addrs, cumIdx}] one per block, in order
+  (function buildUpticks(){
+    var d = window.SWEEP;
+    if (!d || !d.events) return;
+    var byOff = {}, order = [];
+    d.events.forEach(function(e){
+      var o = e[0];
+      if (!byOff[o]){ byOff[o] = {off:o, sats:0}; order.push(o); }
+      byOff[o].sats += e[1];              // e[2] is the wave index, deliberately not summed
+    });
+    order.sort(function(a,b){ return a-b; });
+    order.forEach(function(o){
+      var u = byOff[o], b = BLK_AT[o];    // b undefined if the block index has not caught up
+      u.height = b ? b.h : 0;
+      u.addrs  = b ? b.n : 0;
+      // the last cum index at this offset is where the step finishes, which is the point
+      // the marker should sit on
+      var idx = -1;
+      for (var i = 0; i < cum.length; i++) if (cum[i][0] === o) idx = i;
+      u.cumIdx = idx;
+      if (idx >= 0 && u.sats > 0) upticks.push(u);
+    });
+  })();
+
   function xSweep(i){ return PL + (comp[i] / compSpan) * (seamX - PL); }
   function xHold(ts){
     var now = Math.floor(Date.now()/1000);
@@ -930,6 +1120,8 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     if (f < 0) f = 0; if (f > 1) f = 1;
     return seamX + f * (W - PR - seamX);
   }
+
+  var yMap = null;                         // set by draw(), read by the hover marker
 
   function draw(){
     if (!measure()) return;
@@ -940,6 +1132,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
     var potAdd = ov;
     var top = Math.max(peak, held + MAX_ADD) * 1.14;
     function y(sats){ return (H - PB) - (sats / top) * innerH; }
+    yMap = y;                              // the hover marker needs the live scale
     var elTot = el("totalBtc");
     if (elTot) elTot.textContent = fmt(btc(held + potAdd), 4);
 
@@ -1199,6 +1392,11 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
       document.body.classList.toggle("potential", mode > 0);
       document.body.classList.toggle("suspected", !!(t && t.key === "suspected"));
       fillNote(mode);
+      // the readouts describe a movement, and which movement that is changes with the
+      // standard, so they re-render on the toggle rather than only on the next chain tick
+      renderBlocksSince();
+      tickElapsed();
+      resolveTierAnchorTs();
       // the morph interpolates SATS between stops, not a 0..1 flag, so moving from
       // attested straight to verified travels the same curve as any other pair
       var to = stopSats(mode);
@@ -1218,6 +1416,116 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
       b.addEventListener("click", function(){ setMode(+b.getAttribute("data-tier")); });
     });
     fillNote(0);
+  })();
+
+  /* ---------- hover: name the on-chain movement behind an uptick ---------- */
+  // Only the sweep half of the chart has upticks; right of the seam is time passing with
+  // nothing moving, so the box stays hidden there rather than inventing a nearest block.
+  (function blockHover(){
+    var tip = el("blkTip");
+    if (!tip || !upticks.length || !svg) return;
+    var dot = null, shownOff = null, hideT = 0;
+
+    // The upticks sit only a few pixels apart, so without these two guards the box is
+    // unreachable: drifting a couple of pixels sideways on the way to it retargets a
+    // neighbouring block and the box jumps out from under the cursor.
+    //   inTip   once the pointer is over the box (or the small gap under it), stop
+    //           retargeting entirely, so travelling to the link cannot move the thing
+    //           being travelled to.
+    //   hideT   leaving the svg schedules the hide instead of doing it immediately, and
+    //           entering the box cancels it, so the crossing does not dismiss the box.
+    function inTip(cx, cy){
+      if (tip.hidden) return false;
+      var r = tip.getBoundingClientRect();
+      return cx >= r.left - 8 && cx <= r.right + 8 && cy >= r.top - 8 && cy <= r.bottom + 18;
+    }
+    function cancelHide(){ if (hideT){ clearTimeout(hideT); hideT = 0; } }
+    function scheduleHide(){ cancelHide(); hideT = setTimeout(hide, 140); }
+
+    function fmtWhen(ts){
+      var d = new Date(ts * 1000);
+      function p2(n){ return n < 10 ? "0" + n : "" + n; }
+      return d.getUTCDate() + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getUTCMonth()]
+             + " " + p2(d.getUTCHours()) + ":" + p2(d.getUTCMinutes()) + " UTC";
+    }
+
+    function hide(){
+      cancelHide();
+      if (shownOff === null) return;
+      shownOff = null;
+      tip.hidden = true;
+      if (dot && dot.parentNode) dot.parentNode.removeChild(dot);
+      dot = null;
+    }
+
+    function show(u){
+      if (!yMap) return;
+      if (u.off === shownOff) return;
+      shownOff = u.off;
+      var sats = cum[u.cumIdx][1];                 // cumulative height of the step's top
+      var cx = xSweep(u.cumIdx), cy = yMap(sats);
+
+      el("blkAmt").textContent = fmt(btc(u.sats), 4);
+      el("blkHeight").textContent = u.height ? u.height.toLocaleString("en-US") : "pending";
+      el("blkWhen").textContent = fmtWhen((window.SWEEP.t0 || 0) + u.off);
+      // a block whose addresses are not in the published rows shows no count rather than 0
+      var ar = el("blkAddrs"), arow = ar.parentNode;
+      if (u.addrs > 0){ ar.textContent = u.addrs.toLocaleString("en-US"); arow.hidden = false; }
+      else { arow.hidden = true; }
+      var link = el("blkLink");
+      if (u.height){
+        link.href = "https://mempool.space/block/" + u.height;
+        link.hidden = false;
+      } else {
+        link.hidden = true;
+      }
+
+      // the svg's viewBox is 1:1 with its CSS box (measure() keeps it so), which is what
+      // lets chart coordinates be used directly as pixel offsets inside .chart
+      tip.hidden = false;
+      var half = tip.offsetWidth / 2, cw = svg.clientWidth;
+      var left = Math.max(half + 4, Math.min(cw - half - 4, cx));
+      tip.style.left = left + "px";
+      tip.style.top = Math.max(tip.offsetHeight + 6, cy - 14) + "px";
+
+      if (dot && dot.parentNode) dot.parentNode.removeChild(dot);
+      dot = document.createElementNS(NS, "circle");
+      dot.setAttribute("class", "blk-dot");
+      dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("r", 4.5);
+      dot.setAttribute("fill", "#f7931a");
+      dot.setAttribute("stroke", "#0d0f12");
+      dot.setAttribute("stroke-width", 2);
+      svg.appendChild(dot);
+    }
+
+    function nearest(x){
+      if (x > seamX) return null;                  // past the seam nothing has moved
+      var best = null, bd = Infinity;
+      for (var i = 0; i < upticks.length; i++){
+        var d = Math.abs(xSweep(upticks[i].cumIdx) - x);
+        if (d < bd){ bd = d; best = upticks[i]; }
+      }
+      return bd <= 26 ? best : null;               // don't claim a block the cursor isn't near
+    }
+
+    function onMove(ev){
+      // heading for the box: leave it exactly where it is
+      if (inTip(ev.clientX, ev.clientY)){ cancelHide(); return; }
+      var r = svg.getBoundingClientRect();
+      if (!r.width) return;
+      var u = nearest(ev.clientX - r.left);
+      if (u) { cancelHide(); show(u); } else hide();
+    }
+
+    svg.addEventListener("pointermove", onMove);
+    svg.addEventListener("pointerleave", scheduleHide);
+    svg.addEventListener("pointercancel", hide);
+    // pointerover/out rather than enter/leave: the link inside is the element the pointer
+    // actually lands on, and only these two bubble up to the box
+    tip.addEventListener("pointerover", cancelHide);
+    tip.addEventListener("pointerout", scheduleHide);
+    // a redraw wipes the marker along with everything else in the svg
+    window.addEventListener("resize", hide);
   })();
 
   // Pin the headline to the width it renders at now. The total can only fall (coins
@@ -1277,7 +1585,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch}
   })();
 
   /* ---------- local address check ---------- */
-  var DRAINED_COUNT = 4696;   // must match drained.js exactly
+  var DRAINED_COUNT = 4909;   // must match drained.js exactly
   function datasetReady(){
     return Array.isArray(window.DRAINED) && window.DRAINED.length === DRAINED_COUNT;
   }

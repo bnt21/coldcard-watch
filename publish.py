@@ -592,6 +592,23 @@ def apply_edits(entries, dry=False, st=None):
     p = os.path.join(PUBLIC, "drains.js")
     edits[p] = "window.DRAINS=" + json.dumps({"blocks": blocks, "rows": rows},
                                              separators=(",", ":")) + ";\n"
+    # blocks.js is the homepage's copy of just the block index: [t-offset, height].
+    # The chart's hover needs a block height for each uptick, and drains.js is 270KB —
+    # far too heavy for the front page — while this is a couple of KB. It is written
+    # HERE, alongside drains.js, so the two can never drift: any publish that moves a
+    # block moves both. Offsets are relative to blocks[0].t, which is SWEEP.t0, so the
+    # chart can join an event straight to a height without carrying timestamps twice.
+    # Third field is the number of drained addresses recorded in that block, counted from
+    # rows. It is NOT taken from SWEEP's third field, which is a wave index, not a count.
+    p = os.path.join(PUBLIC, "blocks.js")
+    _t0 = blocks[0]["t"] if blocks else 0
+    _per = {}
+    for _a, _s, _bi in rows:
+        _per[_bi] = _per.get(_bi, 0) + 1
+    edits[p] = "window.BLOCKS=" + json.dumps(
+        {"t0": _t0,
+         "map": [[b["t"] - _t0, b["h"], _per.get(i, 0)] for i, b in enumerate(blocks)]},
+        separators=(",", ":")) + ";\n"
     p = os.path.join(PUBLIC, "drained.js")
     edits[p] = "window.DRAINED=" + json.dumps(hashes, separators=(",", ":")) + ";\n"
 

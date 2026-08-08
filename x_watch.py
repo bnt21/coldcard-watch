@@ -668,6 +668,20 @@ def detect_site_behind(env, st, tweets, dry=False):
                 f"{carried:,.0f}. Either a revision or a figure for part of the incident; "
                 f"the difference is stated in prose this does not read.\n"
                 f"  https://x.com/{handle}/status/{t['id']}", env, dry)
+        # A figure BETWEEN the tiers the site carries means one of them is stale, which is
+        # a fact about what the live site is showing and so belongs in the channel. It is
+        # not "behind" (it is under our ceiling) and it is not a cut. Before this existed,
+        # Galaxy's 1,719 confirmed landed between our 1,596 and 2,055 and was logged as a
+        # possible revision downward.
+        if v.get("tier_stale") and not v["behind"]:
+            key = f"{handle}:stale:{v['claim_btc']:.0f}"
+            if key not in st["behind_alerts"]:
+                url = f"https://x.com/{handle}/status/{t['id']}"
+                publish.notify_change(claims.describe(v, source=handle, url=url), env, dry)
+                if not dry:
+                    st["behind_alerts"][key] = int(time.time())
+                print(f"  TIER STALE: {handle} reports {v['claim_btc']:.0f} BTC vs carried "
+                      f"{v['stale_tier_btc']:.0f}", flush=True)
         if not v["behind"]:
             continue
         # One report is one event even when it spans a thread. Galaxy's headline carried the

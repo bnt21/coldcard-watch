@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Verified drained addresses, Coldcard thefts</title>
-<meta name="description" content="The 4,696 bitcoin addresses confirmed drained on 30 and 31 July 2026, with the amount taken from each and the block it happened in. Sortable and filterable.">
-<link rel="icon" href="/bitcoin.svg">
+<meta name="description" content="The 4,925 bitcoin addresses confirmed drained on 30 and 31 July 2026, with the amount taken from each and the block it happened in. Sortable and filterable.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/bitcoin.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
@@ -108,7 +110,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
 
 <div class="shell">
   <div class="shell-in">
-    <a class="brand" href="/"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></a>
+    <a class="brand" href="/"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Watch</span></a>
     <div class="shell-right">
       <nav class="nav"><a href="/">Dashboard</a><a href="/list.html" aria-current="page">Address list</a><a href="/methodology.html">Methodology</a></nav>
       <div class="tick live" id="tickWrap"><span class="dot"></span><span id="tickText">live</span></div>
@@ -157,7 +159,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
     These addresses belong to the people who were robbed. They are listed because the transactions are
     public on the Bitcoin blockchain and the same set has already been published elsewhere, not because
     anyone here is accused of anything. One person can hold many addresses, so the number of victims is
-    smaller than 4,696 and is not knowable from the chain.
+    smaller than 4,925 and is not knowable from the chain.
   </p>
 <footer>
   <p>Independent security research. Not affiliated with Coinkite or Coldcard. This is a public list of on-chain addresses; every one links to a block explorer so it can be checked.</p>
@@ -246,9 +248,9 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
     rows.sort(compare);
 
     var total = rows.reduce(function(s,r){ return s + r[1]; }, 0);
-    // reserved widths, so shrinking 4,696 to 391 cannot drag the rest of the line left
+    // reserved widths, so shrinking 4,925 to 391 cannot drag the rest of the line left
     countEl.innerHTML = 'Showing <b class="n">' + rows.length.toLocaleString("en-US") +
-                        '</b> of <b class="n">4,696</b> addresses · <b class="btc">' +
+                        '</b> of <b class="n">4,925</b> addresses · <b class="btc">' +
                         fmt(total/1e8, 8) + '</b> BTC';
 
     if (!rows.length){

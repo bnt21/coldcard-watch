@@ -91,6 +91,28 @@ def published_totals(public_dir=None):
     return btc, addresses
 
 
+def carried_tiers(public_dir=None):
+    """Every figure the site carries, in BTC, ascending. [] when it carries none.
+
+    The site shows more than one standard at once, and collapsing them to a single number
+    is what made it blind on 2026-08-07. Galaxy confirmed 1,719 BTC while the site carried
+    attested 1,596 and suspected 2,055. Against the ceiling alone, 1,719 is not news; it
+    even reads as a revision DOWNWARD. Against the tiers as a set it is obvious: it sits
+    between them, so the attested figure the site publishes is stale by 123 BTC.
+    """
+    pub = public_dir or PUBLIC
+    p = os.path.join(pub, "potential.js")
+    if not os.path.exists(p):
+        return []
+    try:
+        with open(p, encoding="utf-8") as fh:
+            s = fh.read()
+        d = json.loads(s[s.index("{"):s.rindex("}") + 1])
+    except (OSError, ValueError):
+        return []
+    return sorted((t.get("total_sats") or 0) / 1e8 for t in (d.get("tiers") or []))
+
+
 def carried_total(public_dir=None):
     """The largest figure the site CARRIES, in BTC, across every standard — its own
     verified total plus any attested or suspected tier standing above it. None when the
@@ -153,6 +175,8 @@ def assess(text, pub_btc=None, pub_addresses=None, public_dir=None, carried_btc=
     v = {"claim_btc": claim, "claims_btc": all_claims, "claim_addresses": addr_claim,
          "published_btc": pub_btc, "published_addresses": pub_addresses,
          "carried_btc": carried_btc or 0,
+         "carried_tiers": carried_tiers(public_dir),
+         "tier_stale": False,
          "gap_btc": None, "gap_addresses": None, "gap_fraction": None,
          "behind": False, "revised_down": False}
     if claim is None or not pub_btc:
@@ -161,15 +185,32 @@ def assess(text, pub_btc=None, pub_addresses=None, public_dir=None, carried_btc=
     v["gap_fraction"] = (claim - pub_btc) / claim if claim else 0
     if addr_claim is not None and pub_addresses:
         v["gap_addresses"] = addr_claim - pub_addresses
-    # the bar is the largest figure the site already shows at any standard, so a post
-    # restating a number already on the toggle is not news and does not fire
+    # The site shows several standards at once, so the question is not "is this bigger than
+    # our biggest number" but "where does it fall among the numbers we publish".
+    tiers = v["carried_tiers"]
     bar = max(pub_btc, carried_btc or 0)
     v["behind"] = claim > bar * (1 + MATERIAL_FRACTION)
-    # a source lowering the figure the site carries on their authority is the other way
-    # this goes wrong, and it is invisible from the chain
-    if carried_btc and claim < carried_btc * (1 - MATERIAL_FRACTION):
+
+    # A claim landing BETWEEN the tiers means a figure we publish is stale, even though it
+    # is under our ceiling. This is the case that went silent on 2026-08-07: Galaxy
+    # confirmed 1,719 while the site carried 1,596 and 2,055. It is not "behind" (below the
+    # ceiling) and it is emphatically not a revision downward — it is a lower tier needing
+    # to be raised, which IS a fact about what the live site is showing.
+    if tiers and len(tiers) > 1 and not v["behind"]:
+        lo, hi = tiers[0], tiers[-1]
+        if claim > lo * (1 + MATERIAL_FRACTION) and claim < hi * (1 - MATERIAL_FRACTION):
+            v["tier_stale"] = True
+            v["stale_tier_btc"] = lo
+            v["gap_tier"] = round(claim - lo, 4)
+
+    # A source lowering the figure the site carries on their authority is the other way
+    # this goes wrong, and it is invisible from the chain. Measured against the LOWEST tier,
+    # not the highest: anything above that floor is covered by the two cases above, and
+    # comparing to the ceiling made every between-tiers figure look like a cut.
+    floor = tiers[0] if tiers else (carried_btc or 0)
+    if floor and claim < floor * (1 - MATERIAL_FRACTION):
         v["revised_down"] = True
-        v["gap_carried"] = round(claim - carried_btc, 4)
+        v["gap_carried"] = round(claim - floor, 4)
     return v
 
 
@@ -182,6 +223,18 @@ def describe(v, source=None, url=None):
     shown = f"{shown} and {figs[-1]:,.0f}" if len(figs) > 1 else f"{figs[0]:,.0f}"
     pub = v["published_btc"]
     carried = v.get("carried_btc") or 0
+    if v.get("tier_stale"):
+        lines = [f"A FIGURE THE SITE CARRIES IS STALE — {who} reports {shown} BTC; the site "
+                 f"carries {v['stale_tier_btc']:,.0f} at that standard, "
+                 f"{v['gap_tier']:,.0f} BTC low.", "",
+                 f"  it is under the site's top figure ({max(v['carried_tiers']):,.0f}), so "
+                 f"the site is not behind overall — the lower tier needs raising",
+                 f"  verified on-chain here is unchanged at {pub:,.4f}"]
+        if url:
+            lines += ["", f"  {url}"]
+        lines += ["", "Nothing was published. Raising a carried figure is a decision about "
+                      "someone else's number, taken by running potential.py --tier."]
+        return "\n".join(lines)
     lines = [f"SITE IS BEHIND THE PRIMARY SOURCE — {who} reports {shown} BTC; "
              f"the site publishes {pub:,.4f}.", ""]
     if carried:

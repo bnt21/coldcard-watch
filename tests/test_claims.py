@@ -202,12 +202,15 @@ class CarriedFigureTest(unittest.TestCase):
 
     def test_a_lower_figure_from_the_source_is_flagged_as_a_possible_revision(self):
         # the site carries this number on their authority, so if they lower it the site
-        # overstates, and no amount of reading the chain would ever show that
+        # overstates, and no amount of reading the chain would ever show that.
+        # Measured against the LOWEST tier carried, not the highest: against the ceiling,
+        # every figure sitting between the tiers looked like a cut, which is how a
+        # confirmed RISE to 1,719 was classified as a revision down on 2026-08-07.
         v = claims.assess("revised down to 1,400 BTC", PUB_BTC, PUB_ADDR,
                           carried_btc=self.CARRIED_NOW)
         self.assertTrue(v["revised_down"])
         self.assertFalse(v["behind"])
-        self.assertEqual(v["gap_carried"], -655.0)
+        self.assertEqual(v["gap_carried"], round(1400.0 - min(claims.carried_tiers()), 4))
 
     def test_a_restatement_of_the_carried_figure_is_not_a_revision(self):
         v = claims.assess("still 2,055 BTC", PUB_BTC, PUB_ADDR, carried_btc=self.CARRIED_NOW)
@@ -222,3 +225,97 @@ class CarriedFigureTest(unittest.TestCase):
         v = claims.assess("now 2,400 BTC", PUB_BTC, PUB_ADDR, carried_btc=self.CARRIED_NOW)
         s = claims.describe(v, source="glxyresearch")
         self.assertIn("already carries 2,055 BTC", s, s)
+
+
+# verbatim, via GET /2/tweets — the post that went silent on 2026-08-07
+GALAXY_1719 = (
+    "$111 MILLION CONFIRMED STOLEN SO FAR IN COLDCARD EXPLOIT\n\n"
+    "Thanks to victim reports, we can confirm with high confidence that 1719 BTC has been "
+    "stolen from Coldcard victims so far\n\nWe have many more coins we are vetting for "
+    "confirmation - we think total losses likely exceed $130m https://t.co/pLfiMQZFyX"
+)
+
+
+class TierStaleTest(unittest.TestCase):
+    """A figure landing BETWEEN the tiers the site carries.
+
+    2026-08-07: Galaxy confirmed 1,719 BTC while the site carried attested 1,596 and
+    suspected 2,055. Both accounts were watched and both tweets were ingested. Nothing
+    fired, because the bar was a single scalar — the MAXIMUM tier — so a claim under the
+    ceiling could not read as news, and the same claim then tripped revised_down for being
+    below 2,055. A confirmed figure rising by 123 BTC was classified as a possible cut and
+    written to a log.
+    """
+
+    TIERS = [1596.0, 2055.0]
+
+    def v(self, text):
+        return claims.assess(text, PUB_BTC, PUB_ADDR, carried_btc=max(self.TIERS))
+
+    def test_the_missed_post_is_now_caught(self):
+        v = self.v(GALAXY_1719)
+        self.assertTrue(v["tier_stale"], "this is the post the change exists for")
+        self.assertEqual(v["claim_btc"], 1719.0)
+        self.assertEqual(v["stale_tier_btc"], 1596.0)
+        self.assertEqual(v["gap_tier"], 123.0)
+
+    def test_a_rise_is_never_reported_as_a_cut(self):
+        self.assertFalse(self.v(GALAXY_1719)["revised_down"],
+                         "1,719 is above the lowest tier; calling it a revision down is "
+                         "the bug that hid it")
+
+    def test_it_is_not_reported_as_behind_because_it_is_under_the_ceiling(self):
+        self.assertFalse(self.v(GALAXY_1719)["behind"])
+
+    def test_a_figure_above_every_tier_is_still_behind_not_stale(self):
+        v = self.v("now 2,400 BTC confirmed")
+        self.assertTrue(v["behind"])
+        self.assertFalse(v["tier_stale"])
+
+    def test_restating_a_carried_tier_fires_nothing(self):
+        for txt in ("still 1,596 BTC", "still 2,055 BTC"):
+            v = self.v(txt)
+            self.assertFalse(v["tier_stale"], txt)
+            self.assertFalse(v["behind"], txt)
+            self.assertFalse(v["revised_down"], txt)
+
+    def test_a_figure_below_every_tier_is_still_a_possible_revision_down(self):
+        v = self.v("revised to 1,400 BTC")
+        self.assertTrue(v["revised_down"])
+        self.assertFalse(v["tier_stale"])
+
+    def test_one_tier_alone_cannot_be_stale(self):
+        # nothing to sit between; the behind/revised split still applies
+        v = claims.assess(GALAXY_1719, PUB_BTC, PUB_ADDR, carried_btc=1596.0)
+        self.assertFalse(v["tier_stale"])
+
+    def test_the_message_names_the_stale_figure_and_the_gap(self):
+        s = claims.describe(self.v(GALAXY_1719), source="glxyresearch")
+        for must in ("STALE", "1,719", "1,596", "123"):
+            self.assertIn(must, s, s)
+        self.assertNotIn("BEHIND THE PRIMARY SOURCE", s)
+
+    def test_the_tiers_are_read_from_the_published_file(self):
+        self.assertEqual(claims.carried_tiers(), [1596.0, 2055.0])
+
+    def test_x_watch_actually_routes_the_stale_case_to_the_channel(self):
+        # claims.py being right is not the same as the pipeline acting on it. Mutating the
+        # branch out of x_watch left every test above green.
+        import inspect
+        import x_watch
+        src = inspect.getsource(x_watch.detect_site_behind)
+        self.assertIn('tier_stale', src)
+        self.assertIn("notify_change", src)
+
+    def test_the_quoting_post_alone_carries_no_total_claim(self):
+        # @intangiblecoins quoted Galaxy with per-victim statistics. Those are not a claim
+        # about the total and must not fire anything; the total lives in the quoted post,
+        # which is read because its author is on the watchlist.
+        quote = ("as of now:\n\nmedian dormancy 3.5 years\n88% of coins stolen were 1+ year old\n\n"
+                 "by address:\nmedian loss 0.014 BTC\nmean loss 0.212 BTC\n\n"
+                 "victim reports received: 250+\n\nby victim (as reported):\n"
+                 "median loss 1.022 BTC\nmean loss 4.04 BTC\n"
+                 "loss range across all reports: 624 sats to 58.97 BTC")
+        v = self.v(quote)
+        self.assertFalse(v["behind"])
+        self.assertFalse(v["tier_stale"])

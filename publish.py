@@ -511,7 +511,10 @@ def self_check(verbose=True):
     if miss:
         problems.append(f"{miss} rows missing from the hash set")
     fmt = f"{n:,}"
-    for name in ("index.html", "list.html"):
+    # methodology.html prints the verified count in prose and was not checked, so it drifted
+    # to 4,584 while the site published 4,925. A page that states the count is a page that
+    # can contradict it.
+    for name in ("index.html", "list.html", "methodology.html"):
         if fmt not in read(os.path.join(PUBLIC, name)):
             problems.append(f"{name} does not contain the formatted count {fmt}")
     # The monitor deliberately carries no expected count. It reads DRAINED_COUNT out of the

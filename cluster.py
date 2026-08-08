@@ -370,8 +370,12 @@ def add_cluster(coll, source, note, dry=False, st=None, min_victims=3, hold_addr
     idx, moved_ts = publish.apply_last_move(idx, extra_seeds=[coll, track])
     edits[os.path.join(publish.PUBLIC, "index.html")] = idx
 
-    edits[os.path.join(publish.PUBLIC, "list.html")] = \
-        publish.swap_count(_read(os.path.join(publish.PUBLIC, "list.html")), old_n, new_n)
+    # methodology.html states the verified count in prose too. It was left out of this
+    # sweep and went stale silently: the page claimed 4,584 verified while the site had
+    # published 4,909. Any page that prints the count is swept.
+    for name in ("list.html", "methodology.html"):
+        edits[os.path.join(publish.PUBLIC, name)] = \
+            publish.swap_count(_read(os.path.join(publish.PUBLIC, name)), old_n, new_n)
 
     meth = _read(os.path.join(publish.PUBLIC, "methodology.html"))
     if "<!-- xrow -->" in meth:

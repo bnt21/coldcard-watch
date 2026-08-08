@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>How these addresses were identified</title>
-<meta name="description" content="The method behind Coldcard Sweep Watch: how victim and attacker addresses are told apart, what evidence each cluster rests on, and what this method cannot see.">
-<link rel="icon" href="/bitcoin.svg">
+<meta name="description" content="The method behind Coldcard Watch: how victim and attacker addresses are told apart, what evidence each cluster rests on, and what this method cannot see.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/bitcoin.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
@@ -90,7 +92,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
 
 <div class="shell">
   <div class="shell-in">
-    <a class="brand" href="/"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Sweep Watch</span></a>
+    <a class="brand" href="/"><img src="/bitcoin.svg" alt="Bitcoin"><span>Coldcard Watch</span></a>
     <div class="shell-right">
       <nav class="nav"><a href="/">Dashboard</a><a href="/list.html">Address list</a><a href="/methodology.html" aria-current="page">Methodology</a></nav>
       <div class="tick live" id="tickWrap"><span class="dot"></span><span id="tickText">live</span></div>
@@ -330,7 +332,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
       <tr><td>31 Jul<br>19:53</td><td>13 addresses<br>0.19 BTC</td><td>2.0 sat/vB</td>
         <td>Reported in a reply by @jmassu. Verified here: twelve single-input sweeps in one block, then a
           consolidation into an address that has not moved.</td></tr>
-      <!-- xrow --><tr><td>Added<br>05 Aug</td><td>112 addresses<br>36.02 BTC</td><td>1.2–1467.8 sat/vB</td><td>Reported by Andreas Schj&oslash;nhaug on behalf of a former colleague who was robbed. Verified here: 112 single-input, no-change sweeps converging on one fresh address with no prior history, then forwarded once into a taproot vault that has not moved since.</td></tr><!-- /xrow -->
+      <!-- xrow --><tr><td>Added<br>07 Aug</td><td>16 addresses<br>0.03 BTC</td><td>2.0 sat/vB</td><td>Matches the drain fingerprint and independently reported by lopp. Verified on-chain.</td></tr><!-- /xrow -->
     </tbody>
   </table>
   <p class="warn">
@@ -407,7 +409,7 @@ footer p{color:var(--ink-3);font-size:.85rem;max-width:70ch;margin:0}
   </p>
   <p>
     The attested figure is the measure of how much this misses. Galaxy count roughly 7,300 drained
-    addresses and this site has verified 4,584 of them, so about a third of the thefts in this incident
+    addresses and this site has verified 4,925 of them, so about a third of the thefts in this incident
     are ones no method that reads only the chain has reached.
   </p>
 
